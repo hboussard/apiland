@@ -36,7 +36,7 @@ public class Parcel extends FarmUnit {
 	
 	public int getPGP(){
 		if(getAttribute("pgp") != null){
-			return (int) getAttribute("pgp").getValue(CAPFarm.t);
+			return (Integer) getAttribute("pgp").getValue(CAPFarm.t);
 		}
 		return -1;
 	}
