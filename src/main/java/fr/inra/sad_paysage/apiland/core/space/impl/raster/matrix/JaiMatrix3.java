@@ -38,16 +38,16 @@ public class JaiMatrix3 implements Matrix {
 	private String file;
 	private Set<Integer> values;
 
-	public JaiMatrix(String image) {
+	public JaiMatrix3(String image) {
 		this(JAI.create("fileload", image));
 		setFile(image);
 	}
 
-	public JaiMatrix(PlanarImage pi) {
+	public JaiMatrix3(PlanarImage pi) {
 		this(pi, true);
 	}
 
-	public JaiMatrix(PlanarImage pi, boolean read) {
+	public JaiMatrix3(PlanarImage pi, boolean read) {
 		this.pi = pi;
 		ite = RandomIterFactory.create(this.pi, null);
 
@@ -57,7 +57,7 @@ public class JaiMatrix3 implements Matrix {
 		}
 	}
 
-	public JaiMatrix(PlanarImage pi, Set<Integer> values) {
+	public JaiMatrix3(PlanarImage pi, Set<Integer> values) {
 		this.pi = pi;
 		ite = RandomIterFactory.create(this.pi, null);
 
@@ -89,7 +89,7 @@ public class JaiMatrix3 implements Matrix {
 		Raster.setCellSize(cellsize);
 	}*/
 
-	public JaiMatrix(double cellsize, double minx, double maxx, double miny, double maxy, PlanarImage pi) {
+	public JaiMatrix3(double cellsize, double minx, double maxx, double miny, double maxy, PlanarImage pi) {
 		this(pi);
 		minX = minx;
 		maxX = maxx;
@@ -99,7 +99,7 @@ public class JaiMatrix3 implements Matrix {
 		Raster.setCellSize(this.cellsize);
 	}
 
-	public JaiMatrix(double cellsize, double minx, double maxx, double miny, double maxy, PlanarImage pi,
+	public JaiMatrix3(double cellsize, double minx, double maxx, double miny, double maxy, PlanarImage pi,
 			boolean read) {
 		this(pi, read);
 		minX = minx;
@@ -110,7 +110,7 @@ public class JaiMatrix3 implements Matrix {
 		Raster.setCellSize(this.cellsize);
 	}
 
-	public JaiMatrix(double cellsize, double minx, double maxx, double miny, double maxy, PlanarImage pi,
+	public JaiMatrix3(double cellsize, double minx, double maxx, double miny, double maxy, PlanarImage pi,
 			Set<Integer> values) {
 		this(pi, values);
 		minX = minx;

@@ -1,0 +1,78 @@
+package fr.inra.sad_paysage.apiland.capfarm.model;
+
+import java.io.File;
+import java.io.IOException;
+
+import com.csvreader.CsvReader;
+import com.csvreader.CsvReader.CatastrophicException;
+import com.csvreader.CsvReader.FinalizedException;
+
+public class CoverFactory {
+
+	public static void init(String types){
+		File folder = new File(types);
+		for(File f : folder.listFiles()){
+			try {
+				// initialisation des couverts
+				//System.out.println(f.toString()+"/covers.txt");
+				CsvReader cr = new CsvReader(f.toString()+"/covers.txt");
+				cr.setDelimiter(';');
+				cr.readHeaders();
+				while(cr.readRecord()){
+					CoverManager.getCoverUnit(cr.get("code"), cr.get("name"));
+				}
+				cr.close();
+				
+				if(new File(f.toString()+"/groups.txt").exists()){ // initialisation des groupes de couverts
+					cr = new CsvReader(f+"/groups.txt");
+					cr.setDelimiter(';');
+					cr.readHeaders();
+					while(cr.readRecord()){
+						CoverManager.getCoverGroup(cr.get("code"), cr.get("name"), cr.get("covers"));
+					}
+					cr.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (FinalizedException e) {
+				e.printStackTrace();
+			} catch (CatastrophicException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void init(Covering system, String coverFile, String groupFile) {
+		//System.out.println("initialisation des couverts");
+		
+		try {
+			// initialisation des couverts
+			CsvReader cr = new CsvReader(coverFile);
+			cr.setDelimiter(';');
+			cr.readHeaders();
+			while(cr.readRecord()){
+				system.addCover(CoverManager.getCoverUnit(cr.get("code"), cr.get("name")));
+			}
+			cr.close();
+			
+			if(groupFile != null && !groupFile.equalsIgnoreCase("") && new File(groupFile).exists()){ // initialisation des groupes de couverts
+				cr = new CsvReader(groupFile);
+				cr.setDelimiter(';');
+				cr.readHeaders();
+				while(cr.readRecord()){
+					system.addCover(CoverManager.getCoverGroup(cr.get("code"), cr.get("name"), cr.get("covers")));
+				}
+				cr.close();
+			}else{
+				//throw new IllegalArgumentException("group file :'"+groupFile+"' does not exists.");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (FinalizedException e) {
+			e.printStackTrace();
+		} catch (CatastrophicException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

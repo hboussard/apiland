@@ -104,6 +104,12 @@ public class SetPatch implements Patch {
 		return pixels.iterator().next().equals(pi.pixels().iterator().next());
 	}
 
+	@Override
+	public Envelope getEnvelope() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 }

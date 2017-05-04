@@ -1,7 +1,9 @@
 package fr.inra.sad_paysage.apiland.core.space.impl.raster.matrix;
 
 import com.csvreader.CsvReader;
+
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.Raster;
+
 import java.awt.RenderingHints;
 import java.awt.image.RenderedImage;
 import java.io.BufferedReader;
@@ -29,12 +31,12 @@ public class JaiMatrixFactory3 extends MatrixFactory {
 	private static int height;
 	private static int noDataValue = -1;
 
-	private static JaiMatrixFactory factory = new JaiMatrixFactory();
+	private static JaiMatrixFactory3 factory = new JaiMatrixFactory3();
 
-	private JaiMatrixFactory() {
+	private JaiMatrixFactory3() {
 	}
 
-	public static JaiMatrixFactory get() {
+	public static JaiMatrixFactory3 get() {
 		return factory;
 	}
 

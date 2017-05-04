@@ -41,6 +41,7 @@ import fr.inra.sad_paysage.apiland.core.change.ChangeableObserver;
 import fr.inra.sad_paysage.apiland.core.time.Instant;
 import fr.inra.sad_paysage.apiland.core.time.Time;
 import fr.inra.sad_paysage.apiland.core.time.TimeException;
+import fr.inra.sad_paysage.apiland.core.time.delay.Delay;
 
 public class StaticAttribute<O extends Serializable> extends Attribute<O>{
 
@@ -214,6 +215,12 @@ public class StaticAttribute<O extends Serializable> extends Attribute<O>{
 	@Override
 	public Instant getLastOccurence(Serializable o) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public O[] split(Delay d) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

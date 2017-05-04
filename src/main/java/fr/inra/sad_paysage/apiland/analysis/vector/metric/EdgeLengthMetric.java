@@ -12,11 +12,11 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import fr.inra.sad_paysage.apiland.analysis.VariableManager;
 import fr.inra.sad_paysage.apiland.analysis.vector.metric.VectorMetric;
+import fr.inra.sad_paysage.apiland.capfarm.model.Cover;
+import fr.inra.sad_paysage.apiland.capfarm.model.CoverGroup;
 import fr.inra.sad_paysage.apiland.core.composition.Composition;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad_paysage.apiland.core.time.Instant;
-import fr.inra.sad_paysage.capfarm.model.Cover;
-import fr.inra.sad_paysage.capfarm.model.CoverGroup;
 
 public class EdgeLengthMetric extends VectorMetric {
 

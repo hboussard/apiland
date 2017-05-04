@@ -169,6 +169,12 @@ public class DiscreteAttribute<O extends Serializable> extends Attribute<O> {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public O[] split(Delay d) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 }
