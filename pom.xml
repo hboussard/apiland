@@ -147,5 +147,15 @@
     <artifactId>miglayout</artifactId>
     <version>3.7</version>
 </dependency>
+<dependency>
+    <groupId>org.antlr</groupId>
+    <artifactId>antlr</artifactId>
+    <version>4.4</version>
+</dependency>
+<dependency>
+    <groupId>org.chocosolver</groupId>
+    <artifactId>choco</artifactId>
+    <version>3.3.3</version>
+</dependency>
   </dependencies>
 </project>
