@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="ConstraintTest">
+  <test name="ConstraintTest">
+  	<classes>
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.ParcelAreaConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.TotalAreaConstraintTest" /> 
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.DistanceFromFacilitiesConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.DistanceBetweenCoversConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.OnBooleanConditionConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.OnNumericConditionConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.DelayConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.DurationConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.RepetitionConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.NextCoverConstraintTest" />
+  		<class  name="fr.inra.sad_paysage.capfarm.model.constraint.test.TemporalPatternConstraintTest" />
+  	</classes>
+  </test>  
+</suite>  	
