@@ -17,7 +17,7 @@ public class Friction {
 	
 	public Friction(String f){
 		r = new HashMap<Double, Double>();
-		min = 999999999;
+		min = Integer.MAX_VALUE;
 		read(f);
 	}
 	
