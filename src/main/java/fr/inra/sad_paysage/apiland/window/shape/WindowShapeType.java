@@ -10,9 +10,9 @@ public enum WindowShapeType {
 	
 	CIRCLE,
 	
-	FUNCTIONAL
+	FUNCTIONAL;
 	
-	/*RING*/;
+	//RING;
 	
 	public WindowShape create(int width){
 		switch(this){

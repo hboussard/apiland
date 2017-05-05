@@ -92,6 +92,7 @@ public class SlidingWindowMatrixTreatment extends Treatment implements AnalysisO
 		minRate = (Double) getInput("min_rate");
 		filters = (Set<Integer>) getInput("filters");
 		unfilters = (Set<Integer>) getInput("unfilters");
+		
 	}
 
 	@Override
