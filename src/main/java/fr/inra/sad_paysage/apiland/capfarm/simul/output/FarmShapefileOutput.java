@@ -15,7 +15,6 @@ public class FarmShapefileOutput extends OutputAnalysis {
 			Instant t = simulation.manager().start();
 			while(t.isBefore(simulation.manager().end()) || t.equals(simulation.manager().end())){
 				for(CoverLocationModel model : (GlobalCoverLocationModel) simulation.model().get("agriculture")){
-					System.out.println(simulation.folder()+model.getName()+"_"+t.year());
 					DynamicLayerFactory.exportShape(
 							model.getCoverAllocator().getTerritory(), 
 							t,
