@@ -1,0 +1,1 @@
+mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=fr.inra.sad_paysage.apiland -DartifactId=apiland

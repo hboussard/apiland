@@ -1,0 +1,19 @@
+mvn install --> compile, joue les tests, package --> création de .jar dans le rep "target"
+mvn clean --> nettoie tous les fichiers compilés
+
+revert : nouveau commit, annule les changement d'un cmmit en en créant un nouveau
+reset : revient à l'état historique d'avant en écrasant les plus récents DANGEREUX !!! à éviter !
+
+mieux vaut travailler sur une nouvelle branche locale
+
+rebase ou merge : à voir suivant la politique
+rebase : ligne toute droite
+merge : branche visible
+
+voir les librairies disponibles maven central repository
+
+rebase dev onto master puis merge dev onto master
+--> kraken propose le fastforward directement
+
+
+
