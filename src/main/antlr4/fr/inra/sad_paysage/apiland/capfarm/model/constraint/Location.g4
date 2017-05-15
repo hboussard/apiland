@@ -1,9 +1,5 @@
 grammar Location;
 
-@header {
-	package fr.inra.sad_paysage.capfarm.model.constraint;
-}
-
 evaluate :
 	localisation EOF
 ; 

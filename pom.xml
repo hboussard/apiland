@@ -10,7 +10,11 @@
 <properties>
 <maven.compiler.source>1.8</maven.compiler.source>
 <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- <antlr4.visitor>true</antlr4.visitor>
+    <antlr4.listener>true</antlr4.listener> -->
 </properties>
+<!-- 
 <build>
 	<plugins>
 		<plugin>
@@ -26,7 +30,7 @@
 			</executions>
 		</plugin>
 	</plugins>
-</build>
+</build> -->
 <dependencies>
 	<dependency>
 		<groupId>org.jfree</groupId>
@@ -173,10 +177,11 @@
 		<artifactId>choco</artifactId>
 		<version>3.3.3</version>
 	</dependency>
-	<dependency>
-		<groupId>org.antlr</groupId>
-		<artifactId>antlr4-runtime</artifactId>
-		<version>4.0</version>
-	</dependency>
+	 <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>4.0</version>
+      <scope>compile</scope>
+    </dependency>
 </dependencies>
 </project>
