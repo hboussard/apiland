@@ -33,9 +33,9 @@ public class CfmManager extends SimulationManager {
 		setDelay(new YearDelay(1));
 		outputs = new HashSet<OutputAnalysis>();
 		check = false;
-		probaTimeFolder = "c:/Hugues/workspace/capfarm-2/system/proba_times/";
+		//probaTimeFolder = "c:/Hugues/workspace/capfarm-2/system/proba_times/";
 		//this.probaTimeFolder = probaFolder;
-		//probaTimeFolder = getClass().getResource("../../../resources/proba_times/").toString();
+		probaTimeFolder = CfmManager.class.getResource("proba_times/").toString();
 	}
 	
 	@Override

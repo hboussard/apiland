@@ -292,7 +292,7 @@ public class MatrixMetricManager {
 	
 	public static Set<String> getQualitativeMetricNames(Set<Integer> values){
 		Set<String> metrics = new TreeSet<String>();
-
+		
 		for(String m : qualitativeMetrics){
 			if(valueMetrics.contains(m)){
 				if(values.size() < 50){
