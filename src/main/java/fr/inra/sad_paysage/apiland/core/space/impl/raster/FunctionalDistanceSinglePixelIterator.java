@@ -49,17 +49,13 @@ public class FunctionalDistanceSinglePixelIterator implements Iterator<Pixel>{
 
 	private void init(){
 		around = new TreeSet<Pixel>();
-		
 		Map<Pixel, Double> rcm = new HashMap<Pixel, Double>();
 		rcm.put(pixel, 0.0);
-		
 		TreeSet<Pixel> waits = new TreeSet<Pixel>();
 		waits.add(pixel);
-		
 		while(!waits.isEmpty()){
 			diffuse(rcm, waits);
 		}
-		
 		ite = around.iterator();
 	}
 	
@@ -71,7 +67,6 @@ public class FunctionalDistanceSinglePixelIterator implements Iterator<Pixel>{
 		}else{
 			f = frictionMat.get(p);
 		}
-			
 		if(f != Raster.getNoDataValue()){
 			
 			double v = rcm.get(p);
@@ -84,7 +79,6 @@ public class FunctionalDistanceSinglePixelIterator implements Iterator<Pixel>{
 			diffuseQueen(p, new Pixel(p.x()+1, p.y()+1), v, f, rcm, waits); // sud est
 			diffuseQueen(p, new Pixel(p.x()-1, p.y()+1), v, f, rcm, waits); // sud ouest
 			diffuseQueen(p, new Pixel(p.x()-1, p.y()-1), v, f, rcm, waits); // nord ouest
-
 			//ever.put(p, 1);
 		}
 	}

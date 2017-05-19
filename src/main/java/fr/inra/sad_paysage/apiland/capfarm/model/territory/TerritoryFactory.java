@@ -24,6 +24,7 @@ import fr.inra.sad_paysage.apiland.core.space.impl.GeometryImplType;
 import fr.inra.sad_paysage.apiland.core.structure.DynamicRepresentationType;
 import fr.inra.sad_paysage.apiland.core.time.Instant;
 import fr.inra.sad_paysage.apiland.core.time.Interval;
+import fr.inra.sad_paysage.apiland.capfarm.model.Cover;
 import fr.inra.sad_paysage.apiland.capfarm.model.CoverManager;
 import fr.inra.sad_paysage.apiland.capfarm.model.CoverUnit;
 
@@ -83,6 +84,10 @@ public class TerritoryFactory {
 			for(String c : e.getValue()){
 				parcelType.addAttributeType(DynamicElementTypeFactory.createAttributeType(c, null, e.getKey()));
 			}	
+		}
+		// ajout des attributs de comptage d'occurence de couverts
+		for(Cover c  : CoverManager.coverUnits()){
+			System.out.println(c);
 		}
 		parcelType.setCondition("parcel");
 			

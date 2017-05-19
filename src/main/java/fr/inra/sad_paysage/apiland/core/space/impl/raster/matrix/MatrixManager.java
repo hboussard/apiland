@@ -43,6 +43,7 @@ import java.text.DecimalFormatSymbols;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 
+import fr.inra.sad_paysage.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad_paysage.apiland.core.util.VisuImageJ;
 
 public class MatrixManager {
@@ -225,13 +226,20 @@ public class MatrixManager {
 		if(m1.cellsize() != m2.cellsize()){
 			throw new IllegalArgumentException("matrix have not the same cellsize");
 		}
-		return retile(m1, m2.width(), m2.height(), m2.minX(), m2.minY());
+		return retile(m1, m2.minX(), m2.minY(), m2.width(), m2.height());
 	}
 	
 	public static Matrix retile(Matrix m, int dX, int dY, int ncols, int nrows) {
-		Matrix mn = MatrixFactory.get(m.getType()).create(ncols, nrows, 
-				m.cellsize(), m.minX()+dX*m.cellsize(), m.minX()+dX*m.cellsize()+ncols*m.cellsize(),
-				m.minY()+dY*m.cellsize(), m.minY()+dY*m.cellsize()+ nrows*m.cellsize(), m.noDataValue());
+		Matrix mn = MatrixFactory.get(m.getType()).create(
+				ncols, 
+				nrows, 
+				m.cellsize(), 
+				m.minX()+dX*m.cellsize(), 
+				m.minX()+dX*m.cellsize()+ncols*m.cellsize(),
+				m.minY()+(m.height()-nrows-dY)*m.cellsize(), 
+				m.minY()+(m.height()-nrows-dY)*m.cellsize()+nrows*m.cellsize(), 
+				m.noDataValue());
+		
 		for(int j=0; j<nrows; j++){
 			for(int i=0; i<ncols; i++){
 				mn.put(i, j, m.get(i+dX, j+dY));
@@ -240,13 +248,54 @@ public class MatrixManager {
 		return mn;
 	}
 	
-	public static Matrix retile(Matrix m, int ncols, int nrows, double xllcorner, double yllcorner) {
+	public static Matrix retile(Matrix m, double minx, double maxx, double miny, double maxy) {
 		
-		Matrix mn = MatrixFactory.get(m.getType()).create(ncols, nrows, m.cellsize(), xllcorner, xllcorner + ncols * m.cellsize(), yllcorner, yllcorner + nrows * m.cellsize(), m.noDataValue());
+		int ncols = new Double((maxx - minx) / m.cellsize()).intValue();
+		int nrows = new Double((maxy - miny) / m.cellsize()).intValue();
+		
+		System.out.println(ncols+" "+nrows);
+		
+		Matrix mn = MatrixFactory.get(m.getType()).create(
+				ncols, 
+				nrows, 
+				m.cellsize(), 
+				minx,
+				maxx,
+				miny,
+				maxy,
+				m.noDataValue());
+		
+		int dX = new Double((minx - m.minX()) / m.cellsize()).intValue();
+		int dY = new Double((miny - m.minY()) / m.cellsize()).intValue();
+		System.out.println(dX+" "+dY);
 		
 		for(int j=0; j<nrows; j++){
 			for(int i=0; i<ncols; i++){
-				mn.put(i, j, m.get(i+5000, j+5000));
+				mn.put(i, j, m.get(i+dX, j+dY));
+			}
+		}
+
+		return mn;
+	}
+	
+	public static Matrix retile(Matrix m, double xllcorner, double yllcorner, int ncols, int nrows) {
+		
+		Matrix mn = MatrixFactory.get(m.getType()).create(
+				ncols, 
+				nrows, 
+				m.cellsize(), 
+				xllcorner, 
+				xllcorner + ncols * m.cellsize(), 
+				yllcorner, 
+				yllcorner + nrows * m.cellsize(), 
+				m.noDataValue());
+		
+		int dX = new Double((m.minX() - xllcorner) / m.cellsize()).intValue();
+		int dY = new Double((m.minY() - yllcorner) / m.cellsize()).intValue();
+		
+		for(int j=0; j<nrows; j++){
+			for(int i=0; i<ncols; i++){
+				mn.put(i, j, m.get(i+dX, j+dY));
 			}
 		}
 		/*
