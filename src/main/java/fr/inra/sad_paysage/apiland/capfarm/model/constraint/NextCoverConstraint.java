@@ -72,7 +72,7 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 						if(!domain().accept(c)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD : Next Cover "+c+"\n");
+								sb.append(covers().toString()+" BAD : Next Cover "+c+"\n");
 							}else{
 								return ok;
 							}
@@ -84,7 +84,7 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 						if(domain().accept(c)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD : Next Cover "+c+"\n");
+								sb.append(covers().toString()+" BAD : Next Cover "+c+"\n");
 							}else{
 								return ok;
 							}

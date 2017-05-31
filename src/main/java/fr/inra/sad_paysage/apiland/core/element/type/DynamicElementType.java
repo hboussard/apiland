@@ -220,7 +220,9 @@ public abstract class DynamicElementType implements Cloneable, Changeable, Seria
 	}
 	
 	public void addAttributeType(AttributeType type){
-		attributeTypes.add(type);
+		if(!hasAttributeType(type.getName())){
+			attributeTypes.add(type);	
+		}
 	}
 	
 	public void setAttributeTypes(List<AttributeType> attributeTypes){
@@ -228,7 +230,9 @@ public abstract class DynamicElementType implements Cloneable, Changeable, Seria
 	}
 	
 	public void addRepresentationType(RepresentationType type){
-		representationTypes.add(type);
+		if(!hasRepresentationType(type.getName())){
+			representationTypes.add(type);
+		}
 	}
 	
 	public void setRepresentationTypes(List<RepresentationType> representationTypes){

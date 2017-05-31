@@ -13,12 +13,10 @@ public class HistoricFactory {
 	public static void init(Farm farm, Instant start){
 		if(farm.hasHistoric()){
 			try {
-				
 				File folder = new File(farm.getHistoric());
 				String historicFile = null;
 				if(folder.isFile()){
 					historicFile = folder.getAbsolutePath();
-					//System.out.println(historicFile);
 				}else{
 					int rH = new Double(Math.random() * folder.list().length).intValue();
 					int i=0;
@@ -71,9 +69,9 @@ public class HistoricFactory {
 							cover = infos[0];
 							nb = Integer.parseInt(infos[1]);
 						}
-						farm.parcel(parcel).getAttribute("seq_cover").setValue(t, (CoverUnit) Cover.get(cover));
-						t = Instant.get(t.dayOfMonth(), t.month(), t.year()+nb);
-						
+						farm.parcel(parcel).getAttribute("cover").setValue(t, (CoverUnit) Cover.get(cover));
+						//farm.parcel(parcel).getAttribute("seq_cover").setValue(t, (CoverUnit) Cover.get(cover));
+						t = Instant.get(t.dayOfMonth(), t.month(), t.year()+nb);	
 					}
 				}
 				cr.close();

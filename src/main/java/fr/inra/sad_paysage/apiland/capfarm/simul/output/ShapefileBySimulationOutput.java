@@ -13,11 +13,10 @@ import fr.inra.sad_paysage.apiland.core.composition.StaticAttribute;
 import fr.inra.sad_paysage.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad_paysage.apiland.core.element.type.DynamicElementTypeFactory;
 import fr.inra.sad_paysage.apiland.core.time.Instant;
-import fr.inra.sad_paysage.apiland.core.time.Interval;
 import fr.inra.sad_paysage.apiland.simul.OutputAnalysis;
 import fr.inra.sad_paysage.apiland.simul.Simulation;
 
-public class ShapefileByCoverOutput extends OutputAnalysis {
+public class ShapefileBySimulationOutput extends OutputAnalysis {
 	
 	@Override
 	public void close(Simulation simulation){
@@ -46,15 +45,12 @@ public class ShapefileByCoverOutput extends OutputAnalysis {
 			//simulation.model().map().get("territory").getType().display();
 			
 			for(CoverLocationModel model : (GlobalCoverLocationModel) simulation.model().get("agriculture")){
-				System.out.println(model);
 				for(Parcel p : model.getCoverAllocator().parcels()){
-					System.out.println("parcel : "+p);
 					Instant t = simulation.manager().start();
 					while(t.isBefore(simulation.manager().end()) || t.equals(simulation.manager().end())){
 						CoverUnit cu = (CoverUnit) p.getAttribute("cover").getValue(t);
 						count.get(p).put(cu, count.get(p).get(cu)+1);
 						
-						System.out.println(t+" "+cu+" "+count.get(p).get(cu));
 						
 						t = simulation.manager().delay().next(t);
 					}

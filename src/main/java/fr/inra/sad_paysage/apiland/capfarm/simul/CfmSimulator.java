@@ -8,7 +8,6 @@ import com.csvreader.CsvReader.CatastrophicException;
 import com.csvreader.CsvReader.FinalizedException;
 
 import fr.inra.sad_paysage.apiland.capfarm.csp.ProbaTimeManager;
-import fr.inra.sad_paysage.apiland.capfarm.simul.ecological.EcologicalModelManager;
 import fr.inra.sad_paysage.apiland.core.element.DynamicLayer;
 import fr.inra.sad_paysage.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad_paysage.apiland.simul.OutputAnalysis;
@@ -43,7 +42,7 @@ public abstract class CfmSimulator extends Simulator {
 		initFarms();
 		initOutput();
 		//initEcologicalModel();
-		//initRasterization();
+		initRasterization();
 	}
 
 	private void initProbaTimes() {
@@ -95,6 +94,11 @@ public abstract class CfmSimulator extends Simulator {
 	}
 	*/
 
+	protected void initRasterization() {
+		// do nothing
+	}
+	
+	/*
 	private void initRasterization() {
 
 		String cercle2km = "C:/Hugues/projets/agriconnect/restitution/data/sig/cercle_ouvert_2km.shp";
@@ -114,5 +118,6 @@ public abstract class CfmSimulator extends Simulator {
 		// rasterisation effectuee 1 seule fois
 		operation.make(manager().start(), map().get("territory"));
 	}
+	*/
 }
 
