@@ -126,6 +126,7 @@ public class RasterManager {
 			f = ite.next();
 			
 			if(map != null){
+				//System.out.println(f.getAttribute(name).getValue(t));
 				value = Integer.parseInt(map.get(f.getAttribute(name).getValue(t).toString()));
 			}else{
 				value = (Integer) f.getAttribute(name).getValue(t);

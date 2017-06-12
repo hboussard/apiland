@@ -93,6 +93,7 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 			w = new CenteredWindow(shape.create(matrix, windowSize*matrix.cellsize()/2, frictionMap, pt));
 		}else if(frictionMatrix != null){
 			w = new CenteredWindow(shape.create(matrix, windowSize*matrix.cellsize()/2, frictionMatrix, pt));
+			System.out.println(w.width()+" "+w.height());
 		}else{
 			w = new CenteredWindow(shape.create(windowSize));
 		}

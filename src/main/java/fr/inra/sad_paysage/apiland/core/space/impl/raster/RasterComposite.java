@@ -176,12 +176,16 @@ public final class RasterComposite extends Raster {
 	@Override
 	protected Raster addPixelComposite(PixelComposite impl) {
 		if(rasters.size() == 0){
+			
 			return impl;
 		}
 		if(impl.count() == 0){
 			return clone().smooth();
 		}
+		/*
+		System.out.println("a2");
 		if(intersects(impl)){
+			System.out.println("ajout3");
 			if(contains(impl)){
 				return clone().smooth();
 			}
@@ -192,15 +196,19 @@ public final class RasterComposite extends Raster {
 			rc.add(impl);
 			return rc.smooth();
 		}
+		System.out.println("a3");
 		if(touches(impl)){
+			System.out.println("ajout4");
 			RasterComposite rc = clone();
 			rc.add(impl);
 			return rc.smooth();
 		}
+		*/
 		RasterComposite rc = new RasterComposite();
 		rc.add(this);
 		rc.add(impl);
-		return rc.smooth();
+		//return rc.smooth();
+		return rc;
 	}
 
 	@Override
@@ -467,6 +475,19 @@ public final class RasterComposite extends Raster {
 	
 	@Override
 	protected boolean touchesPixelComposite(PixelComposite impl) {
+		boolean response = false;
+		for(Pixel p1 : this){
+			for(Pixel p2 : impl){
+				if(p1.equalsPixel(p2)){
+					return false;
+				}
+				if(p1.touchesPixel(p2)){
+					response = true;
+				}
+			}
+		}
+		return response;
+		/*
 		if(disjointPixelComposite(impl)){
 			for(Pixel p : this){
 				if(impl.touchesPixel(p)){
@@ -475,6 +496,7 @@ public final class RasterComposite extends Raster {
 			}
 		}
 		return false;
+		*/
 	}
 
 	@Override

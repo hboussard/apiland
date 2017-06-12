@@ -66,7 +66,7 @@ public class ShapefileBySimulationOutput extends OutputAnalysis {
 				DynamicLayerFactory.exportShape(
 						model.getCoverAllocator().getTerritory(), 
 						simulation.manager().start(),
-						simulation.folder()+"cover");
+						simulation.scenario().folder()+"count_cover_by_simulation");
 			}
 			
 			// suppression de l'attribut "nb_'cover'" pour chaque couvert

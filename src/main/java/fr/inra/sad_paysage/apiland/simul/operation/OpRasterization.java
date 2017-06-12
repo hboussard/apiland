@@ -16,6 +16,7 @@ import fr.inra.sad_paysage.apiland.analysis.matrix.calculation.ClusteringQueenAn
 import fr.inra.sad_paysage.apiland.core.element.DynamicElement;
 import fr.inra.sad_paysage.apiland.core.element.DynamicFeature;
 import fr.inra.sad_paysage.apiland.core.element.DynamicLayer;
+import fr.inra.sad_paysage.apiland.core.space.Geometry;
 import fr.inra.sad_paysage.apiland.core.space.GeometryFactory;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.RasterComposite;

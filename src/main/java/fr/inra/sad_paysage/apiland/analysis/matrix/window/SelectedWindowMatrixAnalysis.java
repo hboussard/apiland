@@ -106,7 +106,6 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 				p = PixelManager.get(xp, yp);
 				
 				if(pixels.contains(p)){
-					//System.out.println("création du process en "+p); 
 					wp = processType().create(window(), p);
 					processes.add(wp);
 				}

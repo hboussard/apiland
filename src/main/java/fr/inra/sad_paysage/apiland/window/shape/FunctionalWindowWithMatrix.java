@@ -12,13 +12,15 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 	public FunctionalWindowWithMatrix(Matrix m, double d, Matrix f){
 		super(m, d);
 		this.friction = f;
-		this.min = f.minV();
+		//this.min = f.minV();
+		this.min = 1;
 	}
 	
 	public FunctionalWindowWithMatrix(Matrix m, double d, int displacement, Matrix f){
 		super(m, d, displacement);
 		this.friction = f;
-		this.min = f.minV();
+		//this.min = f.minV();
+		this.min = 1;
 	}
 	
 	@Override

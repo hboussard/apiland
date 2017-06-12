@@ -359,6 +359,7 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 	
 	@Override
 	protected boolean touchesPixel(Pixel impl) {
+		System.out.println("de bordel");
 		boolean touche = false;
 		for(Pixel p : this){
 			if(p.equals(impl)){

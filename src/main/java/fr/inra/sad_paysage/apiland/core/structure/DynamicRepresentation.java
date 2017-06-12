@@ -123,6 +123,7 @@ public class DynamicRepresentation<G extends Geometry> extends Representation<G>
 		
 		//if(g.getClass() instanceof getSpatialBinding())){
 			if(getTemporalBinding().equals(t.getClass())){
+				
 				dynamic.addTemporal(new TemporalEntity<G>(t,g));
 				notifyObservers(t.start(),this, g);
 				return;

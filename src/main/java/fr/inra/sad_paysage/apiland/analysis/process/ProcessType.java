@@ -22,7 +22,7 @@ public abstract class ProcessType<M extends Metric> {
 	 * to add a set of metrics
 	 * @param m new metrics
 	 */
-	protected void addMetrics(Set<M> m){
+	public void addMetric(Set<M> m){
 		metrics.addAll(m);
 	}
 	

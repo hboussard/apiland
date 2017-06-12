@@ -73,7 +73,7 @@ public class ShapefileByScenarioOutput extends OutputAnalysis {
 			DynamicLayerFactory.exportShape(
 					model.getCoverAllocator().getTerritory(), 
 					scenario.manager().start(),
-					scenario.folder()+"cover");
+					scenario.folder()+"count_cover_by_scenario");
 		}
 		
 			
