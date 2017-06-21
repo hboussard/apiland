@@ -1,5 +1,6 @@
 package fr.inra.sad_paysage.apiland.capfarm.simul.farm;
 
+import fr.inra.sad_paysage.apiland.capfarm.csp.FixedCoverAllocationProblemFactory;
 import fr.inra.sad_paysage.apiland.capfarm.model.economic.EconomicCoverAllocationProblemFactory;
 import fr.inra.sad_paysage.apiland.capfarm.model.economic.OptimizeEconomicCoverAllocationProblemFactory;
 import fr.inra.sad_paysage.apiland.capfarm.simul.CSPCoverLocationModel;
@@ -33,6 +34,7 @@ public class CfmFarmSimulator extends CfmSimulator {
 		case IDLE : factory = new CoverAllocationProblemFactory(); break;
 		case ECONOMIC : factory = new EconomicCoverAllocationProblemFactory(); break;
 		case OPTIMIZE : factory = new OptimizeEconomicCoverAllocationProblemFactory(); break;
+		case SOLUTION : factory = new FixedCoverAllocationProblemFactory(); break;
 		}
 		
 		switch(manager().processMode()){

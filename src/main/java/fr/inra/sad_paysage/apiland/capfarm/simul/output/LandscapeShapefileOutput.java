@@ -19,7 +19,7 @@ public class LandscapeShapefileOutput extends OutputAnalysis {
 			while(t.isBefore(simulation.manager().end()) || t.equals(simulation.manager().end())){
 				DynamicLayerFactory.exportShape(simulation.model().map().get("territory"), 
 						t,
-						simulation.scenario().folder()+"s"+simulation.number()+"_landscape_"+t.year());
+						simulation.scenario().folder()+"s"+simulation.manager().number()+"_landscape_"+t.year());
 				
 				t = simulation.manager().delay().next(t);
 			}

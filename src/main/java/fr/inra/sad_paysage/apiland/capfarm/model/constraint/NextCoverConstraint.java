@@ -58,9 +58,8 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 	public boolean check(Instant start, Instant end, boolean verbose){
 		boolean ok = true;
 		StringBuilder sb = new StringBuilder();
-		sb.append("next cover ");
+		//sb.append("next cover ");
 		Set<CoverUnit> next = new HashSet<CoverUnit>();
-		
 		CoverUnit prec;
 		for(Parcel p : location()){
 			prec = null;

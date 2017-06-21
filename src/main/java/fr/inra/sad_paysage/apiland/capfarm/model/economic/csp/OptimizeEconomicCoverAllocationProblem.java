@@ -16,7 +16,6 @@ import fr.inra.sad_paysage.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad_paysage.apiland.capfarm.model.economic.EconomicProfil;
 import fr.inra.sad_paysage.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad_paysage.apiland.core.time.Instant;
-import fr.inra.sad_paysage.apiland.core.time.Time;
 import fr.inra.sad_paysage.apiland.capfarm.model.Cover;
 import fr.inra.sad_paysage.apiland.capfarm.model.CoverUnit;
 

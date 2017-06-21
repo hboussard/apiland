@@ -1,6 +1,7 @@
 package fr.inra.sad_paysage.apiland.capfarm.csp;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import fr.inra.sad_paysage.apiland.capfarm.model.FarmingSystem;
@@ -138,6 +139,18 @@ public class CoverAllocatorComposite implements CoverAllocator {
 	public int getMemory() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Map<Parcel, CoverUnit> getSolution() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSolution(Map<Parcel, CoverUnit> fixed) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

@@ -509,15 +509,15 @@ public class DynamicLayerFactory {
 			if (types[0].getRepresentationType("the_geom")
 					.getSpatialBinding().equals(Surfacic.class)) {
 				shapeW.writeHeaders(new Envelope(minx, maxx,
-						miny, maxy), ShapeType.POLYGON, count, 100);
+						miny, maxy), ShapeType.POLYGON, count, 1000000);
 			} else if (types[0].getRepresentationType("the_geom")
 					.getSpatialBinding().equals(Linear.class)) {
 				shapeW.writeHeaders(new Envelope(minx, maxx,
-						miny, maxy), ShapeType.ARC, count, 100);
+						miny, maxy), ShapeType.ARC, count, 1000000);
 			} else if (types[0].getRepresentationType("the_geom")
 					.getSpatialBinding().equals(Local.class)) {
 				shapeW.writeHeaders(new Envelope(minx, maxx,
-						miny, maxy), ShapeType.POINT, count, 100);
+						miny, maxy), ShapeType.POINT, count, 1000000);
 			} else {
 				throw new IllegalArgumentException();
 			}

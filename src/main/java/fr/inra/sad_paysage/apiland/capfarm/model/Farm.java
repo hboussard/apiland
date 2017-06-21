@@ -1,6 +1,7 @@
 package fr.inra.sad_paysage.apiland.capfarm.model;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import fr.inra.sad_paysage.apiland.capfarm.csp.CoverAllocator;
@@ -164,6 +165,34 @@ public class Farm implements CoverAllocator {
 	@Override
 	public int getMemory() {
 		return memory;
+	}
+
+	// test de la procedure de FixedCoverAllocator
+	
+	private String solutionFile;
+	
+	private Map<Parcel, CoverUnit> solution;
+	
+	@Override
+	public void setSolution(Map<Parcel, CoverUnit> solution){
+		this.solution = solution;
+	}
+	
+	public void setSolution(String solutionfixFile){
+		this.solutionFile = solutionfixFile;
+	}
+	
+	public String getFixFile(){
+		return solutionFile;
+	}
+	
+	public boolean hasSolution(){
+		return solutionFile != null;
+	}
+	
+	@Override
+	public Map<Parcel, CoverUnit> getSolution() {
+		return solution;
 	}
 
 }

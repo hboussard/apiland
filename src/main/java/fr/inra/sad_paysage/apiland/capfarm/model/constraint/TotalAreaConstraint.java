@@ -70,7 +70,7 @@ public class TotalAreaConstraint extends CoverAllocationConstraint<Integer, Inte
 	public boolean check(Instant start, Instant end, boolean verbose){
 		boolean ok = true;
 		StringBuilder sb = new StringBuilder();
-		sb.append("total area ");
+		//sb.append("total area ");
 		int area;
 		Delay d = new YearDelay(1);
 		int supermin = Integer.MAX_VALUE;
@@ -91,7 +91,7 @@ public class TotalAreaConstraint extends CoverAllocationConstraint<Integer, Inte
 				if(!domain().accept(area)){
 					ok = false;
 					if(verbose){
-						sb.append("BAD : Total Area : area = "+area+" not in domain "+domain()+"\n");
+						sb.append("BAD  - Total Area : area = "+area+" not in domain "+domain()+"\n");
 					}else{
 						return ok;
 					}
@@ -101,7 +101,7 @@ public class TotalAreaConstraint extends CoverAllocationConstraint<Integer, Inte
 				if(domain().accept(area)){
 					ok = false;
 					if(verbose){
-						sb.append("BAD : Total Area : area = "+area+" not in domain "+domain()+"\n");
+						sb.append("BAD  - Total Area : area = "+area+" not in domain "+domain()+"\n");
 					}else{
 						return ok;
 					}
@@ -114,9 +114,9 @@ public class TotalAreaConstraint extends CoverAllocationConstraint<Integer, Inte
 		if(verbose){
 			if(ok){
 				if(supermin == supermax){
-					sb.append("GOOD : cover "+covers().toString()+" has total area = "+supermin/10000.0);
+					sb.append("GOOD - cover "+covers().toString()+" has total area = "+supermin/10000.0);
 				}else{
-					sb.append("GOOD : cover "+covers().toString()+" has total area between min = "+supermin/10000.0+" and max = "+supermax/10000.0);
+					sb.append("GOOD - cover "+covers().toString()+" has total area between min = "+supermin/10000.0+" and max = "+supermax/10000.0);
 				}
 			}
 			System.out.println(sb.toString());

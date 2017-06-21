@@ -135,8 +135,9 @@ public class RepetitionConstraint extends CoverAllocationConstraint<Integer, Int
 	public boolean check(Instant start, Instant end, boolean verbose){
 		boolean ok = true;
 		StringBuilder sb = new StringBuilder();
-		sb.append("repetition ");
-		
+		//sb.append("repetition ");
+		int supermin = Integer.MAX_VALUE;
+		int supermax = Integer.MIN_VALUE;
 		for(Parcel p : location()){
 			
 			int min = Integer.MAX_VALUE;
@@ -167,6 +168,9 @@ public class RepetitionConstraint extends CoverAllocationConstraint<Integer, Int
 				
 			}
 			
+			supermin = Math.min(supermin, min);
+			supermax = Math.max(supermax, max);
+			
 			switch(mode()){
 			case ONLY :
 				if(min != Integer.MAX_VALUE){
@@ -174,7 +178,7 @@ public class RepetitionConstraint extends CoverAllocationConstraint<Integer, Int
 						ok = false;
 						//System.out.println(p.getId()+" "+min+" "+max);
 						if(verbose){
-							sb.append("BAD : cover has bad repetition time min = "+min+" and max = "+max+"\n");
+							sb.append("BAD  : cover has bad repetition time min = "+min+" and max = "+max+"\n");
 						}else{
 							return ok;
 						}
@@ -187,7 +191,7 @@ public class RepetitionConstraint extends CoverAllocationConstraint<Integer, Int
 						ok = false;
 						//System.out.println(p.getId()+" "+min+" "+max);
 						if(verbose){
-							sb.append("BAD : cover has bad repetition time min = "+min+" and max = "+max+"\n");
+							sb.append("BAD  : cover has bad repetition time min = "+min+" and max = "+max+"\n");
 						}else{
 							return ok;
 						}
@@ -196,6 +200,18 @@ public class RepetitionConstraint extends CoverAllocationConstraint<Integer, Int
 				break;
 			default : throw new IllegalArgumentException("mode "+mode()+" is not supported for constraint type "+type());	
 			}
+		}
+		
+		if(verbose){
+			if(ok){
+				if(supermin == Integer.MAX_VALUE){
+					sb.append("GOOD - repetition "+mode()+" cover "+covers().toString()+" has no repetition");
+				}else{
+					sb.append("GOOD - repetition "+mode()+" cover "+covers().toString()+" has repetition between min = "+supermin+" and max = "+supermax);
+				}
+				
+			}
+			System.out.println(sb.toString());
 		}
 		return ok;
 	}

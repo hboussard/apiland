@@ -1,5 +1,6 @@
 package fr.inra.sad_paysage.apiland.capfarm.csp;
 
+import java.util.Map;
 import java.util.Set;
 
 import fr.inra.sad_paysage.apiland.capfarm.model.FarmingSystem;
@@ -54,4 +55,12 @@ public interface CoverAllocator extends Covering {
 	boolean isMemory();
 	
 	int getMemory();
+	
+	// test de la procedure de FixedAllocationProblem
+	Map<Parcel, CoverUnit> getSolution();
+	
+	void setSolution(Map<Parcel, CoverUnit> solution);
+	
+	
+	
 }

@@ -105,7 +105,7 @@ public class ParcelAreaConstraint extends CoverAllocationConstraint<Integer, Int
 	public boolean check(Instant start, Instant end, boolean verbose){
 		boolean ok = true;
 		StringBuilder sb = new StringBuilder();
-		sb.append("parcel area ");
+		//sb.append("parcel area ");
 		Delay d = new YearDelay(1);
 		switch(mode()){
 		case ALWAYS : 
@@ -116,7 +116,7 @@ public class ParcelAreaConstraint extends CoverAllocationConstraint<Integer, Int
 						if(!covers().contains(c)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD Parcel Area "+mode()+" : parcel "+p.getId()+" area = "+p.getArea()+" not in domain "+domain()+"\n");
+								sb.append("BAD  - Parcel Area "+mode()+" : parcel "+p.getId()+" cover "+c+" area = "+p.getArea()+" in domain "+domain()+"\n");
 							}else{
 								return ok;
 							}
@@ -133,7 +133,7 @@ public class ParcelAreaConstraint extends CoverAllocationConstraint<Integer, Int
 						if(covers().contains(c)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD Parcel Area "+mode()+" : parcel "+p.getId()+" area = "+p.getArea()+" not in domain "+domain()+"\n");
+								sb.append("BAD  - Parcel Area "+mode()+" : parcel "+p.getId()+" cover "+c+" area = "+p.getArea()+" not in domain "+domain()+"\n");
 							}else{
 								return ok;
 							}
@@ -150,7 +150,7 @@ public class ParcelAreaConstraint extends CoverAllocationConstraint<Integer, Int
 						if(covers().contains(c)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD Parcel Area "+mode()+" : parcel "+p.getId()+" area = "+p.getArea()+" not in domain "+domain()+"\n");
+								sb.append("BAD  - Parcel Area "+mode()+" : parcel "+p.getId()+" cover "+c+" area = "+p.getArea()+" not in domain "+domain()+"\n");
 							}else{
 								return ok;
 							}
@@ -167,7 +167,7 @@ public class ParcelAreaConstraint extends CoverAllocationConstraint<Integer, Int
 						if(!covers().contains(c)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD Parcel Area "+mode()+" : parcel "+p.getId()+" area = "+p.getArea()+" not in domain "+domain()+"\n");
+								sb.append("BAD  - Parcel Area "+mode()+" : parcel "+p.getId()+" cover "+c+" area = "+p.getArea()+" not in domain "+domain()+"\n");
 							}else{
 								return ok;
 							}
@@ -178,7 +178,7 @@ public class ParcelAreaConstraint extends CoverAllocationConstraint<Integer, Int
 			break;
 		}
 		if(verbose){
-			System.out.println(sb.toString());
+			System.out.println("GOOD - cover "+covers().toString()+" has good parcel area");
 		}
 		return ok;
 	}

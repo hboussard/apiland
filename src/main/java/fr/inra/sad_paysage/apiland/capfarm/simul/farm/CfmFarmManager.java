@@ -22,6 +22,4 @@ public class CfmFarmManager extends CfmManager {
 		return farm;
 	}
 
-
-
 }

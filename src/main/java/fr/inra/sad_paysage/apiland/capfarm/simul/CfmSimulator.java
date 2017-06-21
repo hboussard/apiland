@@ -8,13 +8,8 @@ import com.csvreader.CsvReader.CatastrophicException;
 import com.csvreader.CsvReader.FinalizedException;
 
 import fr.inra.sad_paysage.apiland.capfarm.csp.ProbaTimeManager;
-import fr.inra.sad_paysage.apiland.core.element.DynamicLayer;
-import fr.inra.sad_paysage.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad_paysage.apiland.simul.OutputAnalysis;
 import fr.inra.sad_paysage.apiland.simul.Simulator;
-import fr.inra.sad_paysage.apiland.simul.operation.OpRasterization;
-import fr.inra.sad_paysage.apiland.simul.operation.OpRasterizationType;
-import fr.inra.sad_paysage.apiland.simul.operation.OperationBuilder;
 
 public abstract class CfmSimulator extends Simulator {
 
@@ -41,8 +36,6 @@ public abstract class CfmSimulator extends Simulator {
 		initTerritory();
 		initFarms();
 		initOutput();
-		//initEcologicalModel();
-		initRasterization();
 	}
 
 	private void initProbaTimes() {
@@ -86,17 +79,6 @@ public abstract class CfmSimulator extends Simulator {
 		}
 	}
 
-	/*
-	private void initEcologicalModel() {
-		if(!EcologicalModelManager.empty()){
-			vkv
-		}
-	}
-	*/
-
-	protected void initRasterization() {
-		// do nothing
-	}
 	
 	/*
 	private void initRasterization() {

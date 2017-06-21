@@ -17,17 +17,17 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 	
 	private Set<Integer> interest;
 	
-	/*
-	private int index = 0;
 	
+	//private int index = 0;
+
 	private int nbPixel = 0;
 	
 	private int size;
-	*/
+	
 	public ClusteringAnalysis(Matrix m, Set<Integer> interest){
 		super(m);
 		this.interest = interest;
-		//size = m.height() * m.width();
+		size = m.height() * m.width();
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 		int oldy = -1;
 		int index = 0;
 		for(Pixel p : matrix()){
-			
+			//System.out.println(p);
 			if(p.y() > oldy){ // nettoyage du trop plein 
 				Iterator<Pixel> ite = ever.iterator();
 				while(ite.hasNext()){
@@ -94,7 +94,7 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 	}
 	
 	private boolean treatPixel(Matrix m, Pixel p, Set<Pixel> ever, LinkedList<Pixel> next){
-		//System.out.println(++nbPixel+" / "+size);
+		System.out.println(++nbPixel+" / "+size);
 		Iterator<Pixel> ite = getMargins(p);
 		Pixel np;
 		while(ite.hasNext()){

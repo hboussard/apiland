@@ -13,7 +13,6 @@ import fr.inra.sad_paysage.apiland.capfarm.csp.CoverAllocationProblem;
 import fr.inra.sad_paysage.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad_paysage.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad_paysage.apiland.core.time.Instant;
-import fr.inra.sad_paysage.apiland.capfarm.model.Cover;
 import fr.inra.sad_paysage.apiland.capfarm.model.CoverUnit;
 
 public class EconomicCoverAllocationProblem extends CoverAllocationProblem {
@@ -71,28 +70,5 @@ public class EconomicCoverAllocationProblem extends CoverAllocationProblem {
 		SMF.limitFail(solver, 1000);
 	}
 	
-	@Override
-	protected boolean solve() {
-		int ip, ic;
-		
-		if(solver.findSolution()) {
-			for(Parcel p : parcels().keySet()){
-				ip = parcels().get(p);
-				if(((IntVar) parcelsImplantedCoverContinue[ip]).getValue() == 0){
-					for(Cover c : covers().keySet()){
-						ic = covers().get(c);	
-						if(((IntVar) coversAndParcels(ic, ip)).getValue() == 1){
-							p.getAttribute("cover").setValue(time(), c);
-							//p.getAttribute("cov").setValue(t, c.getCode());
-							break;
-						}
-					}
-				}
-			}
-			return true;
-		}
-		
-		return false;
-	}
 	
 }

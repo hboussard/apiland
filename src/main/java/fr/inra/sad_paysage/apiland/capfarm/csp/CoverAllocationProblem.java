@@ -12,7 +12,6 @@ import org.chocosolver.solver.search.strategy.strategy.StrategiesSequencer;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.variables.VF;
-import org.chocosolver.solver.variables.VariableFactory;
 import org.chocosolver.util.tools.ArrayUtils;
 
 import fr.inra.sad_paysage.apiland.capfarm.model.constraint.CoverAllocationConstraint;
@@ -124,7 +123,7 @@ public class CoverAllocationProblem extends AbstractProblem {
 			}
 			
 			// contrainte generale "chaque parcelle a une et une seule culture allouee"
-			solver.post(ICF.sum(parcelsAndCovers[ip], VariableFactory.one(solver)));
+			solver.post(ICF.sum(parcelsAndCovers[ip], VF.one(solver)));
 			
 			// gestion des CoverGroup
 			for(CoverGroup g : groups.keySet()){
@@ -144,7 +143,7 @@ public class CoverAllocationProblem extends AbstractProblem {
 			}
 			
 			// gestion de la continuité des cultures
-			parcelsImplantedCoverContinue[ip] = VariableFactory.bool("time_p_"+ip, solver);
+			parcelsImplantedCoverContinue[ip] = VF.bool("time_p_"+ip, solver);
 			if(previous[ip] != null){
 				LCF.ifThen(parcelsImplantedCoverContinue[ip], 
 						ICF.arithm(coversAndParcels[covers.get(previous[ip].getValue())][ip], "=", 1));

@@ -38,6 +38,8 @@ public class ProbaTimeManager {
 	}
 	
 	public static double getProba(String probaType, int time, int nbYear){
+		System.out.println(probaType+" "+time+" "+nbYear);
+		System.out.println(probas.get(probaType));
 		return probas.get(probaType).get(time).get(nbYear);
 		/*
 		try{

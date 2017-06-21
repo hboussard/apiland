@@ -84,7 +84,7 @@ public class DurationConstraint extends CoverAllocationConstraint<Integer, Integ
 		Time t;
 		boolean ok = true;
 		StringBuilder sb = new StringBuilder();
-		sb.append("duration ");
+		//sb.append("duration ");
 		int supermin = Integer.MAX_VALUE;
 		int supermax = Integer.MIN_VALUE;
 		int d;
@@ -134,7 +134,7 @@ public class DurationConstraint extends CoverAllocationConstraint<Integer, Integ
 						if(!domain().accept(min) || !domain().accept(max)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD : cover "+tv.getValue()+" has duration time between min = "+min+" and max = "+max+"\n");
+								sb.append("BAD  - cover "+tv.getValue()+" has duration time between min = "+min+" and max = "+max+"\n");
 							}else{
 								return ok;
 							}
@@ -146,7 +146,7 @@ public class DurationConstraint extends CoverAllocationConstraint<Integer, Integ
 						if(domain().accept(min) || domain().accept(max)){
 							ok = false;
 							if(verbose){
-								sb.append("BAD : cover "+tv.getValue()+" has duration time between min = "+min+" and max = "+max+"\n");
+								sb.append("BAD  - cover "+tv.getValue()+" has duration time between min = "+min+" and max = "+max+"\n");
 							}else{
 								return ok;
 							}
@@ -160,10 +160,12 @@ public class DurationConstraint extends CoverAllocationConstraint<Integer, Integ
 		
 		if(verbose){
 			if(ok){
-				if(supermin == supermax){
-					sb.append("GOOD : cover "+covers().toString()+" has duration time = "+supermin);
+				if(supermin == Integer.MAX_VALUE){
+					sb.append("GOOD - Duration "+mode()+" cover "+covers().toString()+" has good duration");
+				}else if(supermin == supermax){
+					sb.append("GOOD - Duration "+mode()+" cover "+covers().toString()+" has duration time = "+supermin);
 				}else{
-					sb.append("GOOD : cover "+covers().toString()+" has duration time between min = "+supermin+" and max = "+supermax);
+					sb.append("GOOD - Duration "+mode()+" cover "+covers().toString()+" has duration time between min = "+supermin+" and max = "+supermax);
 				}
 			}
 			System.out.println(sb.toString());	

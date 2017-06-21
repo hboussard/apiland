@@ -3,6 +3,7 @@ package fr.inra.sad_paysage.apiland.capfarm.simul;
 import java.io.File;
 
 import fr.inra.sad_paysage.apiland.capfarm.model.Farm;
+import fr.inra.sad_paysage.apiland.capfarm.model.FixedFactory;
 import fr.inra.sad_paysage.apiland.capfarm.model.HistoricFactory;
 import fr.inra.sad_paysage.apiland.capfarm.model.MemoryFactory;
 import fr.inra.sad_paysage.apiland.capfarm.model.territory.Parcel;
@@ -28,6 +29,7 @@ public class CfmSimulation extends Simulation {
 			model.getCoverAllocator().clearParcels();
 			MemoryFactory.init(model, manager().start(), manager().paramProcessMode());
 			HistoricFactory.init((Farm) model.getCoverAllocator(), manager().start());
+			FixedFactory.init((Farm) model.getCoverAllocator(), manager().start());
 		}
 	}
 	

@@ -44,6 +44,10 @@ public abstract class CoverAllocationConstraint<D, E> implements Serializable, C
 		this.domain = domain;
 	}
 	
+	public void setCheckOnly(boolean checkOnly){
+		this.checkOnly = checkOnly;
+	}
+	
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
