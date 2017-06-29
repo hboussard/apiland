@@ -190,7 +190,7 @@ public class DynamicElementBuilder implements Serializable {
 			reset();
 			return element;
 		}else{
-			throw new IllegalArgumentException("parameters are not initialyzed !!!");
+			throw new IllegalArgumentException("parameters are not initialized !!!");
 		}
 	}
 

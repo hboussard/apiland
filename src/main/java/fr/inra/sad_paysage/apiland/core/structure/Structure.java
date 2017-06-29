@@ -2,7 +2,11 @@ package fr.inra.sad_paysage.apiland.core.structure;
 
 
 import fr.inra.sad_paysage.apiland.core.change.Changeable;
+import fr.inra.sad_paysage.apiland.core.composition.DiscreteAttribute;
+import fr.inra.sad_paysage.apiland.core.composition.DiscreteAttributeType;
+import fr.inra.sad_paysage.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad_paysage.apiland.core.time.Instant;
+import fr.inra.sad_paysage.apiland.core.time.delay.YearDelay;
 
 /**
  * modeling class of a geometric structure of a dynamic element
@@ -13,7 +17,7 @@ public abstract class Structure implements Structurable, Iterable<Representation
 	private static final long serialVersionUID = 1L;
 	
 	//private DynamicElement element;
-	
+		
 	@Override
 	public Structure clone() {
 		try{

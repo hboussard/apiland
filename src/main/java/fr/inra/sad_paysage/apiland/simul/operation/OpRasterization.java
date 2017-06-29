@@ -33,6 +33,8 @@ public class OpRasterization extends OpTranslation {
 	
 	private double minX = -1, maxX = -1, minY = -1, maxY = -1;
 	
+	private String rasterRepresentation = "raster";
+	
 	public OpRasterization(OpRasterizationType type) {
 		super(type);
 		cellsize = type.getCellSize();
@@ -42,6 +44,7 @@ public class OpRasterization extends OpTranslation {
 			minY = type.minY();
 			maxY = type.maxY();
 		}
+		rasterRepresentation = type.raster();
 	}
 	
 	public double getCellSize() {
@@ -79,10 +82,12 @@ public class OpRasterization extends OpTranslation {
 		getRasterRepresentation(element, vectorRepresentation, t, cellsize, minX, maxX, minY, maxY);
 	}
 	
-	private void getRasterRepresentation(DynamicElement element, Representation vectorRepresentation, Instant t, double cellsize,
+	private void getRasterRepresentation(DynamicElement element, Representation<?> vectorRepresentation, Instant t, double cellsize,
 			double minX, double maxX, double minY, double maxY){
 		Raster.setCellSize(cellsize);
-			
+		 
+		//Raster representation = new RasterComposite();
+		
 		int ncols = new Double((Math.floor((maxX - minX) / Raster.getCellSize())) + 1).intValue();
 		int nrows = new Double((Math.floor((maxY - minY) / Raster.getCellSize())) + 1).intValue();
 		
@@ -154,17 +159,22 @@ public class OpRasterization extends OpTranslation {
 		RasterComposite raster = (RasterComposite) ca.getResult();
 		
 		String id;
+		Geometry g;
 		for(Raster r : raster.getRasters()){
 			id = new Integer((int) mt.get(r.iterator().next())).toString();
 			ite = ((DynamicLayer<DynamicElement>) element).deepIterator();
 			while(ite.hasNext()){
 				f = ite.next();
 				if(f.getId().equalsIgnoreCase(id)){
-					f.getRepresentation("raster").setGeometry(t, GeometryFactory.create(r));
+					g = GeometryFactory.create(r);
+					f.getRepresentation(rasterRepresentation).setGeometry(t, g);
+					//representation.addGeometryImpl(g.get());
 					break;
 				}
 			}
 		} 
+		
+		//element.getStructure().getRepresentation("raster").addRepresentation(representation);
 	}
 
 }

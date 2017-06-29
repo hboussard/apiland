@@ -18,8 +18,18 @@ public class SimpleStructure extends Structure {
 	
 	private ChangeableObject changeable;
 	
+	private double minX;
+	
+	private double minY;
+	
+	private double maxX;
+	
+	private double maxY;
+	
+	
 	public SimpleStructure(){
 		changeable = new ChangeableObject();
+		//System.out.println("simple strucutre");
 	}
 	
 	@Override
@@ -97,7 +107,28 @@ public class SimpleStructure extends Structure {
 	public Instant getLastChange() {
 		return representation.getLastChange();
 	}
+	
+	@Override
+	public double minX() {
+		return minX;
+	}
 
+	@Override
+	public double maxX() {
+		return maxX;
+	}
+
+	@Override
+	public double minY() {
+		return minY;
+	}
+
+	@Override
+	public double maxY() {
+		return maxY;
+	}
+	/*
+	
 	@Override
 	public double minX() {
 		return representation.minX();
@@ -117,7 +148,7 @@ public class SimpleStructure extends Structure {
 	public double maxY() {
 		return representation.maxY();
 	}
-
+	*/
 	@Override
 	public void delete() {
 		super.delete();
@@ -125,6 +156,26 @@ public class SimpleStructure extends Structure {
 		representation = null;
 		changeable.delete();
 		changeable = null;
+	}
+	
+	@Override
+	public void setMinX(double minX){
+		this.minX = minX;
+	}
+	
+	@Override
+	public void setMinY(double minY){
+		this.minY = minY;
+	}
+	
+	@Override
+	public void setMaxX(double maxX){
+		this.maxX = maxX;
+	}
+	
+	@Override
+	public void setMaxY(double maxY){
+		this.maxY = maxY;
 	}
 
 }

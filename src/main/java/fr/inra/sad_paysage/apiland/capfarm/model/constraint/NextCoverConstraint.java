@@ -38,7 +38,9 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 					for(CoverUnit cu : ((SetDomain<CoverUnit>) domain()).set()){
 						cons[i++] = ICF.arithm(cap.coversAndParcels(cap.covers().get(cu), ip), "=", 1);
 					}
-					LCF.ifThen(cap.parcelsImplantedCoverContinue(ip).not(), LCF.or(cons));
+					if(cons.length > 0){
+						LCF.ifThen(cap.parcelsImplantedCoverContinue(ip).not(), LCF.or(cons));
+					}
 					break;
 				case NEVER : 
 					cons = new Constraint[((SetDomain<CoverUnit>) domain()).set().size()];
@@ -46,7 +48,9 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 					for(CoverUnit cu : ((SetDomain<CoverUnit>) domain()).set()){
 						cons[i++] = ICF.arithm(cap.coversAndParcels(cap.covers().get(cu), ip), "=", 0);
 					}
-					LCF.ifThen(cap.parcelsImplantedCoverContinue(ip).not(), LCF.and(cons));
+					if(cons.length > 0){
+						LCF.ifThen(cap.parcelsImplantedCoverContinue(ip).not(), LCF.and(cons));
+					}
 					break;
 				default : throw new IllegalArgumentException("mode "+mode()+" is not supported for constraint type "+type());
 				}

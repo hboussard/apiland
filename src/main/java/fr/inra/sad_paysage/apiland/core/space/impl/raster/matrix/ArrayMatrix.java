@@ -341,5 +341,4 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 	}
 
 	
-	
 }

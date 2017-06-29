@@ -79,14 +79,17 @@ public class SlidingWindowMatrixAnalysis extends WindowMatrixAnalysis implements
 	
 	@Override
 	protected void doRun() {
+		
 		processes = new WindowMatrixProcess[matrix().width()];
 		createProcesses();
+		
 		for(int yt=0; yt<matrix().numYTiles(); yt++){
 			//System.out.println("Sliding Window : "+yt);
 			for(int xt=0; xt<matrix().numXTiles(); xt++){
 				distributeValues(xt, yt);	
 			}
 		}
+		
 		if(finishProcesses != null){
 			while(finishProcesses.size() > 0){
 				WindowMatrixProcess wmp = finishProcesses.removeFirst();

@@ -217,17 +217,20 @@ public class JaiMatrix implements Matrix {
 			do {
 				v = ite.getSampleDouble();
 				values.add((int) v);
+				minV = Math.min(minV, v);
+				maxV = Math.max(maxV, v);
 			} while (!ite.nextPixelDone());
 			ite.startPixels();
 			System.out.println((line++)+"/"+height());
 		} while (!ite.nextLineDone());
 		
+		/*
 		for(int v1 : values){
 			if(v1 != Raster.getNoDataValue()){
 				minV = Math.min(minV, v1);
 				maxV = Math.max(maxV, v1);
 			}
-		}
+		}*/
 		
 		//System.out.println(pi.getClass());
 		/*

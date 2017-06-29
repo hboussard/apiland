@@ -122,6 +122,7 @@ public class TerritoryFactory {
 		
 		// definition du type "Territoire"
 		DynamicLayerType territoryType = new DynamicLayerType(Territory.class);
+		territoryType.addRepresentationType(new DynamicRepresentationType("raster", Interval.class, Surface.class, GeometryImplType.RASTER));
 		territoryType.addElementType(agriculturalAreaType);
 		territoryType.addElementType(trameAreaType);
 		

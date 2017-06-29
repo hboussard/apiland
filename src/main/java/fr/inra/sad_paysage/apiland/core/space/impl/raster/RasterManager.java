@@ -88,7 +88,11 @@ public class RasterManager {
 		return exportMatrix(layer, name, t, null, -1, -1, -1, -1);
 	}
 	
-	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, String> map, 
+	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, Integer> map){
+		return exportMatrix(layer, name, t, map, layer.minX(), layer.maxX(), layer.minY(), layer.maxY());
+	}
+	
+	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, Integer> map, 
 			double minX, double maxX, double minY, double maxY){
 		
 		int tx, ty;
@@ -109,6 +113,8 @@ public class RasterManager {
 		int nrows = new Double((Math.floor((maxY - minY) / Raster.getCellSize())) + 1).intValue();
 		
 		Matrix m = ArrayMatrixFactory.get().create(ncols, nrows, Raster.getCellSize(), minX, maxX, minY, maxY, Raster.getNoDataValue());
+		
+		//System.out.println(m.getClass());
 		m.init(m.noDataValue());
 		int value;
 		Geometry g;
@@ -126,8 +132,7 @@ public class RasterManager {
 			f = ite.next();
 			
 			if(map != null){
-				//System.out.println(f.getAttribute(name).getValue(t));
-				value = Integer.parseInt(map.get(f.getAttribute(name).getValue(t).toString()));
+				value = map.get(f.getAttribute(name).getValue(t).toString());
 			}else{
 				value = (Integer) f.getAttribute(name).getValue(t);
 			}

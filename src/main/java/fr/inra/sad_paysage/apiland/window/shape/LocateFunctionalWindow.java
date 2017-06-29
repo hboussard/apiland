@@ -22,7 +22,7 @@ public class LocateFunctionalWindow extends WindowShape {
 		this.filter = f;
 		this.theoricalSize = theoricalSize;
 		width = new Double(Math.sqrt(filter.length)).intValue();
-		//display();
+		display();
 		//export("C:/Hugues/agents/jacques/filtres/test.txt");
 	}
 	

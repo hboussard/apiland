@@ -54,6 +54,7 @@ public class MultipleStructure extends Structure implements Iterable<Representat
 	public MultipleStructure(){
 		representations = new HashMap<String,Representation<?>>();
 		changeable = new ChangeableObject();
+		//System.out.println("multiople surtcutre");
 	}
 	
 	public MultipleStructure clone(){

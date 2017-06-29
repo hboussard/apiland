@@ -29,7 +29,6 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	private LocateFunctionalWindow location;
 	
 	private Pixel locate;
-	//private Pixel initPixel;
 	
 	private TreeSet<Pixel> waits;
 	//private LinkedList<Pixel> waits;
@@ -38,7 +37,6 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	//private Set<Pixel> ever;
 	//private Matrix ever;
 	
-	//private Map<Pixel, Double> rcm;
 	private Matrix rcm;
 	
 	private boolean isInit;
@@ -56,18 +54,6 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	private List<Pixel> removeHorizontalDownList;
 	
 	private int displacement;
-	//private Map<String, Integer> filters;
-	
-	//private int index;
-	
-	//private Map<Pixel, Map<Pixel, Double>> angles;
-	
-	//private static final double angleMin = 0;
-	//private static final double angleMin = 0.35;
-	//private static final double angleMin = 0.79;
-	//private static final double angleMin = 2.35;
-	//private static final double angleMin = 2.355;
-	//private static final double angleMin = Math.PI;
 	
 	private Pixel[][] pixels;
 	
@@ -81,8 +67,6 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		this.displacement = displacement;
 		locations = new TreeMap<Pixel, LocateFunctionalWindow>();
 		
-		//rcm = new HashMap<Pixel, Double>();
-		//rcm = ArrayMatrixFactory.get().create(m);
 		rcm = ArrayMatrixFactory.get().create(diameter(), diameter(), m.cellsize(), 0, 0, 0, 0,Raster.getNoDataValue());
 		
 		waits = new TreeSet<Pixel>(new Comparator<Pixel>(){
@@ -129,89 +113,11 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 				pixels[y+1][x+1] = new Pixel(x, y);
 			}
 		}
-		
-		//initPixel = pixel(diameter()/2, diameter()/2);
-		/*angles = new HashMap<Pixel, Map<Pixel, Double>>();
-		double a, b;
-		Pixel p, pc;
-		for(int y=0; y<diameter(); y++){
-			for(int x=0; x<diameter(); x++){
-				pc = pixel(x, y);
-				angles.put(pc, new HashMap<Pixel, Double>());
-				
-				if(pc.equals(initPixel)){
-					p = pixel(pc.x(), pc.y()-1); // nord 
-					angles.get(pc).put(p, Math.PI);
-					p = pixel(pc.x()+1, pc.y()); // est
-					angles.get(pc).put(p, Math.PI);
-					p = pixel(pc.x(), pc.y()+1); // sud
-					angles.get(pc).put(p, Math.PI);
-					p = pixel(pc.x()-1, pc.y()); // ouest
-					angles.get(pc).put(p, Math.PI);
-					p = pixel(pc.x()+1, pc.y()-1); // nord est
-					angles.get(pc).put(p, Math.PI);
-					p = pixel(pc.x()+1, pc.y()+1); // sud est
-					angles.get(pc).put(p, Math.PI);
-					p = pixel(pc.x()-1, pc.y()+1); // sud ouest
-					angles.get(pc).put(p, Math.PI);
-					p = pixel(pc.x()-1, pc.y()-1); // nord ouest
-					angles.get(pc).put(p, Math.PI);
-					continue;
-				}
-				
-				b = Math.sqrt(Math.pow(pc.x()-initPixel.x(), 2)+Math.pow(pc.y()-initPixel.y(), 2));
-				
-				a = 1;
-				p = pixel(pc.x(), pc.y()-1); // nord 
-				setAngle(pc, p, a, b);
-				
-				p = pixel(pc.x()+1, pc.y()); // est
-				setAngle(pc, p, a, b);
-				
-				p = pixel(pc.x(), pc.y()+1); // sud
-				setAngle(pc, p, a, b);
-				
-				p = pixel(pc.x()-1, pc.y()); // ouest
-				setAngle(pc, p, a, b);
-				
-				a = Math.sqrt(2);
-				p = pixel(pc.x()+1, pc.y()-1); // nord est
-				setAngle(pc, p, a, b);
-				
-				p = pixel(pc.x()+1, pc.y()+1); // sud est
-				setAngle(pc, p, a, b);
-				
-				p = pixel(pc.x()-1, pc.y()+1); // sud ouest
-				setAngle(pc, p, a, b);
-				
-				p = pixel(pc.x()-1, pc.y()-1); // nord ouest
-				setAngle(pc, p, a, b);
-			}
-		}*/
 	}
 	
 	private Pixel pixel(int x, int y){
 		return pixels[y+1][x+1];
 	}
-	/*
-	private void setAngle(Pixel pc, Pixel p, double a, double b){
-		double c = Math.sqrt(Math.pow(p.x()-initPixel.x(), 2) + Math.pow(p.y()-initPixel.y(), 2));
-		double cos = (Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2*a*b);
-		if(cos < -1){
-			cos = -1;
-		}else if(cos > 1){
-			cos = 1;
-		}
-		double angle = Math.acos(cos);
-		//System.out.println(a+" "+b+" "+c+" "+angle);
-		if(Double.isNaN(angle)){
-			//System.out.println(a+" "+b+" "+c+" "+angle);
-			//angles.get(pc).put(p, 0.0);
-			throw new IllegalArgumentException(cos+" "+angle);
-		}else{
-			angles.get(pc).put(p, angle);
-		}
-	}*/
 	
 	public Matrix matrix(){
 		return matrix;
@@ -234,99 +140,20 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	
 	@Override
 	public void locate(int x, int y) {
-		//System.out.println(x);
 		locate = new Pixel(x, y);
 		if(!locations.containsKey(locate)){
-			/*
-			if(x == 0){
-				System.out.println("diffusion en "+y);
-			}
-			if(location == null){
-				location = diffusion(window.toWindow(locate));
-			}
-			if(x == 395){
-				//if(x == 11745){
-				System.out.println("diffusion en "+y+" faite");
-			}
-			*/
-			/*
-			if(x == 0){
-				System.out.println("diffusion en "+y);
-			}
-			location = diffusion(window.toWindow(locate));
-			if(x == 395){
-			//if(x == 11745){
-				System.out.println("diffusion en "+y+" faite");
-			}
-			*/
-			
 			if(displacement==-1 || y%displacement==0){
 				location = diffusion(window.toWindow(locate));
-				
 			}else{
 				location = locations.get(new Pixel(x, y-(y%displacement)));
 			}
-			
-			
-			//}
-			
-			//location = diffusion2(window.toWindow(locate));
-			/*
-			String filter = location.getStringFilter();
-			if(!filters.containsKey(filter)){
-				filters.put(filter, 0);
-			}
-			filters.put(filter, filters.get(filter) + 1);
-			index++;
-			*/
-			
-			//System.out.println("create window shape "+x+" "+y+" : "+locations.size());
-			//location.display();
-			
 			locations.put(locate, location);
-			//System.out.println("size "+locations.size()+" "+locate);
 		}else{
 			location = locations.get(locate);
 		}
 		if(displacement!=-1 && locations.containsKey(new Pixel(x, y-displacement))){
 			locations.remove(new Pixel(x, y-displacement));
 		}
-	}
-	
-	@Override
-	public void close() {
-		//System.out.println("nombre de passages : "+index);
-		/*
-		System.out.println(filters.size()+"/"+index);
-		Stats s = new Stats();
-		for(int v : filters.values()){
-			s.add(v);
-		}
-		s.calculate();
-		System.out.println(s.getMinimum()+" "+s.getMaximum()+" "+s.getAverage()+" "+s.getStandardDeviation());
-		*/
-		/*
-		try {
-			CsvWriter cw = new CsvWriter("c://Hugues/temp/schemes-11.csv");
-			cw.setDelimiter(';');
-			cw.write("id");
-			cw.write("scheme");
-			cw.write("count");
-			cw.endRecord();
-			int id = 0;
-			for(Entry<String, Integer> e : filters.entrySet()){
-				//if(e.getValue() == s.getMaximum()){
-				//	System.out.println(e.getKey());
-				//}
-				cw.write((++id)+"");
-				cw.write(e.getKey());
-				cw.write(e.getValue()+"");
-				cw.endRecord();
-			}
-			cw.close();
-		} catch (FinalizedException | IOException e1) {
-			e1.printStackTrace();
-		}*/
 	}
 	
 	@Override
@@ -526,36 +353,8 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	}
 	
 	protected abstract double friction(Matrix m, Pixel p);
-	/*
+	
 	private void diffuseRook(Pixel pc, Pixel op, double v, double f){
-		double angle = angles.get(pc).get(op);
-		double ov, of;
-		if(angle >= angleMin 
-				&& ever.get(op) == Raster.getNoDataValue()
-				&& (of = friction(matrix, op)) != Raster.getNoDataValue()){
-			ov = v + (matrix.cellsize()/2*f + matrix.cellsize()/2*of);
-			if(ov <= dMax && ov < rcm.get(op)){
-				rcm.put(op, ov);
-				waits.add(op);
-			}
-		}
-	}
-	
-	private void diffuseQueen(Pixel pc, Pixel op, double v, double f){
-		double angle = angles.get(pc).get(op);
-		double ov, of;
-		if(angle >= angleMin 
-				&& ever.get(op) == Raster.getNoDataValue()
-				&& (of = friction(matrix, op)) != Raster.getNoDataValue()){
-			ov = v + (Math.sqrt(2)*matrix.cellsize()/2*f + Math.sqrt(2)*matrix.cellsize()/2*of);
-			if(ov <= dMax && ov < rcm.get(op)){
-				rcm.put(op, ov);
-				waits.add(op);
-			}
-		}
-	}*/
-	
-	private void diffuseRookFalse(Pixel pc, Pixel op, double v, double f){
 		double ov, of;
 		if(rcm.get(op) == Integer.MAX_VALUE){
 			if((of = friction(matrix, op)) != Raster.getNoDataValue()){
@@ -569,7 +368,7 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		}
 	}
 	
-	private void diffuseQueenFalse(Pixel pc, Pixel op, double v, double f){
+	private void diffuseQueen(Pixel pc, Pixel op, double v, double f){
 		double ov, of;
 		if(rcm.get(op) == Integer.MAX_VALUE){
 			if((of = friction(matrix, op)) != Raster.getNoDataValue()){
@@ -591,7 +390,7 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 			//System.out.println(p+" "+c);
 			
 			double v = rcm.get(p);
-			/*
+			
 			diffuseRook(p, pixel(p.x(), p.y()-1), v, f); // nord
 			diffuseRook(p, pixel(p.x()+1, p.y()), v, f); // est
 			diffuseRook(p, pixel(p.x(), p.y()+1), v, f); // sud
@@ -601,23 +400,6 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 			diffuseQueen(p, pixel(p.x()+1, p.y()+1), v, f); // sud est
 			diffuseQueen(p, pixel(p.x()-1, p.y()+1), v, f); // sud ouest
 			diffuseQueen(p, pixel(p.x()-1, p.y()-1), v, f); // nord ouest
-			*/
-		// test
-		//double f = 1;
-		//double v = 1;
-		// fin test
-		
-		
-			diffuseRookFalse(p, pixel(p.x(), p.y()-1), v, f); // nord
-			diffuseRookFalse(p, pixel(p.x()+1, p.y()), v, f); // est
-			diffuseRookFalse(p, pixel(p.x(), p.y()+1), v, f); // sud
-			diffuseRookFalse(p, pixel(p.x()-1, p.y()), v, f); // ouest
-			
-			diffuseQueenFalse(p, pixel(p.x()+1, p.y()-1), v, f); // nord est
-			diffuseQueenFalse(p, pixel(p.x()+1, p.y()+1), v, f); // sud est
-			diffuseQueenFalse(p, pixel(p.x()-1, p.y()+1), v, f); // sud ouest
-			diffuseQueenFalse(p, pixel(p.x()-1, p.y()-1), v, f); // nord ouest
-			
 			
 			//ever.put(p, 1);
 		}

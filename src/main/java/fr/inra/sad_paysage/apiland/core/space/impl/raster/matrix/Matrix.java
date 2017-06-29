@@ -39,7 +39,7 @@ import java.util.Set;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.Raster;
 
-public interface Matrix extends Serializable, Iterable<Pixel>{
+public interface Matrix extends Serializable, Iterable<Pixel> {
 
 	double get(final int x, final int y);
 	

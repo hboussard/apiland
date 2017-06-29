@@ -51,7 +51,7 @@ public class DurationConstraint extends CoverAllocationConstraint<Integer, Integ
 								cap.solver().post(ICF.arithm(cap.parcelsImplantedCoverContinue(ip), "=", 1));
 							}
 						}else if(hasMax){
-							if(count == max){
+							if(count >= max){
 								cap.solver().post(ICF.arithm(cap.parcelsImplantedCoverContinue(ip), "=", 0));
 							}else{
 								int rp = (int) (Math.random() * 100);

@@ -9,6 +9,8 @@ public class OpRasterizationType extends OpTranslationType {
 	
 	private double minX, maxX, minY, maxY;
 	
+	private String raster;
+	
 	@Override
 	public void reset(){
 		super.reset();
@@ -17,6 +19,7 @@ public class OpRasterizationType extends OpTranslationType {
 		maxX = -1;
 		minY = -1;
 		maxY = -1;
+		raster = "raster";
 	}
 	
 	private void setCellSize(double cellsize){
@@ -43,11 +46,20 @@ public class OpRasterizationType extends OpTranslationType {
 		return maxY;
 	}
 	
+	public String raster(){
+		return raster;
+	}
+	
 	@Override
 	public boolean setParameter(String name, Object value){
 		if(name.equalsIgnoreCase("cellsize")){
 			try{
-				setCellSize((Integer)value);
+				if(value instanceof Integer){
+					setCellSize(new Integer((int) value).doubleValue());
+				}else{
+					setCellSize((Double) value);	
+				}
+
 				return true;
 			}catch(IllegalArgumentException e){
 				e.printStackTrace();
@@ -67,6 +79,10 @@ public class OpRasterizationType extends OpTranslationType {
 		}
 		if(name.equalsIgnoreCase("maxY")){
 			maxY = (double) value;
+			return true;
+		}
+		if(name.equalsIgnoreCase("raster")){
+			raster = (String) value;
 			return true;
 		}
 		return super.setParameter(name, value);

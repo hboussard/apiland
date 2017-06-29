@@ -83,7 +83,6 @@ public class ShapefileByScenarioOutput extends OutputAnalysis {
 		for(CoverLocationModel model : (GlobalCoverLocationModel) scenario.model().get("agriculture")){
 			for(Parcel p : model.getCoverAllocator().parcels()){
 				for(Cover c : CoverManager.coverUnits()){
-					System.out.println("remove "+"nb_"+c.getCode());
 					p.getComposition().removeAttribute("nb_"+c.getCode());
 				}
 			}
