@@ -26,6 +26,7 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 
 	@Override
 	public void post(CoverAllocationProblem cap) {
+	
 		for(Parcel p : location()){
 			int ip = cap.parcels().get(p);
 			if(cap.previous(ip) != null && covers().contains(cap.previous(ip).getValue())){

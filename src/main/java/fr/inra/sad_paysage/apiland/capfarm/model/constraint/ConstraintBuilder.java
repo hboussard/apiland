@@ -1,5 +1,6 @@
 package fr.inra.sad_paysage.apiland.capfarm.model.constraint;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -97,6 +98,22 @@ public class ConstraintBuilder {
 		}else if(covers[0].equalsIgnoreCase("ALL")){
 			for(Cover c : allocator.coverUnits()){
 				this.covers.add(c);
+			}
+		}else if(covers[0].equalsIgnoreCase("EXCEPT")){
+			for(Cover c : allocator.coverUnits()){
+				boolean ok = true;
+				for(int i=1; i<covers.length; i++){
+					
+					if(c.getCode().equalsIgnoreCase(covers[i])){
+						System.out.println("ici");						
+						ok = false;
+						break;
+					}
+				}
+				if(ok){
+					System.out.println("ok pour "+c);
+					this.covers.add(c);
+				}
 			}
 		}else{
 			for(String code : covers){
@@ -360,10 +377,12 @@ public class ConstraintBuilder {
 				Set<CoverUnit> next;
 				CoverAllocationConstraint<?, ?> constraint;
 				Set<Cover> cov = new TreeSet<Cover>();
+				Set<Cover> total = new TreeSet<Cover>();
 				while(cr.readRecord()){
 					cov.clear();
 					prec = allocator.getCoverUnit(cr.get("previous"));
 					cov.add(prec);
+					total.add(prec);
 					next = new TreeSet<CoverUnit>();
 					for(int c=1; c<cr.getHeaderCount(); c++){
 						if(cr.get(c).equals("1")){
@@ -375,6 +394,11 @@ public class ConstraintBuilder {
 						allocator.addConstraint(constraint);
 					}
 				}
+				
+				
+				constraint = new OnLocationConstraint(new File(params[0]).getName(), false, ConstraintMode.ALWAYS, total, location);
+				allocator.addConstraint(constraint);
+				
 				cr.close();
 			} catch (IOException e) {
 				e.printStackTrace();

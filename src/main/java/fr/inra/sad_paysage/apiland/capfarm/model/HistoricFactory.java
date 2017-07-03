@@ -30,6 +30,50 @@ public class HistoricFactory {
 					}
 				}
 				
+				
+				CsvReader cr = new CsvReader(historicFile);
+				cr.setDelimiter(';');
+				cr.readHeaders();
+				Instant t;
+				while(cr.readRecord()){
+					
+					// determination du nombre d'annees
+					String[] sequence;
+					String[] infos;
+					int nb;
+					String parcel;
+					parcel = cr.get("parcel");
+					sequence = cr.get("historic").replaceAll(" ", "").split("-");
+					int nbYear = 0;
+					for(String cover : sequence){
+						nb = 1;
+						if(cover.contains("(")){
+							infos = cover.replace(")", "").split("\\(");
+							cover = infos[0];
+							nb = Integer.parseInt(infos[1]);
+						}
+						nbYear += nb;
+					}
+					// fin determination du nombre d'annees
+					
+					t = Instant.get(start.dayOfMonth(), start.month(), start.year() - nbYear);
+					
+					for(String cover : sequence){
+						nb = 1;
+						if(cover.contains("(")){
+							infos = cover.replace(")", "").split("\\(");
+							cover = infos[0];
+							nb = Integer.parseInt(infos[1]);
+						}
+						farm.parcel(parcel).getAttribute("cover").setValue(t, (CoverUnit) Cover.get(cover));
+						t = Instant.get(t.dayOfMonth(), t.month(), t.year()+nb);	
+					}
+					
+				}
+				
+				cr.close();
+				
+				/*
 				// détermination du nombre d'années sur la première ligne
 				CsvReader cr = new CsvReader(historicFile);
 				cr.setDelimiter(';');
@@ -75,6 +119,7 @@ public class HistoricFactory {
 					}
 				}
 				cr.close();
+				*/
 			} catch (IOException | FinalizedException | CatastrophicException e) {
 				e.printStackTrace();
 			}
