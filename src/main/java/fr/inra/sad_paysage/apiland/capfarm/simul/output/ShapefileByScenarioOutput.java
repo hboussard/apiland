@@ -37,7 +37,7 @@ public class ShapefileByScenarioOutput extends OutputAnalysis {
 				}
 			}
 		}				
-		scenario.model().map().get("territory").getType().display();
+		//scenario.model().map().get("territory").getType().display();
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class ShapefileByScenarioOutput extends OutputAnalysis {
 				}
 			}
 		}
-		scenario.model().map().get("territory").getType().display();
+		//scenario.model().map().get("territory").getType().display();
 	}
 
 	

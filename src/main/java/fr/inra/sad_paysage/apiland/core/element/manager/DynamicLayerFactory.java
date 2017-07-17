@@ -209,8 +209,9 @@ public class DynamicLayerFactory {
 			for(DynamicElementType t : types){
 				t.addRepresentationType(rType);
 			}
-			
+			int index = 0;
 			while (sfr.hasNext()) {
+				
 				Object shape = sfr.nextRecord().shape();
 				
 				if(geometryClass.equals(Surfacic.class)){
@@ -236,7 +237,7 @@ public class DynamicLayerFactory {
 				}else{
 					throw new IllegalArgumentException();
 				}
-				
+				//System.out.println(++index);
 				importEntry(layer, time, GeometryFactory.create(geo), dfr, dfr.readEntry(), posIds, positions, condition, types);
 			}
 			
@@ -382,7 +383,8 @@ public class DynamicLayerFactory {
 			
 			importEntry((DynamicLayer<E>) element, time, geometry, dfr, entry, posIds, positions, condition, types);
 		}
-		layer.add((E)element);
+		
+		layer.add((E) element);
 	}
 	
 	public static boolean exportShape(DynamicElement element, Instant time, String shape){

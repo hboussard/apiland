@@ -198,7 +198,7 @@ public class AsciiGridManager {
 					yorigin = minY + (Math.floor((maxY - minY) / cellsize) + 1) * cellsize;
 				}
 
-				System.out.println(nrows+" "+ncols);
+				//System.out.println(nrows+" "+ncols);
 				
 				for (int j = 0; j < nrows; j++) {
 					System.out.println(j+" / "+nrows);

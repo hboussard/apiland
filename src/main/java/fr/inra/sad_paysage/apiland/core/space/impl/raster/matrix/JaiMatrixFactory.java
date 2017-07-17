@@ -132,6 +132,7 @@ public class JaiMatrixFactory extends MatrixFactory {
 		initWithEntete(ascii);
 		//PlanarImage pi = (PlanarImage) readTiled(ascii, width, height);
 		PlanarImage pi = (PlanarImage) readTiled(ascii, width, 1);
+		System.out.println(pi.getHeight()+" "+pi.getWidth());
 		//Matrix m = new JaiMatrix(cellsize, minx, maxx, miny, maxy, pi, values);
 		Matrix m = new JaiMatrix(cellsize, minx, maxx, miny, maxy, pi, read);
 		m.setFile(ascii);

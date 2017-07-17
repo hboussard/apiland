@@ -5,7 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
@@ -25,50 +29,272 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 public class SiteSelector {
-	/*
-	private static String path = "C:/Hugues/projets/agriconnect/article/article_FSD/data/ouvert/"; // chemin d'accès au dossier
-	private static String input = path+"site_ouvert"; // nom de couche
-	private static String attributEA = "FARM"; // nom de l'attribut "exploitation"
-	private static String name = "site_ouvert_1km"; // nom du fichier de sortie
-	private static String attributCommune = "COMMUNE_IL"; // nom de l'attribut "commune"
-	private static double codeCommune = 35104; // code commune
-	*/
-	private static String path;
-	private static String input;
-	private static String attributEA = "FARM"; // nom de l'attribut "exploitation"
-	private static String name = "site_ouvert_1km"; // nom du fichier de sortie
+
+	private static String path = "C:/Hugues/modelisation/capfarm/methodo/fond_de_carte/RPG/2014/";
+	private static String input = path+"RPG_Robillard";
+	private static String attributEA = "ILOTS-AN_6"; // nom de l'attribut "exploitation"
+	private static String name = "robillard"; // nom du fichier de sortie
 	private static String attributCommune = "COMMUNE_IL"; // nom de l'attribut "commune"
 	private static double codeCommune = 35104; // code commune
 	
+	private static double x = 479800.0;
+	private static double y = 6880480.0;
 	
-	private static double x;
-	private static double y;
-	
-	// Agriconnect site ouvert
-	//private static double x = 367883.4587;
-	//private static double y = 6783447.113;
-	
-	// Agriconnect site fermé
-	//private static double x = 357770.2965;
-	//private static double y = 6830159.9776;
-	
-	// gester 31 (Haute Garonne)
-	//private static double x = 578354;
-	//private static double y = 6256011;
-	
-	// gester 36 (Indre)
-	//private static double x = 594794 
-	//private static double y = 6652998
-	
-	private static double rayon = 500;
+	private static double rayon = 3000; // en metres
+		
+	private static double minFarmArea = 5.0; // en hectare 
 	
 	private static double minX, maxX, minY, maxY;
 	
-	private static int fileLength;
-	
 	private static DbaseFileHeader header;
 	
+	public static void main(String[] args){
+		getEAFromBuffer(); // à lancer après avoir modifier tes paramètres
+	}
 	
+	private static void getEAFromBuffer(){
+		Set<String> eas = getExploitationsFromBuffer();
+		Set<Polygon> ilots = getIlots(eas);
+		writeIlots(ilots);
+		exportBuffer();
+	}
+	
+	private static Set<String> getExploitationsFromBuffer(){
+		Set<String> eas = new TreeSet<String>();
+		Map<String, Set<Polygon>> areas = new TreeMap<String, Set<Polygon>>();
+		try {
+			ShpFiles sf = new ShpFiles(input+".shp");
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
+			header = dfr.getHeader();
+			
+			int indexEA = -1;
+			for(int i=0; i<header.getNumFields(); i++){
+				if(header.getFieldName(i).equalsIgnoreCase(attributEA)){
+					indexEA = i;
+				}
+			}
+			
+			WKTReader wkt = new WKTReader();
+			Polygon zone = (Polygon) ((Point) wkt.read("POINT ("+x+" "+y+")")).buffer(rayon);
+			/*
+			minX = zone.getEnvelopeInternal().getMinX();
+			maxX = zone.getEnvelopeInternal().getMaxX();
+			minY = zone.getEnvelopeInternal().getMinY();
+			maxY = zone.getEnvelopeInternal().getMaxY();
+			*/
+			Object[] entry;
+			while(sfr.hasNext()){
+				Polygon p = (Polygon) ((MultiPolygon) sfr.nextRecord().shape()).getGeometryN(0);
+				entry = dfr.readEntry();
+				p.setUserData(entry);
+				if(p.intersects(zone)){
+					//eas.add(entry[indexEA]+"");
+					if(!areas.containsKey(entry[indexEA])){
+						areas.put((String) entry[indexEA], new HashSet<Polygon>());
+					}
+					areas.get((String) entry[indexEA]).add(p);
+				}
+			}
+			
+			sfr.close();
+			dfr.close();
+			int nbTooSmallEA = 0;
+			double totalArea = 0.0;
+			double rejectArea = 0.0;
+			for(Entry<String, Set<Polygon>> e : areas.entrySet()){
+				double area = 0.0;
+				String code = "";
+				for(Polygon p : e.getValue()){
+					area += p.intersection(zone).getArea();
+					code = (String) ((Object[]) p.getUserData())[indexEA];
+				}
+				if(area >= minFarmArea*10000.0){
+					eas.add(code+"");
+					totalArea += area;
+					System.out.println("EA : "+code+", surface cumulée = "+area);
+				}else{
+					nbTooSmallEA++;
+					rejectArea += area;
+					System.out.println("rejetée : "+code+", surface cumulée = "+area);
+				}
+			}
+			
+			//System.out.println(entry[indexEA]+" : "+p.intersection(zone).getArea());
+			System.out.println("nombre d'exploitations concernées : "+eas.size()+", nombre d'exploitations rejetées : "+nbTooSmallEA);
+			System.out.println("taux de couverture agricole traitée : "+(totalArea*100.0/zone.getArea())+"%");
+			System.out.println("taux de couverture agricole rejetée : "+(rejectArea*100.0/zone.getArea())+"%");
+			System.out.println("taux de couverture agricole : "+((totalArea+rejectArea)*100.0/zone.getArea())+"%");
+			System.out.println("taux de couverture non agricole : "+((100-(totalArea+rejectArea)*100.0/zone.getArea()))+"%");
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return eas;
+	}
+	
+	private static Set<Polygon> getIlots(Set<String> eas){
+		Set<Polygon> ilots = new TreeSet<Polygon>();
+	
+		try {
+			ShpFiles sf = new ShpFiles(input+".shp");
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
+			
+			minX = Double.MAX_VALUE;
+			maxX = Double.MIN_VALUE;
+			minY = Double.MAX_VALUE;
+			maxY = Double.MIN_VALUE;
+			
+			int indexEA = -1;
+			for(int i=0; i<header.getNumFields(); i++){
+				if(header.getFieldName(i).equalsIgnoreCase(attributEA)){
+					indexEA = i;
+					break;
+				}
+			}
+			
+			Object[] entry;
+			while(sfr.hasNext()){
+				Polygon p = (Polygon) ((MultiPolygon) sfr.nextRecord().shape()).getGeometryN(0);
+				entry = dfr.readEntry();
+				//if(eas.contains(((String) entry[indexEA]))){
+				if(eas.contains(entry[indexEA]+"")){
+					p.setUserData(entry);
+					ilots.add(p);
+					minX = Math.min(minX, p.getEnvelopeInternal().getMinX());
+					maxX = Math.max(maxX, p.getEnvelopeInternal().getMaxX());
+					minY = Math.min(minY, p.getEnvelopeInternal().getMinY());
+					maxY = Math.max(maxY, p.getEnvelopeInternal().getMaxY());
+				}
+			}
+			
+			sfr.close();
+			dfr.close();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return ilots;
+	}
+	
+	private static void writeIlots(Set<Polygon> ilots){
+		String output = path+name+"_"+rayon+"_"+minFarmArea;
+		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
+				FileOutputStream shp = new FileOutputStream(output + ".shp");
+				FileOutputStream shx = new FileOutputStream(output + ".shx");){
+			
+			header.setNumRecords(ilots.size());
+			DbaseFileWriter dfw = new DbaseFileWriter(header, fos.getChannel());
+			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
+			sfw.writeHeaders(new Envelope(minX, maxX, minY, maxY), ShapeType.POLYGON, ilots.size(), 1000000);
+			
+			for(Polygon p : ilots){
+				sfw.writeGeometry(p);
+				dfw.write((Object[]) p.getUserData());
+			}
+			
+			dfw.close();
+			sfw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		copyFile(input+".prj", output+".prj");
+	}
+	
+	private static void exportBuffer() {
+		String output = path+"buffer_"+rayon+"_"+x+"-"+y;
+		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
+				FileOutputStream shp = new FileOutputStream(output + ".shp");
+				FileOutputStream shx = new FileOutputStream(output + ".shx");){
+			
+			WKTReader wkt = new WKTReader();
+			Polygon zone = (Polygon) ((Point) wkt.read("POINT ("+x+" "+y+")")).buffer(rayon);
+			
+			DbaseFileHeader h = new DbaseFileHeader();
+			h.setNumRecords(1);
+			DbaseFileWriter dfw = new DbaseFileWriter(h, fos.getChannel());
+			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
+			sfw.writeHeaders(new Envelope(zone.getEnvelopeInternal().getMinX(), zone.getEnvelopeInternal().getMaxX(), 
+					zone.getEnvelopeInternal().getMinY(), zone.getEnvelopeInternal().getMaxY()), ShapeType.POLYGON, 1, 1000000);
+			
+			sfw.writeGeometry(zone);
+			dfw.write(new Object[0]);
+			
+			dfw.close();
+			sfw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
+		copyFile(input+".prj", output+".prj");
+	}
+	
+	private static void getEAFromCommune(){
+		Set<String> eas = getExploitationsFromCode();
+		Set<Polygon> ilots = getIlots(eas);
+		writeIlots(ilots);
+	}
+	
+	private static Set<String> getExploitationsFromCode(){
+		Set<String> eas = new TreeSet<String>();
+		
+		try {
+			ShpFiles sf = new ShpFiles(input+".shp");
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
+			header = dfr.getHeader();
+			
+			minX = sfr.getHeader().minX();
+			maxX = sfr.getHeader().maxX();
+			minY = sfr.getHeader().minY();
+			maxY = sfr.getHeader().maxY();
+			
+			int indexEA = -1, indexCommune = -1;
+			for(int i=0; i<header.getNumFields(); i++){
+				if(header.getFieldName(i).equalsIgnoreCase(attributEA)){
+					indexEA = i;
+				}
+				if(header.getFieldName(i).equalsIgnoreCase(attributCommune)){
+					indexCommune = i;
+				}
+			}
+			
+			Object[] entry;
+			while(sfr.hasNext()){
+				Polygon p = (Polygon) ((MultiPolygon) sfr.nextRecord().shape()).getGeometryN(0);
+				entry = dfr.readEntry();
+				if(((double) entry[indexCommune]) == codeCommune){
+					eas.add((String) entry[indexEA]);
+				}
+			}
+			
+			System.out.println("nombre d'exploitation concernées : "+eas.size());
+			
+			sfr.close();
+			dfr.close();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return eas;
+	}
 	
 	public static String getPath() {
 		return path;
@@ -126,267 +352,8 @@ public class SiteSelector {
 		SiteSelector.rayon = rayon;
 	}
 
-	public static double getMinX() {
-		return minX;
-	}
-
-	public static void setMinX(double minX) {
-		SiteSelector.minX = minX;
-	}
-
-	public static double getMaxX() {
-		return maxX;
-	}
-
-	public static void setMaxX(double maxX) {
-		SiteSelector.maxX = maxX;
-	}
-
-	public static double getMinY() {
-		return minY;
-	}
-
-	public static void setMinY(double minY) {
-		SiteSelector.minY = minY;
-	}
-
-	public static double getMaxY() {
-		return maxY;
-	}
-
-	public static void setMaxY(double maxY) {
-		SiteSelector.maxY = maxY;
-	}
-
-	public static int getFileLength() {
-		return fileLength;
-	}
-
-	public static void setFileLength(int fileLength) {
-		SiteSelector.fileLength = fileLength;
-	}
-
-	public static DbaseFileHeader getHeader() {
-		return header;
-	}
-
-	public static void setHeader(DbaseFileHeader header) {
-		SiteSelector.header = header;
-	}
-
-	public static void main(String[] args){
-		
-		//getEAFromBuffer(); // à lancer après avoir modifier tes paramètres
-	}
 	
-	private static void getEAFromBuffer(){
-		Set<String> eas = getExploitationsFromBuffer();
-		Set<Polygon> ilots = getIlots(eas);
-		writeIlots(ilots);
-		exportBuffer();
-	}
-	
-	private static void exportBuffer() {
-		String output = path+"buffer_31";
-		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
-				FileOutputStream shp = new FileOutputStream(output + ".shp");
-				FileOutputStream shx = new FileOutputStream(output + ".shx");){
-			
-			DbaseFileHeader h = new DbaseFileHeader();
-			h.setNumRecords(1);
-			DbaseFileWriter dfw = new DbaseFileWriter(h, fos.getChannel());
-			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
-			sfw.writeHeaders(new Envelope(minX, maxX, minY, maxY), ShapeType.POLYGON, 1, fileLength);
-			
-			WKTReader wkt = new WKTReader();
-			Polygon zone = (Polygon) ((Point) wkt.read("POINT ("+x+" "+y+")")).buffer(rayon);
-			sfw.writeGeometry(zone);
-			dfw.write(new Object[0]);
-			
-			dfw.close();
-			sfw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} 
-		copyFile(input+".prj", output+".prj");
-	}
-
-	private static void getEAFromCommune(){
-		Set<String> eas = getExploitationsFromCode();
-		Set<Polygon> ilots = getIlots(eas);
-		writeIlots(ilots);
-	}
-	
-	private static Set<String> getExploitationsFromCode(){
-		Set<String> eas = new TreeSet<String>();
-		
-		try {
-			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
-			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
-			header = dfr.getHeader();
-			
-			minX = sfr.getHeader().minX();
-			maxX = sfr.getHeader().maxX();
-			minY = sfr.getHeader().minY();
-			maxY = sfr.getHeader().maxY();
-			fileLength = sfr.getHeader().getFileLength();
-			
-			int indexEA = -1, indexCommune = -1;
-			for(int i=0; i<header.getNumFields(); i++){
-				if(header.getFieldName(i).equalsIgnoreCase(attributEA)){
-					indexEA = i;
-				}
-				if(header.getFieldName(i).equalsIgnoreCase(attributCommune)){
-					indexCommune = i;
-				}
-			}
-			
-			Object[] entry;
-			while(sfr.hasNext()){
-				Polygon p = (Polygon) ((MultiPolygon) sfr.nextRecord().shape()).getGeometryN(0);
-				entry = dfr.readEntry();
-				if(((double) entry[indexCommune]) == codeCommune){
-					eas.add((String) entry[indexEA]);
-				}
-			}
-			
-			sfr.close();
-			dfr.close();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (ShapefileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return eas;
-	}
-	
-	private static Set<String> getExploitationsFromBuffer(){
-		Set<String> eas = new TreeSet<String>();
-		
-		try {
-			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
-			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
-			header = dfr.getHeader();
-			minX = sfr.getHeader().minX();
-			maxX = sfr.getHeader().maxX();
-			minY = sfr.getHeader().minY();
-			maxY = sfr.getHeader().maxY();
-			
-			fileLength = sfr.getHeader().getFileLength();
-			
-			int indexEA = -1;
-			for(int i=0; i<header.getNumFields(); i++){
-				if(header.getFieldName(i).equalsIgnoreCase(attributEA)){
-					indexEA = i;
-				}
-			}
-			
-			WKTReader wkt = new WKTReader();
-			Polygon zone = (Polygon) ((Point) wkt.read("POINT ("+x+" "+y+")")).buffer(rayon);
-			/*
-			minX = zone.getEnvelopeInternal().getMinX();
-			maxX = zone.getEnvelopeInternal().getMaxX();
-			minY = zone.getEnvelopeInternal().getMinY();
-			maxY = zone.getEnvelopeInternal().getMaxY();
-			*/
-			Object[] entry;
-			while(sfr.hasNext()){
-				Polygon p = (Polygon) ((MultiPolygon) sfr.nextRecord().shape()).getGeometryN(0);
-				entry = dfr.readEntry();
-				if(p.intersects(zone)){
-					//eas.add((String) entry[indexEA]);
-					eas.add(entry[indexEA]+"");
-				}
-			}
-			
-			sfr.close();
-			dfr.close();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (ShapefileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		return eas;
-	}
-	
-	private static Set<Polygon> getIlots(Set<String> eas){
-		Set<Polygon> ilots = new TreeSet<Polygon>();
-	
-		try {
-			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
-			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
-			
-			int indexEA = -1;
-			for(int i=0; i<header.getNumFields(); i++){
-				if(header.getFieldName(i).equalsIgnoreCase(attributEA)){
-					indexEA = i;
-					break;
-				}
-			}
-			
-			Object[] entry;
-			while(sfr.hasNext()){
-				Polygon p = (Polygon) ((MultiPolygon) sfr.nextRecord().shape()).getGeometryN(0);
-				entry = dfr.readEntry();
-				//if(eas.contains(((String) entry[indexEA]))){
-				if(eas.contains(entry[indexEA]+"")){
-					p.setUserData(entry);
-					ilots.add(p);
-				}
-			}
-			
-			sfr.close();
-			dfr.close();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (ShapefileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return ilots;
-	}
-	
-	private static void writeIlots(Set<Polygon> ilots){
-		String output = path+name;
-		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
-				FileOutputStream shp = new FileOutputStream(output + ".shp");
-				FileOutputStream shx = new FileOutputStream(output + ".shx");){
-			
-			header.setNumRecords(ilots.size());
-			DbaseFileWriter dfw = new DbaseFileWriter(header, fos.getChannel());
-			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
-			sfw.writeHeaders(new Envelope(minX, maxX, minY, maxY), ShapeType.POLYGON, ilots.size(), fileLength);
-			System.out.println(fileLength);
-			
-			for(Polygon p : ilots){
-				sfw.writeGeometry(p);
-				dfw.write((Object[]) p.getUserData());
-			}
-			
-			dfw.close();
-			sfw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-		copyFile(input+".prj", output+".prj");
-	}
-	
-	public static boolean copyFile(String source, String dest){
+	private static boolean copyFile(String source, String dest){
 		try{
 			// Declaration et ouverture des flux
 			java.io.FileInputStream sourceFile = new java.io.FileInputStream(new File(source));
@@ -416,5 +383,22 @@ public class SiteSelector {
 		}
 		return true; // Résultat OK  
 	}
+	
+
+	// Agriconnect site ouvert
+	//private static double x = 367883.4587;
+	//private static double y = 6783447.113;
+		
+	// Agriconnect site fermé
+	//private static double x = 357770.2965;
+	//private static double y = 6830159.9776;
+		
+	// gester 31 (Haute Garonne)
+	//private static double x = 578354;
+	//private static double y = 6256011;
+		
+	// gester 36 (Indre)
+	//private static double x = 594794 
+	//private static double y = 6652998
 	
 }
