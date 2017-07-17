@@ -1,5 +1,6 @@
 package fr.inra.sad_paysage.apiland.capfarm;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,6 +13,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileWriter;
@@ -32,11 +37,41 @@ public class Util {
 	
 	public static void main(String[] args) {
 		
-		generateShapefile(path+"Yann_Corbeau", "YC", 30);
+		//generateShapefile(path+"Yann_Corbeau", "YC", 30);
 		//generateHistoric(path+"Yann_Corbeau_cfm_land", "id", "cov_2017");
 		
 		//generateShapefile(path+"bergerie");
 		//generateHistoric(path+"bergerie_cfm", "id", "os16", "os17");
+	}
+	
+	public static void preparedCoversAndNextCovers(String input){
+		try {
+			FileInputStream file = new FileInputStream(new File(path+"precedent-suivant.xlsm"));
+
+			//Get the workbook instance for XLS file 
+			XSSFWorkbook workbook = new XSSFWorkbook (file);
+
+			//Get first sheet from the workbook
+			XSSFSheet sheet = workbook.getSheetAt(2);
+			
+			for(Row r : sheet){
+				System.out.print(r.getRowNum()+" : ");
+				for(Cell c : r){
+					
+					if(c.getCellType() == Cell.CELL_TYPE_FORMULA){
+						System.out.print(c.getStringCellValue()+" ");
+					}else{
+						System.out.print(c.toString()+" ");
+					}
+					
+				}
+				System.out.println();
+			}
+			workbook.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void observeShapefile(String input){
