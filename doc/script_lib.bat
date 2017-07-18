@@ -23,4 +23,8 @@ call mvn install:install-file -Dfile=./jai_imageio-1.1.jar -DgroupId=com.sun.med
 call mvn install:install-file -Dfile=./miglayout-3.7-swing.jar -DgroupId=net.miginfocom -DartifactId=miglayout -Dversion=3.7 -Dpackaging=jar
 call mvn install:install-file -Dfile=./antlr-4.4-complete.jar -DgroupId=org.antlr -DartifactId=antlr -Dversion=4.4 -Dpackaging=jar
 call mvn install:install-file -Dfile=./choco-solver-3.3.3-with-dependencies.jar -DgroupId=org.chocosolver -DartifactId=choco -Dversion=3.3.3 -Dpackaging=jar
-
+call mvn install:install-file -Dfile=./poi-3.15.jar -DgroupId=org.apache.poi -DartifactId=poi -Dversion=3.15 -Dpackaging=jar
+call mvn install:install-file -Dfile=./poi-ooxml-3.15.jar -DgroupId=org.apache.poi -DartifactId=poi-ooxml -Dversion=3.15 -Dpackaging=jar
+call mvn install:install-file -Dfile=./poi-ooxml-schemas-3.15.jar -DgroupId=org.apache.poi -DartifactId=poi-ooxml-schemas -Dversion=3.15 -Dpackaging=jar
+call mvn install:install-file -Dfile=./xmlbeans-2.6.0.jar -DgroupId=org.apache.xmlbeans -DartifactId=xmlbeans -Dversion=2.6.0 -Dpackaging=jar
+call mvn install:install-file -Dfile=./commons-collections4-4.1.jar -DgroupId=org.apache.commons -DartifactId=commons-collections4 -Dversion=4.1 -Dpackaging=jar
