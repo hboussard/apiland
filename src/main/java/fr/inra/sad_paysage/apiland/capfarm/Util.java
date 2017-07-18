@@ -8,11 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -37,6 +41,8 @@ public class Util {
 	
 	public static void main(String[] args) {
 		
+		//preparedCoversAndNextCovers(path+"test.xlsm", path+"essai/");
+		
 		//generateShapefile(path+"Yann_Corbeau", "YC", 30);
 		//generateHistoric(path+"Yann_Corbeau_cfm_land", "id", "cov_2017");
 		
@@ -44,32 +50,86 @@ public class Util {
 		//generateHistoric(path+"bergerie_cfm", "id", "os16", "os17");
 	}
 	
-	public static void preparedCoversAndNextCovers(String input){
+	public static void preparedCoversAndNextCovers(String input, String output){
 		try {
-			FileInputStream file = new FileInputStream(new File(path+"precedent-suivant.xlsm"));
+			XSSFWorkbook workbook = new XSSFWorkbook(new File(input));
 
-			//Get the workbook instance for XLS file 
-			XSSFWorkbook workbook = new XSSFWorkbook (file);
-
-			//Get first sheet from the workbook
-			XSSFSheet sheet = workbook.getSheetAt(2);
+			XSSFSheet sheetCovers = workbook.getSheet("cultures");
+			Map<String, String> genericCovers = new TreeMap<String, String>();
+			for(Row r : sheetCovers){
+				if(r.getRowNum() > 1){
+					//System.out.println(r.getCell(0).getStringCellValue()+" "+r.getCell(1).getStringCellValue());
+					genericCovers.put(r.getCell(1).getStringCellValue(), r.getCell(0).getStringCellValue());
+				}
+			}
 			
-			for(Row r : sheet){
-				System.out.print(r.getRowNum()+" : ");
-				for(Cell c : r){
-					
-					if(c.getCellType() == Cell.CELL_TYPE_FORMULA){
-						System.out.print(c.getStringCellValue()+" ");
-					}else{
-						System.out.print(c.toString()+" ");
-					}
-					
+			XSSFSheet sheet = workbook.getSheet("suivants-txt");
+			
+			// récupération des cultures d'interet
+			List<String> covers = new ArrayList<String>();
+			for(Cell c : sheet.getRow(0)){
+				String cover = c.getStringCellValue();
+				if(genericCovers.keySet().contains(cover)){
+					//System.out.println(cover+" ");
+					covers.add(cover);
+				}
+			}
+			boolean[][] next = new boolean[covers.size()][covers.size()];
+		
+			// récupération des précédents-suivants
+			for(int j=0; j<covers.size(); j++){
+				Row r = sheet.getRow(j+1);
+				for(int i=0; i<covers.size(); i++){
+					System.out.print(r.getCell(i+1).toString()+" ");
+					next[j][i] = new Boolean(r.getCell(i+1).toString());
 				}
 				System.out.println();
 			}
+			
 			workbook.close();
 			
+			File out = new File(output);
+			out.mkdirs();
+			
+			// écriture du fichier de couverts
+			CsvWriter cw = new CsvWriter(output+"covers.txt");
+			cw.setDelimiter(';');
+			cw.write("code");
+			cw.write("name");
+			cw.endRecord();
+			for(String cover : covers){
+				cw.write(genericCovers.get(cover));
+				cw.write(cover);
+				cw.endRecord();
+			}
+			cw.close();
+			
+			// écriture du fichier précédents-suivants
+			CsvWriter cw2 = new CsvWriter(output+"next_covers.txt");
+			cw2.setDelimiter(';');
+			cw2.write("previous");
+			for(String cover : covers){
+				cw2.write(genericCovers.get(cover));
+			}
+			cw2.endRecord();
+			for(int j=0; j<covers.size(); j++){
+				cw2.write(genericCovers.get(covers.get(j)));
+				for(int i=0; i<covers.size(); i++){
+					if(next[j][i]){
+						cw2.write("1");
+					}else{
+						cw2.write("0");
+					}
+				}
+				cw2.endRecord();
+			}
+			cw2.close();
+			
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		} catch (FinalizedException e) {
 			e.printStackTrace();
 		}
 	}
