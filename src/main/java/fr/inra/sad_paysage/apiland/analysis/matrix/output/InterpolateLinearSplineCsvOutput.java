@@ -51,7 +51,7 @@ public class InterpolateLinearSplineCsvOutput extends AbstractMetricOutput {
 	}
 
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma);break;
 		case RUNNING : notifyAnalysisRun((WindowMatrixAnalysis)ma);break;
@@ -115,7 +115,7 @@ public class InterpolateLinearSplineCsvOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double v, Process p) {
+	public void notify(Metric m, String metric, double v, Process p) {
 		
 		int x = ((WindowMatrixProcess) p).x();
 		int y = ((WindowMatrixProcess) p).y();
@@ -147,7 +147,7 @@ public class InterpolateLinearSplineCsvOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		switch (s){
 		case DONE : notifyProcessDone((WindowMatrixProcess) p);break;
 		}

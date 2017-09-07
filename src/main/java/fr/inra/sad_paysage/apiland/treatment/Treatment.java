@@ -4,13 +4,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import fr.inra.sad_paysage.apiland.analysis.Analysis;
+import fr.inra.sad_paysage.apiland.analysis.AnalysisObserver;
+import fr.inra.sad_paysage.apiland.analysis.AnalysisState;
+
 import java.util.Map.Entry;
 
 /**
  * modeling class of a treatment
  * @author H.Boussard
  */
-public abstract class Treatment {
+public abstract class Treatment implements AnalysisObserver{
 
 	/** the name */
 	private String name;
@@ -31,7 +36,7 @@ public abstract class Treatment {
 	private Map<String, Class<?>> outputsBinding;
 	
 	/** the views */
-	private Set<TreatmentView> views;
+	private Set<TreatmentObserver> observers;
 	
 	/** the state of the treatment */
 	private TreatmentState state;
@@ -46,8 +51,8 @@ public abstract class Treatment {
 		inputsBinding = new HashMap<String, Class<?>>();
 		outputs = new HashMap<String, Object>();
 		outputsBinding = new HashMap<String, Class<?>>();
-		this.state = TreatmentState.IDLE;
-		this.views = new HashSet<TreatmentView>();
+		state = TreatmentState.IDLE;
+		observers = new HashSet<TreatmentObserver>();
 		manager.addTreatment(this);
 	}
 	
@@ -68,25 +73,32 @@ public abstract class Treatment {
 		this.manager = tm;
 	}
 	
-	public void addView(TreatmentView v){
-		views.add(v);
+	public void addObserver(TreatmentObserver v){
+		observers.add(v);
 	}
 	
-	public Set<TreatmentView> views(){
-		return views;
+	public Set<TreatmentObserver> observers(){
+		return observers;
 	}
 	
 	private void notifyViews(){
 		TreatmentState s = state;
-		for(TreatmentView v : views){
+		for(TreatmentObserver v : observers){
 			v.notify(this, s);
 		}
 	}
 	
-	public void updateProgression(int total){
-		for(TreatmentView v : views){
-			v.updateProgression(total);
+	@Override
+	public void updateProgression(Analysis a, int total){
+		for(TreatmentObserver v : observers){
+			v.updateProgression(this, total);
 		}
+	}
+	
+
+	@Override
+	public void notify(Analysis ma, AnalysisState state) {
+		// do nothing
 	}
 	
 	public final void init() throws TreatmentException {
@@ -142,8 +154,8 @@ public abstract class Treatment {
 		// notifyViews(); --> views have been destroyed
 	}
 	
-	public void clearViews(){
-		views.clear();
+	public void clearObservers(){
+		observers.clear();
 	}
 	
 	public void clearOutputs(){

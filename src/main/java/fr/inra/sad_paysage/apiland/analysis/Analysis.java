@@ -38,7 +38,7 @@ public abstract class Analysis {
 	private void notifyObservers(){
 		AnalysisState s = state;
 		for(AnalysisObserver o : observers){
-			o.notifyFromAnalysis(this, s);
+			o.notify(this, s);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public abstract class Analysis {
 	 */
 	public void updateProgression(int total){
 		for(AnalysisObserver o : observers()){
-			o.updateProgression(total);
+			o.updateProgression(this, total);
 		}
 	}
 }

@@ -178,7 +178,7 @@ public class GridWindowMatrixAnalysis extends WindowMatrixAnalysis implements Vo
 	}*/
 
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		if(p instanceof WindowMatrixProcess && p.processType().equals(processType())){
 			switch(s){
 			case INIT : notifyProcessInit((WindowMatrixProcess)p); break;

@@ -76,7 +76,7 @@ public class MapWindowMatrixAnalysis extends WindowMatrixAnalysis implements Vol
 	}
 
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		if(p instanceof WindowMatrixProcess && p.processType().equals(processType())){
 			switch(s){
 			case READY : notifyProcessReady((WindowMatrixProcess) p); break;

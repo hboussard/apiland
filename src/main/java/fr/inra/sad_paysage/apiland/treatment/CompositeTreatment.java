@@ -3,6 +3,9 @@ package fr.inra.sad_paysage.apiland.treatment;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import fr.inra.sad_paysage.apiland.analysis.Analysis;
+import fr.inra.sad_paysage.apiland.analysis.AnalysisState;
+
 public class CompositeTreatment extends Treatment implements TreatmentManager {
 
 	private LocalTreatmentManager local;
@@ -61,5 +64,6 @@ public class CompositeTreatment extends Treatment implements TreatmentManager {
 	public void doClose() throws TreatmentException{
 		clear();
 	}
+
 
 }

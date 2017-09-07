@@ -30,7 +30,7 @@ public class HeaderAsciiGridOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis a, AnalysisState s) {
+	public void notify(Analysis a, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis) a); break;
 		}
@@ -67,7 +67,7 @@ public class HeaderAsciiGridOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double v, Process wp) {
+	public void notify(Metric m, String metric, double v, Process wp) {
 		m.removeObserver(this);
 	}
 	

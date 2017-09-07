@@ -28,7 +28,7 @@ public class MatrixOutputV extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : matrix.init(0); break;
 		}
@@ -44,7 +44,7 @@ public class MatrixOutputV extends AbstractMetricOutput {
 	}
 
 	@Override
-	public void notifyFromMetric(Metric m, String n, double v, Process p) {
+	public void notify(Metric m, String n, double v, Process p) {
 		if(acceptMetric(n)){
 			int x = CoordinateManager.getLocalX(matrix, ((VectorProcess) p).x());
 			int y = CoordinateManager.getLocalY(matrix, ((VectorProcess) p).y());

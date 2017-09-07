@@ -54,7 +54,7 @@ public class SelectedCsvOutput extends AbstractMetricOutput implements MetricOut
 	}
 
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma);break;
 		case RUNNING : notifyAnalysisRun((WindowMatrixAnalysis)ma);break;
@@ -140,7 +140,7 @@ public class SelectedCsvOutput extends AbstractMetricOutput implements MetricOut
 	}
 
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double v, Process wp) {
+	public void notify(Metric m, String metric, double v, Process wp) {
 		if(pixels.contains(((WindowMatrixProcess) wp).pixel())){
 			values.get(((WindowMatrixProcess) wp).pixel()).put(metric, v);
 		}else{
@@ -149,7 +149,7 @@ public class SelectedCsvOutput extends AbstractMetricOutput implements MetricOut
 	}
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		if(p instanceof WindowMatrixProcess){
 			switch(s){
 			case INIT : notifyProcessInit((WindowMatrixProcess) p); break;

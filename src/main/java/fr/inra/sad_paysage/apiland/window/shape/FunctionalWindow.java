@@ -15,6 +15,7 @@ import fr.inra.sad_paysage.apiland.analysis.process.ProcessState;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.matrix.ArrayMatrixFactory;
+import fr.inra.sad_paysage.apiland.core.space.impl.raster.matrix.Friction;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad_paysage.apiland.analysis.process.Process;
 
@@ -57,17 +58,21 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	
 	private Pixel[][] pixels;
 	
-	public FunctionalWindow(Matrix m, double d){
-		this(m, d, -1);
+	private double fmin;
+	
+	public FunctionalWindow(Matrix m, double d, double min){
+		this(m, d, -1, min);
 	}
 	
-	public FunctionalWindow(Matrix m, double d, int displacement){
+	public FunctionalWindow(Matrix m, double d, int displacement, double min){
 		matrix = m;
 		dMax = d;
+		fmin = min;
 		this.displacement = displacement;
 		locations = new TreeMap<Pixel, LocateFunctionalWindow>();
 		
-		rcm = ArrayMatrixFactory.get().create(diameter(), diameter(), m.cellsize(), 0, 0, 0, 0,Raster.getNoDataValue());
+		System.out.println(diameter());
+		rcm = ArrayMatrixFactory.get().create(diameter(), diameter(), m.cellsize(), 0, 0, 0, 0, Raster.getNoDataValue());
 		
 		waits = new TreeSet<Pixel>(new Comparator<Pixel>(){
 			@Override
@@ -108,6 +113,7 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		//filters = new TreeMap<String, Integer>();
 		
 		pixels = new Pixel[diameter()+2][diameter()+2];
+		//pixels = new Pixel[diameter()][diameter()];
 		for(int y=-1; y<diameter()+1; y++){
 			for(int x=-1; x<diameter()+1; x++){
 				pixels[y+1][x+1] = new Pixel(x, y);
@@ -116,6 +122,8 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	}
 	
 	private Pixel pixel(int x, int y){
+		//System.out.println(diameter());
+		//System.out.println("size "+pixels.length+" "+pixels[0].length);
 		return pixels[y+1][x+1];
 	}
 	
@@ -130,7 +138,16 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	
 	@Override
 	public int diameter(){
-		return new Double((2*dMax/matrix.cellsize())+1).intValue();
+		//System.out.println("diameter "+new Double((2*dMax/matrix.cellsize())+1).intValue());
+		//return new Double((2*dMax/matrix.cellsize())+1).intValue();
+		//return new Double((2*dMax/matrix.cellsize())).intValue();
+		int v = new Double((2*dMax/matrix.cellsize())/fmin).intValue();
+		if(v % 2 == 0){
+			return new Double((2*dMax/matrix.cellsize())/fmin).intValue()+1;
+		}else{
+			return new Double((2*dMax/matrix.cellsize())/fmin).intValue();
+		}
+		
 	}
 	
 	@Override
@@ -287,8 +304,10 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		Pixel px;
 		int index = 0;
 		int theoricalSize = 0;
+		//System.out.println("largeur "+width()+" "+height());
 		for(int y=0; y<height(); y++){
 			for(int x=0; x<width(); x++){
+				//System.out.println(x+" "+y);
 				px = pixel(x, y);
 				//if(rcm.containsKey(px)){
 				if(rcm.get(px) != Integer.MAX_VALUE){
@@ -354,6 +373,8 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	
 	protected abstract double friction(Matrix m, Pixel p);
 	
+	//protected abstract Friction friction();
+	
 	private void diffuseRook(Pixel pc, Pixel op, double v, double f){
 		double ov, of;
 		if(rcm.get(op) == Integer.MAX_VALUE){
@@ -406,7 +427,7 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	}
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		switch(s){
 		case DONE : 
 			WindowMatrixProcess wp = (WindowMatrixProcess) p;

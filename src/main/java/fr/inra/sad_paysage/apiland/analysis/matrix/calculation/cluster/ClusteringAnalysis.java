@@ -1,4 +1,4 @@
-package fr.inra.sad_paysage.apiland.analysis.matrix.calculation;
+package fr.inra.sad_paysage.apiland.analysis.matrix.calculation.cluster;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,6 +41,7 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 		double v;
 		int oldy = -1;
 		int index = 0;
+		int total = matrix().width() * matrix().height();
 		for(Pixel p : matrix()){
 			//System.out.println(p);
 			if(p.y() > oldy){ // nettoyage du trop plein 
@@ -70,6 +71,8 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 					}
 				}
 			}
+			
+			updateProgression(total);
 		}
 		setResult(r.smooth());
 		//setResult(r);

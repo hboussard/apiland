@@ -54,7 +54,7 @@ public class SelectedAsciiGridOutput extends AbstractMetricOutput implements Met
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma); break;
 		case DONE : notifyAnalysisDone((WindowMatrixAnalysis)ma); break;
@@ -122,10 +122,12 @@ public class SelectedAsciiGridOutput extends AbstractMetricOutput implements Met
 
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		if(p instanceof WindowMatrixProcess){
 			switch(s){
 			case DONE : notifyProcessDone((WindowMatrixProcess) p); break;
+			default:
+				break;
 			}
 		}
 	}
@@ -136,7 +138,7 @@ public class SelectedAsciiGridOutput extends AbstractMetricOutput implements Met
 	
 	
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double v, Process wp) {
+	public void notify(Metric m, String metric, double v, Process wp) {
 		//if(acceptMetric(metric) && pixels.contains(((WindowProcess) wp).pixel())){
 		if(acceptMetric(metric)){
 			values.put(((WindowMatrixProcess) wp).pixel(), v);

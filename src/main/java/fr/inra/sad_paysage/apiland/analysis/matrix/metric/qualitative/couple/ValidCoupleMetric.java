@@ -13,9 +13,7 @@ public class ValidCoupleMetric extends MatrixMetric implements CoupleMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
-		if(co.countCouples() > 0){
-			value = co.validCouples();
-		}
+		value = co.validCouples();
 	}
 
 }

@@ -8,7 +8,6 @@ import fr.inra.sad_paysage.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad_paysage.apiland.patch.PatchComposite;
 import fr.inra.sad_paysage.apiland.patch.Envelope;
 import fr.inra.sad_paysage.apiland.patch.Patch;
-import fr.inra.sad_paysage.apiland.patch.PatchManager;
 
 public class HanskiConnectivityMetric extends MatrixMetric implements PatchMetric {
 	

@@ -72,6 +72,14 @@ public class CoverManager {
 		return cu;
 	}
 	
+	public static Set<CoverGroup> coverGroups(){
+		Set<CoverGroup> cg = new TreeSet<CoverGroup>();
+		for(Entry<String, CoverGroup> e : coverGroups.entrySet()){
+			cg.add(e.getValue());
+		}
+		return cg;
+	}
+	
 	public static void display(){
 		System.out.println();
 		for(Entry<String, CoverUnit> e : coverUnits.entrySet()){

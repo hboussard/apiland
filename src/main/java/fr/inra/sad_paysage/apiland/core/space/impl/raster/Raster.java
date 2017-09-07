@@ -34,6 +34,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 package fr.inra.sad_paysage.apiland.core.space.impl.raster;
 
 import java.util.Iterator;
+import java.util.Set;
+
 import fr.inra.sad_paysage.apiland.core.space.Geometry;
 import fr.inra.sad_paysage.apiland.core.space.impl.GeometryImpl;
 import fr.inra.sad_paysage.apiland.core.space.impl.GeometryImplType;
@@ -220,5 +222,35 @@ public abstract class Raster implements GeometryImpl, Iterable<Pixel>{
 	
 	protected abstract Raster addRasterComposite(RasterComposite impl);
 
+	public static double distance(PixelComposite pc1, PixelComposite pc2){
+		double min = Double.MAX_VALUE; 
+		for(Pixel p1 : pc1){
+			for(Pixel p2 : pc2){
+				min = Math.min(min, Math.sqrt(Math.pow(p2.x()-p1.x(), 2) + Math.pow(p2.y()-p1.y(), 2)));
+			}
+			if(min == 0){
+				break;
+			}
+		}
+		if(min == Double.MAX_VALUE){
+			min = Raster.getNoDataValue();
+		}
+		return min;
+	}
 	
+	public static double distance(Set<Pixel> set1, Set<Pixel> set2){
+		double min = Double.MAX_VALUE; 
+		for(Pixel p1 : set1){
+			for(Pixel p2 : set2){
+				min = Math.min(min, Math.sqrt(Math.pow(p2.x()-p1.x(), 2) + Math.pow(p2.y()-p1.y(), 2)));
+			}
+			if(min == 0){
+				break;
+			}
+		}
+		if(min == Double.MAX_VALUE){
+			min = Raster.getNoDataValue();
+		}
+		return min;
+	}
 }

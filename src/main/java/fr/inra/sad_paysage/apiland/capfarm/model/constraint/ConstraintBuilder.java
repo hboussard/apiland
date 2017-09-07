@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import com.csvreader.CsvReader;
@@ -90,7 +89,6 @@ public class ConstraintBuilder {
 	}
 	
 	public void setCover(String... covers) {
-		
 		if(covers[0].equalsIgnoreCase("EACH")){
 			for(Cover c : allocator.coverUnits()){
 				this.covers.add(c);
@@ -103,15 +101,12 @@ public class ConstraintBuilder {
 			for(Cover c : allocator.coverUnits()){
 				boolean ok = true;
 				for(int i=1; i<covers.length; i++){
-					
-					if(c.getCode().equalsIgnoreCase(covers[i])){
-						System.out.println("ici");						
+					if(c.getCode().equalsIgnoreCase(covers[i])){		
 						ok = false;
 						break;
 					}
 				}
 				if(ok){
-					System.out.println("ok pour "+c);
 					this.covers.add(c);
 				}
 			}
@@ -206,6 +201,9 @@ public class ConstraintBuilder {
 		case ParcelArea : 
 			initParcelAreaConstraints();
 			break;
+		case ParcelCount : 
+			initParcelCountConstraints();
+			break;
 		case TotalArea : 
 			 initTotalAreaConstraints();
 			break;
@@ -269,6 +267,12 @@ public class ConstraintBuilder {
 	private void initParcelAreaConstraints() {
 		Domain<Integer, Integer> domain = buildAreaDomain();
 		CoverAllocationConstraint<?, ?> constraint = new ParcelAreaConstraint(code, checkOnly, mode, covers, location, domain);
+		allocator.addConstraint(constraint);
+	}
+	
+	private void initParcelCountConstraints() {
+		Domain<Integer, Integer> domain = buildIntDomain(1);
+		CoverAllocationConstraint<?, ?> constraint = new ParcelCountConstraint(code, checkOnly, mode, covers, location, domain);
 		allocator.addConstraint(constraint);
 	}
 	

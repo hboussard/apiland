@@ -1,9 +1,9 @@
 package fr.inra.sad_paysage.apiland.treatment;
 
-public interface TreatmentView {
+public interface TreatmentObserver {
 
 	void notify(Treatment t, TreatmentState s);
 	
-	void updateProgression(int total);
+	void updateProgression(Treatment t, int total);
 	
 }

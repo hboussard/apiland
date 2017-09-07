@@ -39,7 +39,7 @@ public class DeltaAsciiGridOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma);break;
 		case FINISH : notifyAnalysisFinish((WindowMatrixAnalysis)ma);break;
@@ -116,7 +116,7 @@ public class DeltaAsciiGridOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String n, double v, Process p) {
+	public void notify(Metric m, String n, double v, Process p) {
 		if(acceptMetric(n)){
 			try {
 				if(yGlobal == -1){

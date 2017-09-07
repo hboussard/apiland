@@ -60,7 +60,7 @@ public class GridCsvOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double value, Process process) {
+	public void notify(Metric m, String metric, double value, Process process) {
 		values.put(metric, value);
 		if(value != Raster.getNoDataValue()){
 			okValues = true;
@@ -68,7 +68,7 @@ public class GridCsvOutput extends AbstractMetricOutput {
 	}
 
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma);break;
 		case RUNNING : notifyAnalysisRun((WindowMatrixAnalysis)ma);break;
@@ -117,7 +117,7 @@ public class GridCsvOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		switch (s){
 		case DONE : notifyProcessDone((WindowMatrixProcess) p);break;
 		}

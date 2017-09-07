@@ -1,4 +1,4 @@
-package fr.inra.sad_paysage.apiland.analysis.matrix.calculation;
+package fr.inra.sad_paysage.apiland.analysis.matrix.calculation.cluster;
 
 import java.util.Iterator;
 import java.util.Set;

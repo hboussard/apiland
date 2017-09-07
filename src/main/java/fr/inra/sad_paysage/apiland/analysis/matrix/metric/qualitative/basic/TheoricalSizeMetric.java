@@ -13,9 +13,7 @@ public class TheoricalSizeMetric extends MatrixMetric implements BasicMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
-		if(co.countValues() > 0){
-			value = co.theoricalSize();
-		}
+		value = co.theoricalSize();
 	}
 
 }

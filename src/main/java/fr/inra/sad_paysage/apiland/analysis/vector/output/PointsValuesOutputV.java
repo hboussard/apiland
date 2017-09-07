@@ -26,7 +26,7 @@ public class PointsValuesOutputV extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double value, Process process){
+	public void notify(Metric m, String metric, double value, Process process){
 		//System.out.println("enter : "+metric.replace(".0", "")+" "+value);
 		values.get(((VectorProcess) process).point()).put(metric.replace(".0", ""), value);
 	}

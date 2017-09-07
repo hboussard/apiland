@@ -47,7 +47,7 @@ public class InterpolateLinearSplineAsciiGridOutput extends AbstractMetricOutput
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma);break;
 		case FINISH : notifyAnalysisFinish((WindowMatrixAnalysis)ma);break;
@@ -108,7 +108,7 @@ public class InterpolateLinearSplineAsciiGridOutput extends AbstractMetricOutput
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String name, double v, Process p){
+	public void notify(Metric m, String name, double v, Process p){
 		if(acceptMetric(name)){
 			int x = ((WindowMatrixProcess) p).x();
 			int y = ((WindowMatrixProcess) p).y();

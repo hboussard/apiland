@@ -49,8 +49,8 @@ public class InterpolateCubicSplineAsciiGridOutput extends SchedulerOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
-		super.notifyFromAnalysis(ma, s);
+	public void notify(Analysis ma, AnalysisState s) {
+		super.notify(ma, s);
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma);break;
 		case FINISH : notifyAnalysisFinish((WindowMatrixAnalysis)ma);break;

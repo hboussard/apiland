@@ -159,7 +159,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 
 	@SuppressWarnings("incomplete-switch")
 	@Override
-	public void notifyFromProcess(Process p, ProcessState state) {
+	public void notify(Process p, ProcessState state) {
 		if(p instanceof WindowMatrixProcess && p.processType().equals(processType())){
 			switch(state){
 			case INIT : notifyProcessInit((WindowMatrixProcess)p); break;

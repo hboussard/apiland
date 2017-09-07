@@ -28,7 +28,7 @@ public abstract class Process<M extends Metric> implements Comparable<Process<M>
 	public void setState(ProcessState s){
 		state = s;
 		for(ProcessObserver po : processType.observers()){
-			po.notifyFromProcess(this, state);
+			po.notify(this, state);
 		}
 	}
 	

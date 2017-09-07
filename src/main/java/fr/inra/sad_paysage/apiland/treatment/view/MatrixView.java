@@ -4,9 +4,9 @@ import fr.inra.sad_paysage.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad_paysage.apiland.core.space.impl.raster.matrix.MatrixManager;
 import fr.inra.sad_paysage.apiland.treatment.Treatment;
 import fr.inra.sad_paysage.apiland.treatment.TreatmentState;
-import fr.inra.sad_paysage.apiland.treatment.TreatmentView;
+import fr.inra.sad_paysage.apiland.treatment.TreatmentObserver;
 
-public class MatrixView implements TreatmentView {
+public class MatrixView implements TreatmentObserver {
 	
 	private String matrixPort;
 	
@@ -31,7 +31,7 @@ public class MatrixView implements TreatmentView {
 	}
 	
 	@Override
-	public void updateProgression(int total) {
+	public void updateProgression(Treatment t, int total) {
 		// do nothing
 	}
 

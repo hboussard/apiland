@@ -97,7 +97,7 @@ public class GridWindowMatrixTreatment extends Treatment implements AnalysisObse
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState state) {
+	public void notify(Analysis ma, AnalysisState state) {
 		// do nothing
 	}
 	

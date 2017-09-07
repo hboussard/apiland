@@ -21,7 +21,7 @@ public class ValuesOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double value, Process process){
+	public void notify(Metric m, String metric, double value, Process process){
 		//System.out.println("enter : "+metric.replace(".0", ""));
 		values.put(metric.replace(".0", ""), value);
 	}
@@ -33,7 +33,7 @@ public class ValuesOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState state) {
+	public void notify(Analysis ma, AnalysisState state) {
 		switch (state){
 		case INIT : values.clear(); break;
 		}

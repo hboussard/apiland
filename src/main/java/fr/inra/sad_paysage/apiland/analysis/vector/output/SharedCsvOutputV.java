@@ -45,19 +45,19 @@ public class SharedCsvOutputV extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis a, AnalysisState state) {
+	public void notify(Analysis a, AnalysisState state) {
 		switch (state){ 
 			// do nothing
 		}
 	}
 	
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double value, Process process){
+	public void notify(Metric m, String metric, double value, Process process){
 		values.put(metric, value);
 	}
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState state) {
+	public void notify(Process p, ProcessState state) {
 		switch (state){
 		case DONE : notifyProcessDone((VectorProcess) p); break;
 		}

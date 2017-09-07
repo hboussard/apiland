@@ -52,22 +52,22 @@ public abstract class AbstractMetricOutput implements MetricOutput {
 	}
 
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double value, Process process){
+	public void notify(Metric m, String metric, double value, Process process){
 		// do nothing
 	}
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		// do nothing
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState state) {
+	public void notify(Analysis ma, AnalysisState state) {
 		// do nothing
 	}
 	
 	@Override
-	public void updateProgression(int total) {
+	public void updateProgression(Analysis a, int total) {
 		// do nothing
 	}
 

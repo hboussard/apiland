@@ -24,7 +24,6 @@ public abstract class SimpleWindow extends Window {
 		/*if(p.x() == 10){
 			System.out.println("locate "+p.x()+" "+p.y());
 		}*/
-		
 		if(pixel() != p){
 			setPixel(p);
 			shape.locate(p.x(), p.y());

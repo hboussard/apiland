@@ -15,8 +15,10 @@ public abstract class Pixel2PixelMatrixCalculation extends MatrixCalculation {
 	public void doRun(){
 		Matrix treat = MatrixFactory.get(matrix().getType()).create(matrix().width(), matrix().height(), matrix().cellsize(), matrix().minX(), matrix().maxX(), matrix().minY(), matrix().maxY(), matrix().noDataValue());
 		//Matrix treat = MatrixFactory.get(matrix().getType()).create(matrix());
+		int total = matrix().width() * matrix().height();
 		for(Pixel p : matrix()){
 			treat.put(p, treatPixel(p));
+			updateProgression(total);
 		}
 		setResult(treat);
 	}

@@ -11,8 +11,8 @@ import com.vividsolutions.jts.index.strtree.STRtree;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
-import fr.inra.sad_paysage.apiland.analysis.matrix.calculation.ClusteringAnalysis;
-import fr.inra.sad_paysage.apiland.analysis.matrix.calculation.ClusteringQueenAnalysis;
+import fr.inra.sad_paysage.apiland.analysis.matrix.calculation.cluster.ClusteringAnalysis;
+import fr.inra.sad_paysage.apiland.analysis.matrix.calculation.cluster.ClusteringQueenAnalysis;
 import fr.inra.sad_paysage.apiland.core.element.DynamicElement;
 import fr.inra.sad_paysage.apiland.core.element.DynamicFeature;
 import fr.inra.sad_paysage.apiland.core.element.DynamicLayer;

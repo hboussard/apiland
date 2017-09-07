@@ -4,10 +4,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-
 public class EuclidianDistanceSinglePixelIterator implements Iterator<Pixel>{
 	
 	private Pixel pixel;

@@ -10,7 +10,7 @@ public class FunctionalWindowWithMap extends FunctionalWindow {
 	private Friction friction;
 	
 	public FunctionalWindowWithMap(Matrix m, double d, Friction f){
-		super(m, d);
+		super(m, d, f.min());
 		this.friction = f;
 	}
 	
@@ -21,12 +21,22 @@ public class FunctionalWindowWithMap extends FunctionalWindow {
 	
 	@Override
 	public int width() {
-		return new Double(((2*dMax/matrix.cellsize())/friction.min())+1).intValue()-1;
+		int v = new Double(((2*dMax/matrix.cellsize())/friction.min())+1).intValue();
+		if(v % 2 == 0){
+			return v - 1;
+		}else{
+			return v;
+		}
 	}
 
 	@Override
 	public int height() {
-		return new Double(((2*dMax/matrix.cellsize())/friction.min())+1).intValue()-1;
+		int v = new Double(((2*dMax/matrix.cellsize())/friction.min())+1).intValue();
+		if(v % 2 == 0){
+			return v - 1;
+		}else{
+			return v;
+		}
 	}
 	
 	@Override
@@ -37,7 +47,5 @@ public class FunctionalWindowWithMap extends FunctionalWindow {
 		}
 		return friction.get(c);
 	}
-
-	
 	
 }

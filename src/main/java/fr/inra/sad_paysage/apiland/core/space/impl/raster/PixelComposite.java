@@ -50,47 +50,35 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 	
 	private int value;
 	
-	//private Set<Raster> rasters;
 	private Set<Pixel> pixels;
 	
+	private Set<Pixel> bounds;
+	
 	public PixelComposite(){
-		//rasters = new HashSet<Raster>();
 		this.pixels = new HashSet<Pixel>();
 		smooth = true;
 	}
 	
 	public PixelComposite(Set<Pixel> pixels){
-		//rasters = new HashSet<Raster>();
 		this.pixels = new HashSet<Pixel>();
 		addAll(pixels);
 		smooth = true;
 	}
 	
 	public PixelComposite(Pixel pixel){
-		//rasters = new HashSet<Raster>();
 		this.pixels = new HashSet<Pixel>();
 		add(pixel);
 		smooth = true;
-		//System.out.println("cr�ation d'un pixel composite 3");
 	}
 	
 	public PixelComposite(Pixel pixel, int value){
-		//rasters = new HashSet<Raster>();
-		this.pixels = new HashSet<Pixel>();
-		add(pixel);
-		smooth = true;
+		this(pixel);
 		this.value = value;
-		//System.out.println("cr�ation d'un pixel composite 3");
 	}
 	
 	public PixelComposite(Pixel pixel, int value, Number userObject){
-		//rasters = new HashSet<Raster>();
-		this.pixels = new HashSet<Pixel>();
-		add(pixel);
-		smooth = true;
-		this.value = value;
+		this(pixel, value);
 		setUserData(userObject.doubleValue());
-		//System.out.println("cr�ation d'un pixel composite 3");
 	}
 	
 	public int getValue(){
@@ -161,11 +149,8 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 	@Override
 	public Raster smooth() {
 		if(!smooth){
-			//if(rasters.size() > 0){
 			if(pixels.size() > 0){
-				//if(rasters.size() == 1){
 				if(pixels.size() == 1){
-					//return rasters.iterator().next().smooth();
 					return pixels.iterator().next().smooth();
 				}else{
 					Set<Pixel> pixelss = new HashSet<Pixel>();
@@ -183,6 +168,10 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 		return this;
 	}
 	
+	public Set<Pixel> getPixels(){
+		return pixels;
+	}
+	
 	@Override
 	public Iterator<Pixel> iterator() {
 		return new PixelIterator(pixels.iterator());
@@ -191,6 +180,27 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 	@Override
 	public Iterator<Pixel> getBoundaries(){
 		return new BoundaryIterator(this);
+	}
+	
+	public Set<Pixel> getBounds(){
+		if(bounds == null){
+			bounds = new HashSet<Pixel>();
+			Pixel p, p2;
+			Iterator<Pixel> ite;
+			Iterator<Pixel> iterator = iterator();
+			while(iterator.hasNext()){
+				p = iterator.next();
+				ite = p.getMargins();
+				while(ite.hasNext()){
+					p2 = ite.next();
+					if(!pixels.contains(p2)){
+						bounds.add(p);
+						break;
+					}
+				}
+			}
+		}
+		return bounds;
 	}
 	
 	@Override
@@ -359,7 +369,6 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 	
 	@Override
 	protected boolean touchesPixel(Pixel impl) {
-		System.out.println("de bordel");
 		boolean touche = false;
 		for(Pixel p : this){
 			if(p.equals(impl)){

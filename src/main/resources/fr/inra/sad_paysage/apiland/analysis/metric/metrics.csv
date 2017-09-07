@@ -1,5 +1,4 @@
 name;basic;process;type;class
-
 theorical_size;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.basic.TheoricalSizeMetric
 total_value;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.basic.TotalValueMetric
 valid_value;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.basic.ValidValueMetric
@@ -15,7 +14,6 @@ standard_error;true;quantitative;;fr.inra.sad_paysage.apiland.analysis.matrix.me
 count_positives;true;quantitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.quantitative.CountPositivesMetric
 count_negatives;true;quantitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.quantitative.CountNegativesMetric
 size;true;quantitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.quantitative.SizeMetric
-
 value;true;qualitative;value;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.value.CountValueMetric
 rate_value;true;qualitative;value;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.value.RateValueMetric
 SHDI;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.value.ShannonDiversityIndex
@@ -31,7 +29,6 @@ MD5;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualit
 count_class;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.value.CountClassValueMetric
 count_class_90;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.value.CountClassValue90Metric
 NAT;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.value.NaturaliteMetric
-
 total_couple;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.couple.TotalCoupleMetric
 valid_couple;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.couple.ValidCoupleMetric
 rate_valid_couple;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.couple.RateValidCoupleMetric
@@ -46,14 +43,12 @@ counthete;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.q
 homo_edge;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.couple.EdgeHomogeneousCoupleMetric
 hete_edge;true;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.couple.EdgeHeterogeneousCoupleMetric
 edge;true;qualitative;couple;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.couple.EdgeCoupleMetric
-
 LPI;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.LargestPatchIndex
 MPS;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.MeanPatchSizeMetric
 SDPS;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.StandardDeviationPatchSizeMetric
 VCPS;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.VariationCoefficientPatchSizeMetric
 NP;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.NumberOfPatchMetric
 HC;false;qualitative;;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.HanskiConnectivityMetric
-
 LPCI;false;qualitative;value;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.LargestPatchClassIndex
 MPSC;false;qualitative;value;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.MeanPatchSizeClassMetric
 SDPSC;false;qualitative;value;fr.inra.sad_paysage.apiland.analysis.matrix.metric.qualitative.patch.StandardDeviationPatchSizeClassMetric

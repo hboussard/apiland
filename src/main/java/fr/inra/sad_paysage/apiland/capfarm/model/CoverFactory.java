@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.csvreader.CsvReader;
+import com.csvreader.CsvWriter;
 import com.csvreader.CsvReader.CatastrophicException;
 import com.csvreader.CsvReader.FinalizedException;
 
@@ -71,6 +72,55 @@ public class CoverFactory {
 		} catch (FinalizedException e) {
 			e.printStackTrace();
 		} catch (CatastrophicException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void export(String coverFile, String groupFile){
+		exportCoverUnits(coverFile);
+		exportCoverGroups(groupFile);
+	}
+	
+	public static void exportCoverUnits(String coverFile){
+		try {
+			CsvWriter cw = new CsvWriter(coverFile);
+			cw.setDelimiter(';');
+	
+			cw.write("code");
+			cw.write("name");
+			cw.endRecord();
+			
+			for(CoverUnit cu : CoverManager.coverUnits()){
+				cw.write(cu.getCode());
+				cw.write(cu.getName());
+				cw.endRecord();
+			}
+			
+			cw.close();
+		} catch (com.csvreader.CsvWriter.FinalizedException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void exportCoverGroups(String groupFile){
+		try {
+			CsvWriter cw = new CsvWriter(groupFile);
+			cw.setDelimiter(';');
+	
+			cw.write("code");
+			cw.write("name");
+			cw.write("covers");
+			cw.endRecord();
+			
+			for(CoverGroup cg : CoverManager.coverGroups()){
+				cw.write(cg.getCode());
+				cw.write(cg.getName());
+				cw.write(cg.getCovers().toString().replaceAll("\\[", "{").replaceAll("\\]", "}").replaceAll(" ", ""));
+				cw.endRecord();
+			}
+			
+			cw.close();
+		} catch (com.csvreader.CsvWriter.FinalizedException | IOException e) {
 			e.printStackTrace();
 		}
 	}

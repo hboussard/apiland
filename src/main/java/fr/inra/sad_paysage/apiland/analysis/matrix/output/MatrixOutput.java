@@ -30,7 +30,7 @@ public class MatrixOutput extends AbstractMetricOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : 
 			matrix.init(0); 
@@ -49,7 +49,7 @@ public class MatrixOutput extends AbstractMetricOutput {
 	}
 
 	@Override
-	public void notifyFromMetric(Metric m, String n, double v, Process p) {
+	public void notify(Metric m, String n, double v, Process p) {
 		if(acceptMetric(n)){
 			matrix.put(((WindowMatrixProcess) p).x()/delta, ((WindowMatrixProcess) p).y()/delta, formatDouble(v));
 		}

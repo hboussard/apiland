@@ -37,15 +37,20 @@ public class TemporalPatternConstraint extends CoverAllocationConstraint<Cover, 
 			//Attribute<Cover> attribute = (Attribute<Cover>) p.getAttribute("cover");
 			boolean hasPattern = true;
 			
-			Iterator<TemporalValue<CoverUnit>> ite = ((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).getDynamics().iteratorInverse();
-			int ind = 0;
-			while(ite.hasNext() && ind < pattern.size()){
-				CoverUnit cu = ite.next().getValue();
-				if(!cu.equals(pattern.get(ind++))){
-					hasPattern = false;
-					break;
+			if(((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).getDynamics().size() >= pattern.size()){
+				Iterator<TemporalValue<CoverUnit>> ite = ((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).getDynamics().iteratorInverse();
+				int ind = 0;
+				while(ite.hasNext() && ind < pattern.size()){
+					CoverUnit cu = ite.next().getValue();
+					if(!cu.equals(pattern.get(ind++))){
+						hasPattern = false;
+						break;
+					}
 				}
+			}else{
+				hasPattern = false;
 			}
+			
 			if(hasPattern){
 				switch(mode()){
 				case NEVER : 

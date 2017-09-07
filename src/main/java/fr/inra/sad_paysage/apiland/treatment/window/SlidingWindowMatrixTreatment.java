@@ -29,7 +29,7 @@ import fr.inra.sad_paysage.apiland.window.MultipleWindow;
 import fr.inra.sad_paysage.apiland.window.Window;
 import fr.inra.sad_paysage.apiland.window.shape.WindowShapeType;
 
-public class SlidingWindowMatrixTreatment extends Treatment implements AnalysisObserver {
+public class SlidingWindowMatrixTreatment extends Treatment /*implements AnalysisObserver*/ {
 	
 	private Matrix matrix;
 	
@@ -190,11 +190,6 @@ public class SlidingWindowMatrixTreatment extends Treatment implements AnalysisO
 
 	@Override
 	protected void doClose() {
-		// do nothing
-	}
-
-	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState state) {
 		// do nothing
 	}
 	

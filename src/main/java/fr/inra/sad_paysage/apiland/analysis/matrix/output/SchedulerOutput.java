@@ -28,7 +28,7 @@ public abstract class SchedulerOutput extends AbstractMetricOutput{
 	private VolatileWindowAnalysis analysis;
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState s) {
+	public void notify(Analysis ma, AnalysisState s) {
 		switch (s){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis)ma);break;
 		case FINISH : notifyAnalysisFinish((WindowMatrixAnalysis)ma);break;
@@ -48,7 +48,7 @@ public abstract class SchedulerOutput extends AbstractMetricOutput{
 	}
 	
 	@Override
-	public void notifyFromProcess(Process p, ProcessState s) {
+	public void notify(Process p, ProcessState s) {
 		if(p instanceof WindowMatrixProcess){
 			switch(s){
 			case DONE : updateDone((WindowMatrixProcess) p); break;
@@ -91,7 +91,7 @@ public abstract class SchedulerOutput extends AbstractMetricOutput{
 	protected abstract void notifyChildMetric(String key, double value, WindowMatrixProcess wp);
 
 	@Override
-	public void notifyFromMetric(Metric m, String metric, double v, Process p) {
+	public void notify(Metric m, String metric, double v, Process p) {
 		if(acceptMetric(metric)){
 			if(!currents.containsKey((WindowMatrixProcess) p)){
 				currents.put((WindowMatrixProcess) p, new HashMap<String, Double>());

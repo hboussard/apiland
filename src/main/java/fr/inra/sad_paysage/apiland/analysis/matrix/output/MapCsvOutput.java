@@ -49,7 +49,7 @@ public class MapCsvOutput extends AbstractMetricOutput implements MetricOutput {
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState state) {
+	public void notify(Analysis ma, AnalysisState state) {
 		switch(state){
 		case INIT : notifyAnalysisInit((WindowMatrixAnalysis) ma);break;
 		}
@@ -67,7 +67,7 @@ public class MapCsvOutput extends AbstractMetricOutput implements MetricOutput {
 	}
 
 	@Override
-	public void notifyFromProcess(Process wp, ProcessState state) {
+	public void notify(Process wp, ProcessState state) {
 		switch(state){
 		case DONE : notifyProcessDone((WindowMatrixProcess) wp);break;
 		}
@@ -94,12 +94,7 @@ public class MapCsvOutput extends AbstractMetricOutput implements MetricOutput {
 	}
 
 	@Override
-	public void updateProgression(int total) {
-		// do nothing	
-	}
-
-	@Override
-	public void notifyFromMetric(Metric m, String metric, double v, Process wp) {
+	public void notify(Metric m, String metric, double v, Process wp) {
 		if(acceptMetric(metric)){
 			values.put(metric, v);
 		}else{

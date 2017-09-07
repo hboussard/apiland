@@ -13,9 +13,7 @@ public class RateValidValueMetric extends MatrixMetric implements BasicMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
-		if(co.countValues() > 0){
-			value = (double) (co.validValues())/co.theoricalSize();
-		}
+		value = (double) (co.validValues())/co.theoricalSize();
 	}
 
 }

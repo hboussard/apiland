@@ -127,7 +127,7 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState state) {
+	public void notify(Analysis ma, AnalysisState state) {
 		// do nothing
 	}
 	

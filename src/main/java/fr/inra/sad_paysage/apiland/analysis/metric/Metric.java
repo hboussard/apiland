@@ -86,7 +86,7 @@ public abstract class Metric implements Comparable<Metric> {
 	 */
 	public void notifyObservers(Process wp, String pref){
 		for(MetricObserver o : observers){
-			o.notifyFromMetric(this, pref+variable.getName(), value, wp);
+			o.notify(this, pref+variable.getName(), value, wp);
 		}
 		/*if(removers.size() != 0){
 			for(MetricObserver o : removers){

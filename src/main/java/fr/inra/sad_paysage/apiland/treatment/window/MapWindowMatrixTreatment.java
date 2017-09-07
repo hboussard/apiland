@@ -76,7 +76,7 @@ public class MapWindowMatrixTreatment extends Treatment implements AnalysisObser
 	}
 	
 	@Override
-	public void notifyFromAnalysis(Analysis ma, AnalysisState state) {
+	public void notify(Analysis ma, AnalysisState state) {
 		// do nothing
 	}
 
