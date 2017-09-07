@@ -10,12 +10,12 @@ public abstract class MatrixCalculation extends MatrixAnalysis {
 	
 	@Override
 	public Matrix getResult(){
-		return (Matrix)super.getResult();
+		return (Matrix) super.getResult();
 	}
 	
 	@Override
 	public Matrix allRun(){
-		return (Matrix)super.allRun();
+		return (Matrix) super.allRun();
 	}
 	
 }

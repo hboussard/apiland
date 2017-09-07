@@ -40,5 +40,15 @@ public abstract class MatrixAnalysis extends Analysis {
 	public Matrix[] wholeMatrix(){
 		return matrix;
 	}
+	
+	@Override
+	protected void doInit() {
+		// do nothing
+	}
+	
+	@Override
+	protected void doClose() {
+		// do nothing
+	}
 
 }

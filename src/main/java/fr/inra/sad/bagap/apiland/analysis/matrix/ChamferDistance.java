@@ -10,33 +10,9 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixFactory;
  * 
  * @author Code by Xavier Philippeau <br> Kernels by Verwer, Borgefors and Thiel 
  */
-public class ChamferDistance  {
+public class ChamferDistance extends MatrixCalculation {
  
-	/*
-	public final static int[][] cheessboard = new int[][] {
-		new int[] {1,0,1},
-		new int[] {1,1,1}
-	};
- 
-	public final static int[][] chamfer3 = new int[][] {
-		new int[] {1,0,3},
-		new int[] {1,1,4}
-	};
- 
-	public final static int[][] chamfer5 = new int[][] {
-		new int[] {1,0,5},
-		new int[] {1,1,7},
-		new int[] {2,1,11}
-	};
- 
-	public final static int[][] chamfer7 = new int[][] {
-		new int[] {1,0,14},
-		new int[] {1,1,20},
-		new int[] {2,1,31},
-		new int[] {3,1,44}
-	};*/
- 
-	public final static int[][] chamfer13 = new int[][] {
+	private final static int[][] chamfer13 = new int[][] {
 		new int[] {1, 0, 68},
 		new int[] {1, 1, 96},
 		new int[] {2, 1, 152},
@@ -53,14 +29,33 @@ public class ChamferDistance  {
 	private int normalizer = 0; 
  
 	private int width=0,height=0;
+	
+	private Matrix matrix;
+	
+	private Set<Integer> codes;
  
-	public ChamferDistance() {
+	public ChamferDistance(Matrix input, Set<Integer> codes) {
+		super(input);
+		this.chamfer = ChamferDistance.chamfer13;
+		this.normalizer = this.chamfer[0][2];
+		this.matrix = input;
+		this.codes = codes;
+	}
+	
+	/*
+	private ChamferDistance() {
 		this(ChamferDistance.chamfer13);
 	}
  
-	public ChamferDistance(int[][] chamfermask) {
+	private ChamferDistance(int[][] chamfermask) {
 		this.chamfer = chamfermask;
 		this.normalizer = this.chamfer[0][2];
+	}
+	*/
+
+	@Override
+	protected void doRun() {
+		setResult(compute(matrix, codes));
 	}
  
 	private void testAndSet(Matrix output, int x, int y, double newvalue) {
@@ -91,7 +86,7 @@ public class ChamferDistance  {
 		output[x][y] = newvalue;
 	}
  
-	public Matrix compute(Matrix input, Set<Integer> codes) {
+	private Matrix compute(Matrix input, Set<Integer> codes) {
 		int[] tab = new int[codes.size()];
 		int index = 0;
 		for(int i : codes){
@@ -100,11 +95,13 @@ public class ChamferDistance  {
 		return compute(input, tab);
 	}
 	
-	public Matrix compute(Matrix input, int... code) {
+	private Matrix compute(Matrix input, int... code) {
 		Matrix output = MatrixFactory.get(input.getType()).create(input.width(), input.height(), input.cellsize(), input.minX(), input.maxX(), input.minY(), input.maxY(), input.noDataValue());
 		//Matrix output = MatrixFactory.get(input.getType()).create(input);
 		this.width = input.width();
 		this.height = input.height();
+		
+		int total = (this.width * this.height) * 4;
 		
 		// initialize distance
 		for(int y=0; y<height; y++){
@@ -122,6 +119,7 @@ public class ChamferDistance  {
 				}else{
 					output.put(x, y, -1); // outside the object -> to be computed
 				}
+				updateProgression(total);
 			}
 		}
 		// forward
@@ -147,6 +145,7 @@ public class ChamferDistance  {
 						}
 					}
 				}
+				updateProgression(total);
 			}
 		}
 		
@@ -171,6 +170,7 @@ public class ChamferDistance  {
 						if (dy!=0) testAndSet(output, x+dy, y-dx, v+dt);
 					}
 				}
+				updateProgression(total);
 			}
 		}
 		
@@ -178,13 +178,14 @@ public class ChamferDistance  {
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
 				output.put(x, y, (output.get(x, y)/normalizer) * input.cellsize());
+				updateProgression(total);
 			}
 		}
 		
 		return output;
 	}
 	
-	public double[][] compute(int[][] input) {
+	private double[][] compute(int[][] input) {
  
 		this.width = input[0].length;
 		this.height = input.length;
@@ -256,6 +257,30 @@ public class ChamferDistance  {
 		}
 		return output;
 	}
+	
+	/*
+	private final static int[][] cheessboard = new int[][] {
+		new int[] {1,0,1},
+		new int[] {1,1,1}
+	};
+ 
+	public final static int[][] chamfer3 = new int[][] {
+		new int[] {1,0,3},
+		new int[] {1,1,4}
+	};
+ 
+	private final static int[][] chamfer5 = new int[][] {
+		new int[] {1,0,5},
+		new int[] {1,1,7},
+		new int[] {2,1,11}
+	};
+ 
+	private final static int[][] chamfer7 = new int[][] {
+		new int[] {1,0,14},
+		new int[] {1,1,20},
+		new int[] {2,1,31},
+		new int[] {3,1,44}
+	};*/
 	
 	/*
 	public static void main(String[] args){

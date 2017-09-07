@@ -42,8 +42,6 @@ import java.text.DecimalFormatSymbols;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
-
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.util.VisuImageJ;
 
 public class MatrixManager {
@@ -253,7 +251,7 @@ public class MatrixManager {
 		int ncols = new Double((maxx - minx) / m.cellsize()).intValue();
 		int nrows = new Double((maxy - miny) / m.cellsize()).intValue();
 		
-		System.out.println(ncols+" "+nrows);
+		//System.out.println(ncols+" "+nrows);
 		
 		Matrix mn = MatrixFactory.get(m.getType()).create(
 				ncols, 
@@ -267,7 +265,7 @@ public class MatrixManager {
 		
 		int dX = new Double((minx - m.minX()) / m.cellsize()).intValue();
 		int dY = new Double((miny - m.minY()) / m.cellsize()).intValue();
-		System.out.println(dX+" "+dY);
+		//System.out.println(dX+" "+dY);
 		
 		for(int j=0; j<nrows; j++){
 			for(int i=0; i<ncols; i++){
