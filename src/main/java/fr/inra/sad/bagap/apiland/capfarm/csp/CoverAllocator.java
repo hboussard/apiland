@@ -2,7 +2,6 @@ package fr.inra.sad.bagap.apiland.capfarm.csp;
 
 import java.util.Map;
 import java.util.Set;
-
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverGroup;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.capfarm.model.Covering;
@@ -52,15 +51,19 @@ public interface CoverAllocator extends Covering {
 	
 	void checkFarmingSystem(Instant start, Instant end, boolean verbose);
 	
-	boolean isMemory();
+	boolean hasMemory();
 	
 	int getMemory();
+	
+	void setMemory(int memory);
+	
+	void setMemory(boolean memory);
 	
 	// test de la procedure de FixedAllocationProblem
 	Map<Parcel, CoverUnit> getSolution();
 	
 	void setSolution(Map<Parcel, CoverUnit> solution);
-	
+
 	
 	
 }

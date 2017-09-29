@@ -8,14 +8,15 @@ import fr.inra.sad.bagap.apiland.analysis.process.metric.CoupleMetric;
 public class BaudryBurelHeterogeneityIndex extends MatrixMetric implements CoupleMetric {
 	
 	public BaudryBurelHeterogeneityIndex() {
-		super(VariableManager.get("BBHI"));
+		super(VariableManager.get("HET"));
 	}
 	
 	@Override
 	public void doCalculate(Counting co) {
+		value = 0;
 		if(co.countCouples() > 0){
 			double p;
-			value = 0;
+			
 			for(double c : co.couples()){
 				p = co.countCouple(c) / (double)co.validCouples(); 
 				if(p != 0){

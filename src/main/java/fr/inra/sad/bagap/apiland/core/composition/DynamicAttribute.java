@@ -177,6 +177,7 @@ public class DynamicAttribute<O extends Serializable> extends Attribute<O> imple
 	
 	@Override
 	public void setValue(Time t, Serializable o){
+		//System.out.println(t+" "+o);
 		if(getBinding().equals(o.getClass())){
 			if(getTemporalBinding().equals(t.getClass())){
 				dynamic.addTemporal(new TemporalValue<O>(t,(O)o));

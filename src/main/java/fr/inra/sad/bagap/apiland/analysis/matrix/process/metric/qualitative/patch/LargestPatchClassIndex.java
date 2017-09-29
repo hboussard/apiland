@@ -12,7 +12,7 @@ public class LargestPatchClassIndex extends MatrixMetric implements PatchMetric 
 	private int classMetric;
 	
 	public LargestPatchClassIndex(Integer cm) {
-		super(VariableManager.get("LPCI_"+cm));
+		super(VariableManager.get("LPI-class_"+cm));
 		classMetric = cm;
 	}
 	

@@ -32,8 +32,8 @@ public class CfmFarmSimulator extends CfmSimulator {
 		CoverAllocationProblemFactory factory = null;
 		switch(manager().mode()){
 		case IDLE : factory = new CoverAllocationProblemFactory(); break;
-		case ECONOMIC : factory = new EconomicCoverAllocationProblemFactory(); break;
-		case OPTIMIZE : factory = new OptimizeEconomicCoverAllocationProblemFactory(); break;
+		case ECONOMIC : factory = new EconomicCoverAllocationProblemFactory(manager().economicProfil()); break;
+		case OPTIMIZE : factory = new OptimizeEconomicCoverAllocationProblemFactory(manager().economicProfil()); break;
 		case SOLUTION : factory = new FixedCoverAllocationProblemFactory(); break;
 		}
 		

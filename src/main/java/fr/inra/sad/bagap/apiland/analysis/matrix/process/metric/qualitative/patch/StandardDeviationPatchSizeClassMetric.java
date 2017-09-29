@@ -13,7 +13,7 @@ public class StandardDeviationPatchSizeClassMetric extends MatrixMetric implemen
 	private int classMetric;
 	
 	public StandardDeviationPatchSizeClassMetric(Integer cm) {
-		super(VariableManager.get("SDPSC_"+cm));
+		super(VariableManager.get("SDPS-class_"+cm));
 		classMetric = cm;
 	}
 	

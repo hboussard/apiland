@@ -348,6 +348,96 @@ public class ConstraintLocationListener extends LocationBaseListener {
 	}
 	
 	@Override 
+	public void enterArea(@NotNull LocationParser.AreaContext ctx) {
+		String condition = ctx.getText().replace("AREA", "");
+		
+		int code = -1; 
+		String[] pp = null;
+		if(condition.contains("<=")){
+			pp = condition.split("<=");
+			code = 1;
+		}else if(condition.contains(">=")){
+			pp = condition.split(">=");
+			code = 2;
+		}else if(condition.contains("=")){
+			pp = condition.split("=");
+			code = 3;
+		}else if(condition.contains("<")){
+			pp = condition.split("<");
+			code = 4;
+		}else if(condition.contains(">")){
+			pp = condition.split(">");
+			code = 5;
+		}
+		
+		if(add){
+			for(Parcel p : allocator.parcels()){
+				int area = p.getArea();
+				switch(code){
+				case 1 : 
+					if(area <= Double.parseDouble(pp[1])*10000){
+						local.add(p);
+					}
+					break;
+				case 2 : 
+					if(area >= Double.parseDouble(pp[1])*10000){
+						local.add(p);
+					}
+					break;
+				case 3 : 
+					if(area == Double.parseDouble(pp[1])*10000){
+						local.add(p);
+					}
+					break;
+				case 4 : 
+					if(area < Double.parseDouble(pp[1])*10000){
+						local.add(p);
+					}
+					break;
+				case 5 : 
+					if(area > Double.parseDouble(pp[1])*10000){
+						local.add(p);
+					}
+					break;
+				}
+			}
+		}else{
+			for(Parcel p : allocator.parcels()){
+				int area = p.getArea();
+				switch(code){
+				case 1 : 
+					if(area <= Double.parseDouble(pp[1])*10000){
+						local.remove(p);
+					}
+					break;
+				case 2 : 
+					if(area >= Double.parseDouble(pp[1])*10000){
+						local.remove(p);
+					}
+					break;
+				case 3 : 
+					if(area == Double.parseDouble(pp[1])*10000){
+						local.remove(p);
+					}
+					break;
+				case 4 : 
+					if(area < Double.parseDouble(pp[1])*10000){
+						local.remove(p);
+					}
+					break;
+				case 5 : 
+					if(area > Double.parseDouble(pp[1])*10000){
+						local.remove(p);
+					}
+					break;
+				}
+			}
+		}
+		
+		first = false;
+	}
+	
+	@Override 
 	public void enterDistance(@NotNull LocationParser.DistanceContext ctx) { 
 		//System.out.println("enterDistance '"+ctx.getText()+"'");
 		

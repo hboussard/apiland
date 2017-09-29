@@ -22,10 +22,10 @@ public class CentralPatchHanskiConnectivityClassMetric extends MatrixMetric impl
 	@Override
 	protected void doCalculate(Counting co) {
 		Pixel pixel = ((SimpleWindowMatrixProcess) co.process()).window().toWindow(((SimpleWindowMatrixProcess) co.process()).window().pixel());
-		
+		//System.out.println(((SimpleWindowMatrixProcess) co.process()).window().pixel());
 		Patch patch = null;
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
-			if(p.getValue() == classMetric && p.contains(pixel)){
+			if(p.contains(pixel)){
 				patch = p;
 			}
 		}
@@ -35,6 +35,11 @@ public class CentralPatchHanskiConnectivityClassMetric extends MatrixMetric impl
 			for(Patch p : ((PatchComposite) co.patches()).patches()){
 				if(patch != p && p.getValue() == classMetric){
 					double d = PatchManager.distance(patch, p) / 1000.0;
+					double a = p.getArea() / 10000;
+					
+					value += Math.exp(-1*d)*a;
+				}else if(patch == p && p.getValue() == classMetric){
+					double d = 0;
 					double a = p.getArea() / 10000;
 					
 					value += Math.exp(-1*d)*a;

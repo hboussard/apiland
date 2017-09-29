@@ -8,7 +8,7 @@ import fr.inra.sad.bagap.apiland.analysis.process.metric.BasicMetric;
 public class RateValidValueMetric extends MatrixMetric implements BasicMetric {
 	
 	public RateValidValueMetric() {
-		super(VariableManager.get("rate_valid_value"));
+		super(VariableManager.get("pN-valid"));
 	}
 
 	@Override

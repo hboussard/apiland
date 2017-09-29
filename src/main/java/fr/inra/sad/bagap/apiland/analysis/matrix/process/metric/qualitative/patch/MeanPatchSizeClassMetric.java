@@ -12,7 +12,7 @@ public class MeanPatchSizeClassMetric extends MatrixMetric implements PatchMetri
 	private int classMetric;
 	
 	public MeanPatchSizeClassMetric(Integer cm) {
-		super(VariableManager.get("MPSC_"+cm));
+		super(VariableManager.get("MPS-class_"+cm));
 		classMetric = cm;
 	}
 	

@@ -10,7 +10,7 @@ import fr.inra.sad.bagap.apiland.core.util.Couple;
 public class EdgeHeterogeneousCoupleMetric extends MatrixMetric implements CoupleMetric {
 
 	public EdgeHeterogeneousCoupleMetric() {
-		super(VariableManager.get("hete_edge"));
+		super(VariableManager.get("E-hete"));
 	}
 
 	@Override

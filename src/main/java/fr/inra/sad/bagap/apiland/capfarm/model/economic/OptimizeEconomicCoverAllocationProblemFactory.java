@@ -9,6 +9,12 @@ import fr.inra.sad.bagap.apiland.core.time.Instant;
 
 public class OptimizeEconomicCoverAllocationProblemFactory extends CoverAllocationProblemFactory {
 
+	private String economicProfil;
+	
+	public OptimizeEconomicCoverAllocationProblemFactory(String economicProfil){
+		this.economicProfil = economicProfil;
+	}
+	
 	@Override
 	public CoverAllocationProblem create(CoverAllocator coverAllocator, Instant t){
 		
@@ -17,8 +23,12 @@ public class OptimizeEconomicCoverAllocationProblemFactory extends CoverAllocati
 		for(CoverUnit cu : coverAllocator.coverUnits()){
 			covers[index++] = cu;
 		}
+		//EcoomicProfil ep = EconomicProfilFactory.create(covers);
 		
-		EconomicProfil ep = EconomicProfilFactory.create(covers);
+		//EconomicProfil ep = EconomicProfilFactory.create("C:/Hugues/modelisation/maelia/coupling/profil_economique.csv");
+		EconomicProfil ep = EconomicProfilFactory.create(covers, economicProfil);
+		
 		return new OptimizeEconomicCoverAllocationProblem(coverAllocator, t, ep);
 	}
+	
 }

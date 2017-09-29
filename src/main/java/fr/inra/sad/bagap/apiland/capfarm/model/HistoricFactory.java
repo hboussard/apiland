@@ -2,16 +2,19 @@ package fr.inra.sad.bagap.apiland.capfarm.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvReader.CatastrophicException;
 import com.csvreader.CsvReader.FinalizedException;
 
+import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 
 public class HistoricFactory {
 
 	public static void init(Farm farm, Instant start){
+		
 		if(farm.hasHistoric()){
 			try {
 				File folder = new File(farm.getHistoric());
@@ -61,12 +64,16 @@ public class HistoricFactory {
 					
 					for(String cover : sequence){
 						nb = 1;
-						if(cover.contains("(")){
-							infos = cover.replace(")", "").split("\\(");
-							cover = infos[0];
-							nb = Integer.parseInt(infos[1]);
+						if(!cover.equalsIgnoreCase("")){
+							if(cover.contains("(")){
+								infos = cover.replace(")", "").split("\\(");
+								cover = infos[0];
+								nb = Integer.parseInt(infos[1]);
+							}
+							//System.out.println(parcel+" "+cover);
+							//System.out.println(farm.parcel(parcel));
+							farm.parcel(parcel).getAttribute("cover").setValue(t, (CoverUnit) Cover.get(cover));
 						}
-						farm.parcel(parcel).getAttribute("cover").setValue(t, (CoverUnit) Cover.get(cover));
 						t = Instant.get(t.dayOfMonth(), t.month(), t.year()+nb);	
 					}
 					

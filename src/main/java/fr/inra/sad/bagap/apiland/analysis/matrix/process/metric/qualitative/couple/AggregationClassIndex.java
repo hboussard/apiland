@@ -18,6 +18,7 @@ public class AggregationClassIndex extends MatrixMetric implements ValueMetric, 
 	
 	@Override
 	public void doCalculate(Counting co) {
+		value = -1;
 		if(co.countCouples() > 0){
 			int ai = co.countValue(classMetric);
 			int n=1, n2;
@@ -41,7 +42,11 @@ public class AggregationClassIndex extends MatrixMetric implements ValueMetric, 
 				G = 2*n*(n-1) + 2*m -2;
 			}
 			int g = co.countCouple(Couple.get(classMetric, classMetric));
-			value =  new Double(g) / G * 100.0;
+			if(G != 0){
+				value =  new Double(g) / G * 100.0;
+			}else{
+				value = 0;
+			}
 		}
 	}
 	

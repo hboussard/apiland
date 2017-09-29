@@ -25,6 +25,7 @@ public class Farm implements CoverAllocator {
 		this.system = new FarmingSystem(this);
 	}
 	
+	@Override
 	public String getCode() {
 		return code;
 	}
@@ -44,6 +45,7 @@ public class Farm implements CoverAllocator {
 		return system;
 	}
 
+	@Override
 	public FarmTerritory getTerritory() {
 		return territory;
 	}
@@ -99,6 +101,7 @@ public class Farm implements CoverAllocator {
 	@Override
 	public void clearParcels() {
 		territory.clearParcels();
+		memory = 0;
 	}
 	
 	@Override
@@ -144,23 +147,26 @@ public class Farm implements CoverAllocator {
 		for(CoverAllocationConstraint<?, ?> ca : system.getConstraints()){
 			ca.check(start, end, true);
 		}
-		
 	}
-
 	
 	// gestion du memory
+	int memory = 0;
+	boolean hasMemory = false;
 	
-	int memory = -1; 
-	
+	@Override
 	public void setMemory(int memory){
 		this.memory = memory;
 	}
 	
 	@Override
-	public boolean isMemory() {
-		return memory >= 0;
+	public void setMemory(boolean memory){
+		this.hasMemory = memory;
 	}
 	
+	@Override
+	public boolean hasMemory() {
+		return hasMemory;
+	}
 
 	@Override
 	public int getMemory() {

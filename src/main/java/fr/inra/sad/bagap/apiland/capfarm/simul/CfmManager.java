@@ -1,6 +1,7 @@
 package fr.inra.sad.bagap.apiland.capfarm.simul;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.capfarm.CAPFarm;
@@ -16,7 +17,7 @@ public class CfmManager extends SimulationManager {
 	
 	private Territory territory;
 	
-	private Set<OutputAnalysis> outputs;
+	private LinkedList<OutputAnalysis> outputs;
 	
 	private CfmMode mode = CfmMode.IDLE;
 	
@@ -26,12 +27,14 @@ public class CfmManager extends SimulationManager {
 	
 	private String probaTimeFolder;
 	
+	private String economicProfil;
+	
 	private boolean check;
 
 	public CfmManager(int s){
 		super(s);
 		setDelay(new YearDelay(1));
-		outputs = new HashSet<OutputAnalysis>();
+		outputs = new LinkedList<OutputAnalysis>();
 		check = false;
 		probaTimeFolder = CfmManager.class.getResource("proba_times/").toString();
 	}
@@ -65,6 +68,10 @@ public class CfmManager extends SimulationManager {
 		this.territory = territory;
 	}
 	
+	public void setEconomicProfil(String economicProfil){
+		this.economicProfil = economicProfil;
+	}
+	
 	public void addOutput(OutputAnalysis output) {
 		this.outputs.add(output);
 	}
@@ -73,7 +80,7 @@ public class CfmManager extends SimulationManager {
 		return territory;
 	}
 
-	public Set<OutputAnalysis> outputs(){
+	public LinkedList<OutputAnalysis> outputs(){
 		return outputs;
 	}
 	
@@ -96,4 +103,10 @@ public class CfmManager extends SimulationManager {
 	public void checkConstraints(boolean check) {
 		this.check = check;
 	}
+	
+	public String economicProfil(){
+		return economicProfil;
+	}
+	
+	
 }

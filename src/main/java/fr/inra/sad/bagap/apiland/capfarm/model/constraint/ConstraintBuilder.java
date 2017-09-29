@@ -34,6 +34,8 @@ import fr.inra.sad.bagap.apiland.capfarm.model.economic.EconomicProfil;
 import fr.inra.sad.bagap.apiland.capfarm.model.economic.EconomicProfilFactory;
 import fr.inra.sad.bagap.apiland.capfarm.model.economic.constraint.ProfitConstraint;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
+import fr.inra.sad.bagap.apiland.core.util.Manager;
+import fr.inra.sad.bagap.apiland.simul.SimulationManager;
 
 public class ConstraintBuilder {
 
@@ -144,7 +146,6 @@ public class ConstraintBuilder {
 	
 	public void setLocation(String location){
 		hasLocation = true;
-		
 		LocationParser parser = new LocationParser(new CommonTokenStream(new LocationLexer(new ANTLRInputStream(location)))); 
 		ConstraintLocationListener listener = new ConstraintLocationListener(allocator);
 		//ErrorConstraintLocationListener listener = new ErrorConstraintLocationListener();
@@ -314,6 +315,7 @@ public class ConstraintBuilder {
 	private void initDelayConstraints() {
 		Set<Cover> targets = new TreeSet<Cover>();
 		if(params[0] != null){
+			//System.out.println(params[0]);
 			targets.add(Cover.get(params[0]));	
 		}else{
 			targets.addAll(covers);
@@ -373,7 +375,7 @@ public class ConstraintBuilder {
 			CoverAllocationConstraint<?, ?> constraint = new NextCoverConstraint(code, checkOnly, mode, covers, location, domain);
 			allocator.addConstraint(constraint);
 		}else if(params != null){
-			try {				
+			try {	
 				CsvReader cr = new CsvReader(params[0]);
 				cr.setDelimiter(';');
 				cr.readHeaders();
@@ -394,6 +396,7 @@ public class ConstraintBuilder {
 						}
 					}
 					if(next.size() != allocator.coverUnits().size()){
+						//System.out.println(cov+" / "+next);
 						constraint = new NextCoverConstraint(code+"_"+prec.getCode(), checkOnly, mode, cov, location, new SetDomain<CoverUnit>(next));
 						allocator.addConstraint(constraint);
 					}
@@ -458,10 +461,10 @@ public class ConstraintBuilder {
 	private void initProfitConstraints(){
 		Domain<Integer, Integer> domain = buildIntDomain(100);
 		
-		CoverUnit[] cc = allocator.coverUnits().toArray(new CoverUnit[allocator.coverUnits().size()]);
-		EconomicProfil ep = EconomicProfilFactory.create(cc);
+		//CoverUnit[] cc = allocator.coverUnits().toArray(new CoverUnit[allocator.coverUnits().size()]);
+		//EconomicProfil ep = EconomicProfilFactory.create(cc);
 		
-		CoverAllocationConstraint<?, ?> constraint = new ProfitConstraint(code, checkOnly, mode, covers, location, domain, ep);
+		CoverAllocationConstraint<?, ?> constraint = new ProfitConstraint(code, checkOnly, mode, covers, location, domain);
 		allocator.addConstraint(constraint);
 	}
 	

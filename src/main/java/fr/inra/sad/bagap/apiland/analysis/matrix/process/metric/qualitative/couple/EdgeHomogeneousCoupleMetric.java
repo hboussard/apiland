@@ -10,7 +10,7 @@ import fr.inra.sad.bagap.apiland.core.util.Couple;
 public class EdgeHomogeneousCoupleMetric extends MatrixMetric implements CoupleMetric {
 
 	public EdgeHomogeneousCoupleMetric() {
-		super(VariableManager.get("homo_edge"));
+		super(VariableManager.get("E-homo"));
 	}
 
 	@Override

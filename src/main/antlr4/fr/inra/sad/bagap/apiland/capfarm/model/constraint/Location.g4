@@ -6,7 +6,7 @@ evaluate :
  
 localisation : (partout | plusminus? terme)? (plusminus terme)* ;
 
-terme : parcelles | boolatt | numatt | distance | andterme | xorterme;
+terme : parcelles | boolatt | numatt | distance | area | andterme | xorterme;
 
 plusminus : '+' | '-' ;
 
@@ -17,6 +17,8 @@ boolatt : '[' ATTRIBUTE ('=' (('T'|'\'T\'') | ('F'|'\'F\'')))? ']' ;
 numatt : '[' ATTRIBUTE ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ']' ;
 
 distance : 'DISTANCE' '(' ATTRIBUTE ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ')' ;
+
+area : 'AREA' ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ;
 
 partout : 'ALL' |'All' | 'all' ;
 

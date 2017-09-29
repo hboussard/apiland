@@ -188,7 +188,9 @@ public class CoverAllocationProblem extends AbstractProblem {
 					for(Cover c : covers.keySet()){
 						ic = covers.get(c);	
 						if(((IntVar) coversAndParcels[ic][ip]).getValue() == 1){
+							//System.out.println("1 "+p.getId()+";"+c+";"+p.getArea());
 							p.getAttribute("cover").setValue(t, c);
+							//System.out.println(p.getAttribute("cover").getValue(t));
 							//p.getAttribute("cov").setValue(t, c.getCode());
 							break;
 						}

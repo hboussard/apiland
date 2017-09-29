@@ -13,8 +13,8 @@ public class ShannonEvennessIndex extends MatrixMetric implements ValueMetric {
 	
 	@Override
 	public void doCalculate(Counting co) {
+		value = 0;
 		if(co.countValues() > 0){
-			value = 0;
 			double p;
 			for(int v : co.values()){
 				p = co.countValue(v) / (double)co.validValues();

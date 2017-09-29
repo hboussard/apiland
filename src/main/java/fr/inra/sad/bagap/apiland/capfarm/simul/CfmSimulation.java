@@ -12,6 +12,7 @@ import fr.inra.sad.bagap.apiland.core.composition.DynamicAttribute;
 import fr.inra.sad.bagap.apiland.core.composition.TemporalValue;
 import fr.inra.sad.bagap.apiland.core.time.Future;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
+import fr.inra.sad.bagap.apiland.core.time.Interval;
 import fr.inra.sad.bagap.apiland.simul.Scenario;
 import fr.inra.sad.bagap.apiland.simul.Simulation;
 
@@ -64,10 +65,13 @@ public class CfmSimulation extends Simulation {
 			String seq_year = "";
 			int length = 0;
 			CoverUnit last = null;
+			Interval interval = new Interval(manager().start(), manager().end());
 			for(CoverLocationModel model : (GlobalCoverLocationModel) model().get("agriculture")){
 				for(Parcel p : model.getCoverAllocator().parcels()){
 					// sequence en rapport aux couverts et a leurs durees
 					sb_cover = new StringBuilder();
+					//System.out.println("parcel : "+p.getId());
+					//System.out.println( ((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).getDynamics().size());
 					for(TemporalValue<CoverUnit> tv : ((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).getDynamics()){
 						last = tv.getValue();
 						if(tv.getTime().end() instanceof Future){
@@ -75,14 +79,16 @@ public class CfmSimulation extends Simulation {
 						}else{
 							length = tv.getTime().end().year()-tv.getTime().start().year();
 						}
-						
-						if(length > 1){
-							sb_cover.append(tv.getValue()+"("+length+") - ");
-						}else{
-							sb_cover.append(tv.getValue()+" - ");
+						if(tv.getTime().intersects(interval)){
+							if(length > 1){
+								sb_cover.append(tv.getValue()+"("+length+") - ");
+							}else{
+								sb_cover.append(tv.getValue()+" - ");
+							}
 						}
 					}
 					//System.out.println(((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).getDynamics().size());
+					//System.out.println(sb_cover);
 					sb_cover.delete(sb_cover.length()-3, sb_cover.length());
 					seq_cover = sb_cover.toString();
 					

@@ -8,7 +8,7 @@ import fr.inra.sad.bagap.apiland.analysis.process.metric.CoupleMetric;
 public class RateValidCoupleMetric extends MatrixMetric implements CoupleMetric {
 	
 	public RateValidCoupleMetric() {
-		super(VariableManager.get("rate_valid_couple"));
+		super(VariableManager.get("pNC-valid"));
 	}
 
 	@Override

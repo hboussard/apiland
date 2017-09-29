@@ -13,7 +13,7 @@ public class VariationCoefficientPatchSizeClassMetric extends MatrixMetric imple
 	private int classMetric;
 	
 	public VariationCoefficientPatchSizeClassMetric(Integer cm) {
-		super(VariableManager.get("VCPSC_"+cm));
+		super(VariableManager.get("VCPS-class_"+cm));
 		classMetric = cm;
 	}
 	

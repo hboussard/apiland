@@ -130,7 +130,7 @@ public class CoverAllocatorComposite implements CoverAllocator {
 	}
 
 	@Override
-	public boolean isMemory() {
+	public boolean hasMemory() {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -149,6 +149,18 @@ public class CoverAllocatorComposite implements CoverAllocator {
 
 	@Override
 	public void setSolution(Map<Parcel, CoverUnit> fixed) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMemory(int memory) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void setMemory(boolean memory) {
 		// TODO Auto-generated method stub
 		
 	}

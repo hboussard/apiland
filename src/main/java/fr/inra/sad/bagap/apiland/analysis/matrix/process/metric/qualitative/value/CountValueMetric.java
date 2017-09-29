@@ -10,7 +10,7 @@ public class CountValueMetric extends MatrixMetric implements ValueMetric {
 	private int v;
 	
 	public CountValueMetric(Integer v) {
-		super(VariableManager.get("value_"+v));
+		super(VariableManager.get("NV_"+v));
 		this.v = v;
 	}
 

@@ -54,5 +54,7 @@ MPSC;false;qualitative;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.m
 SDPSC;false;qualitative;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.StandardDeviationPatchSizeClassMetric
 VCPSC;false;qualitative;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.VariationCoefficientPatchSizeClassMetric
 CPHCC;false;qualitative;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.CentralPatchHanskiConnectivityClassMetric
+CPXHCC;false;qualitative;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.CentralPixelHanskiConnectivityClassMetric
 HCC;false;qualitative;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.HanskiConnectivityClassMetric
 NPC;false;qualitative;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.NumberOfPatchClassMetric
+HAGGC;true;qualitative;couple;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.HAGGClassIndex

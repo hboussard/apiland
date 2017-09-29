@@ -29,7 +29,7 @@ public class EconomicProfil {
 	
 	public int profit(CoverUnit cu, int area){
 		int p = profit(getCoverIndex(cu));
-		//System.out.println(p * area);
+		//System.out.println(p +" "+ area+" "+(p*area));
 		return p * area;
 	}
 		
@@ -66,7 +66,11 @@ public class EconomicProfil {
 	private int profit(int index){
 		//System.out.println(yields[index]+" "+prices[index]+" "+new Double(((prices[index] / 1000.0) * (yields[index] / 10000.0) * 1000.0)).intValue());
 		//return new Double(((prices[index] / 1000.0) * (yields[index] / 10000.0) + (bonus[index] / 10000.0) - (charges[index] / 10000.0)) * 1000.0).intValue();
-		return new Double(((prices[index] / 1000.0) * (yields[index] / 10000.0 + (bonus[index] / 10000.0) - (charges[index] / 10000.0)) * 1000.0)).intValue();
+		//return new Double(((prices[index] / 1000.0) * (yields[index] / 10000.0 + (bonus[index] / 10000.0) - (charges[index] / 10000.0)) * 1000.0)).intValue();
+		//return new Double(((prices[index] / 1000.0) * (yields[index] / 10000.0) * 1000.0)).intValue();
+		//return 10;
+		//return yields[index] / 10;
+		return yields[index];
 	}
 	
 	public int[] works(){

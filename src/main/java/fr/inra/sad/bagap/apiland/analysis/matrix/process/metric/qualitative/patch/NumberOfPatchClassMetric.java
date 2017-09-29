@@ -12,7 +12,7 @@ public class NumberOfPatchClassMetric extends MatrixMetric implements PatchMetri
 	private int classMetric;
 	
 	public NumberOfPatchClassMetric(Integer cm) {
-		super(VariableManager.get("NPC_"+cm));
+		super(VariableManager.get("NP-class_"+cm));
 		classMetric = cm;
 	}
 	

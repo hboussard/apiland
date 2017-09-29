@@ -8,7 +8,7 @@ import fr.inra.sad.bagap.apiland.analysis.process.metric.BasicMetric;
 public class ValidValueMetric extends MatrixMetric implements BasicMetric {
 	
 	public ValidValueMetric() {
-		super(VariableManager.get("valid_value"));
+		super(VariableManager.get("N-valid"));
 	}
 
 	@Override

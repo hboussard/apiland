@@ -12,7 +12,7 @@ public class EdgeCoupleMetric extends MatrixMetric implements CoupleMetric {
 	private double couple;
 	
 	public EdgeCoupleMetric(Integer i1, Integer i2) {
-		super(VariableManager.get("edge_"+i1+"-"+i2));
+		super(VariableManager.get("E_"+i1+"-"+i2));
 		this.couple = Couple.get(i1, i2);
 	}
 

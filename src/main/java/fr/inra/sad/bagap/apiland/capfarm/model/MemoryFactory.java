@@ -22,7 +22,7 @@ public class MemoryFactory {
 	public static void init(CoverLocationModel model, Instant t, String farmFolder){
 		
 		CoverAllocator farm = model.getCoverAllocator();
-		if(farm.isMemory()){
+		if(farm.hasMemory()){
 			int memory = farm.getMemory();
 			try {
 				String memoryFile = farmFolder+"/"+farm.getCode()+"/"+farm.getFarmingSystem()+"/"+farm.getCode()+"_memory.csv";
@@ -38,9 +38,10 @@ public class MemoryFactory {
 					cr.close();
 					//System.out.println(farm.getCode());
 					memory = memories.get(new Double(Math.random() * memories.size()).intValue());
+					farm.setMemory(memory);
 				}
 				
-				AttributeType type= DynamicElementTypeFactory.createAttributeType("memory", Interval.class, CoverUnit.class);
+				AttributeType type = DynamicElementTypeFactory.createAttributeType("memory", Interval.class, CoverUnit.class);
 				
 				CsvReader cr = new CsvReader(memoryFile);
 				cr.setDelimiter(';');

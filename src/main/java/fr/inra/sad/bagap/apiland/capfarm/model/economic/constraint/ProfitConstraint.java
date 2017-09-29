@@ -26,9 +26,8 @@ public class ProfitConstraint extends CoverAllocationConstraint<Integer, Integer
 	
 	private EconomicProfil ep;
 	
-	public ProfitConstraint(String code, boolean checkOnly, ConstraintMode mode, Set<Cover> covers, Set<Parcel> parcels, Domain<Integer, Integer> domain, EconomicProfil ep) {
+	public ProfitConstraint(String code, boolean checkOnly, ConstraintMode mode, Set<Cover> covers, Set<Parcel> parcels, Domain<Integer, Integer> domain) {
 		super(code, checkOnly, ConstraintType.Profit, mode, covers, parcels, domain);
-		this.ep = ep;
 	}
 	
 	@Override
@@ -36,10 +35,13 @@ public class ProfitConstraint extends CoverAllocationConstraint<Integer, Integer
 		
 		EconomicCoverAllocationProblem ecap = (EconomicCoverAllocationProblem) cap;
 		
-		IntVar profit = VF.bounded("profit_"+code(), 0, 2000000000, ecap.solver()); 
+		ep = ecap.getEconomicProfil();
 		
-		ecap.solver().post(ICF.scalar(ecap.coverAreas(), ep.profits(covers()), profit));
-	
+		IntVar profit = VF.bounded("profit", 0, 2000000000, ecap.solver()); 
+		
+		//ecap.solver().post(ICF.scalar(ecap.coverAreas(), ep.profits(covers()), profit));
+		ecap.solver().post(ICF.scalar(ecap.coverAreas(), ep.profits(), profit));
+		
 		switch(mode()){
 		case ONLY :
 			post(ecap, domain(), profit);
@@ -52,6 +54,7 @@ public class ProfitConstraint extends CoverAllocationConstraint<Integer, Integer
 	}
 	
 	private void post(CoverAllocationProblem cap, Domain<Integer, Integer> domain, IntVar profit){
+		//System.out.println(domain.getClass());
 		cap.solver().post(domain.postIntVar(profit));
 	}
 
@@ -68,12 +71,12 @@ public class ProfitConstraint extends CoverAllocationConstraint<Integer, Integer
 			for(Parcel p : location()){
 				c = (CoverUnit) p.getAttribute("cover").getValue(t);
 				if(covers().contains(c)){
-					//System.out.println(c+" : "+p.getArea()+" "+p.getId()+" "+ep.profit(c, p.getArea())/100.0);
-					profit += ep.profit(c, p.getArea()) / 100;
+					//System.out.println(p.getId()+";"+c+";"+p.getArea()+";"+ep.profit(c, p.getArea()));
+					profit += ep.profit(c, p.getArea());
 				}
 			}
 			
-			System.out.println(t.year()+" : profit "+profit);
+			//System.out.println(t.year()+" : profit "+profit);
 			supermin = Math.min(supermin, profit);
 			supermax = Math.max(supermax, profit);
 			
@@ -104,8 +107,6 @@ public class ProfitConstraint extends CoverAllocationConstraint<Integer, Integer
 		}
 		if(verbose){
 			if(ok){
-				supermin /= 100;
-				supermax /= 100;
 				if(supermin == supermax){
 					sb.append("GOOD : cover "+covers().toString()+" has profit = "+supermin);
 				}else{

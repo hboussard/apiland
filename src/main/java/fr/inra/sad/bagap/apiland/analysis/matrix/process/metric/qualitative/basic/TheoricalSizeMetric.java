@@ -8,7 +8,7 @@ import fr.inra.sad.bagap.apiland.analysis.process.metric.BasicMetric;
 public class TheoricalSizeMetric extends MatrixMetric implements BasicMetric {
 	
 	public TheoricalSizeMetric() {
-		super(VariableManager.get("theorical_size"));
+		super(VariableManager.get("N-theoretical"));
 	}
 
 	@Override

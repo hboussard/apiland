@@ -9,11 +9,6 @@ import fr.inra.sad.bagap.apiland.capfarm.simul.CfmSimulator;
 import fr.inra.sad.bagap.apiland.capfarm.simul.CoverAllocationProblemFactory;
 import fr.inra.sad.bagap.apiland.capfarm.simul.GlobalCoverLocationModel;
 import fr.inra.sad.bagap.apiland.capfarm.simul.MemoryCoverLocationModel;
-import fr.inra.sad.bagap.apiland.core.element.DynamicLayer;
-import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
-import fr.inra.sad.bagap.apiland.simul.operation.OpRasterization;
-import fr.inra.sad.bagap.apiland.simul.operation.OpRasterizationType;
-import fr.inra.sad.bagap.apiland.simul.operation.OperationBuilder;
 
 public class CfmLandscapeSimulator extends CfmSimulator {
 
@@ -42,13 +37,13 @@ public class CfmLandscapeSimulator extends CfmSimulator {
 				CoverAllocationProblemFactory factory = null;
 				switch(manager().mode()){
 				case IDLE : factory = new CoverAllocationProblemFactory(); break;
-				case ECONOMIC : factory = new EconomicCoverAllocationProblemFactory(); break;
-				case OPTIMIZE : factory = new OptimizeEconomicCoverAllocationProblemFactory(); break;
+				case ECONOMIC : factory = new EconomicCoverAllocationProblemFactory(manager().economicProfil()); break;
+				case OPTIMIZE : factory = new OptimizeEconomicCoverAllocationProblemFactory(manager().economicProfil()); break;
 				}
 				agriculture.add(new CSPCoverLocationModel(this, f, factory)); 
 				break;
 			case MEMORY : 
-				f.setMemory(0);
+				f.setMemory(true);
 				agriculture.add(new MemoryCoverLocationModel(this, f)); 
 				break;
 			default : throw new IllegalArgumentException(manager().processMode()+" not implemented yet");

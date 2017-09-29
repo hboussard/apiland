@@ -21,7 +21,7 @@ public class NaturaliteMetric extends MatrixMetric implements ValueMetric {
 			value = 0;
 			double area;
 			for(int v : co.values()){
-				area = co.countValue(v) * Raster.getCellSize();
+				area = co.countValue(v) * Math.pow(Raster.getCellSize(), 2);
 				//value += area * coeffs.get(v);
 				value += area * v;
 			}

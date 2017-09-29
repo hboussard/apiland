@@ -11,7 +11,7 @@ public class CountCoupleMetric extends MatrixMetric implements CoupleMetric {
 	private double couple;
 	
 	public CountCoupleMetric(Integer i1, Integer i2) {
-		super(VariableManager.get("couple_"+i1+"-"+i2));
+		super(VariableManager.get("NC_"+i1+"-"+i2));
 		this.couple = Couple.get(i1, i2);
 	}
 

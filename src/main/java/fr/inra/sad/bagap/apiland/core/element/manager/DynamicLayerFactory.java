@@ -246,14 +246,19 @@ public class DynamicLayerFactory {
 			double minY = Double.MAX_VALUE;
 			double maxY = Double.MIN_VALUE;
 			
+			//System.out.println("ici "+minX+" "+maxX+" "+minY+" "+maxY);
+			
 			Iterator<DynamicFeature> ite = layer.deepIterator();
 			DynamicFeature e;
+			int i = 0;
 			while(ite.hasNext()){
 				e = ite.next();
 				minX = Math.min(minX, e.minX());
 				maxX = Math.max(maxX, e.maxX());
 				minY = Math.min(minY, e.minY());
 				maxY = Math.max(maxY, e.maxY());
+				
+				//System.out.println(minX+" "+maxX+" "+minY+" "+maxY+" "+(i++));
 			}
 			
 			layer.getStructure().setMinX(minX);

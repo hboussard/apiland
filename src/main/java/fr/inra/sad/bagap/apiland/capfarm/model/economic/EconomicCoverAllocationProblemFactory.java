@@ -9,6 +9,12 @@ import fr.inra.sad.bagap.apiland.core.time.Instant;
 
 public class EconomicCoverAllocationProblemFactory extends CoverAllocationProblemFactory {
 
+	private String economicProfil;
+	
+	public EconomicCoverAllocationProblemFactory(String economicProfil){
+		this.economicProfil = economicProfil;
+	}
+	
 	@Override
 	public CoverAllocationProblem create(CoverAllocator coverAllocator, Instant t){
 		
@@ -18,8 +24,10 @@ public class EconomicCoverAllocationProblemFactory extends CoverAllocationProble
 			covers[index++] = cu;
 		}
 		
-		EconomicProfil ep = EconomicProfilFactory.create(covers);
-		return new EconomicCoverAllocationProblem(coverAllocator, t);
+		//EconomicProfil ep = EconomicProfilFactory.create(covers);
+		EconomicProfil ep = EconomicProfilFactory.create(covers, economicProfil);
+		
+		return new EconomicCoverAllocationProblem(coverAllocator, t, ep);
 	}
 	
 }

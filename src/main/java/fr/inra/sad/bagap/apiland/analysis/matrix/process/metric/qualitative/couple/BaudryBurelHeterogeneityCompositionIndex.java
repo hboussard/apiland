@@ -9,14 +9,14 @@ import fr.inra.sad.bagap.apiland.core.util.Couple;
 public class BaudryBurelHeterogeneityCompositionIndex extends MatrixMetric implements CoupleMetric {
 	
 	public BaudryBurelHeterogeneityCompositionIndex() {
-		super(VariableManager.get("BBHCI"));
+		super(VariableManager.get("HET-agg"));
 	}
 	
 	@Override
 	public void doCalculate(Counting co) {
+		value = 0;
 		if(co.countCouples() > 0){
 			double p;
-			value = 0;
 			for(double c : co.couples()){
 				if(Couple.isHomogeneous(c)){
 					p = co.countCouple(c) / (double) co.validCouples();

@@ -17,6 +17,18 @@ public class LocationBaseListener implements LocationListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArea(@NotNull LocationParser.AreaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArea(@NotNull LocationParser.AreaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPlusminus(@NotNull LocationParser.PlusminusContext ctx) { }
 	/**
 	 * {@inheritDoc}

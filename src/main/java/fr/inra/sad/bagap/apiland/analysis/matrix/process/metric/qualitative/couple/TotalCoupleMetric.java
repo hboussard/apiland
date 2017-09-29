@@ -8,7 +8,7 @@ import fr.inra.sad.bagap.apiland.analysis.process.metric.CoupleMetric;
 public class TotalCoupleMetric extends MatrixMetric implements CoupleMetric {
 	
 	public TotalCoupleMetric() {
-		super(VariableManager.get("total_couple"));
+		super(VariableManager.get("NC-total"));
 	}
 
 	@Override

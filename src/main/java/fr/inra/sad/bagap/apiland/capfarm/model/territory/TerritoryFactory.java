@@ -103,6 +103,7 @@ public class TerritoryFactory {
 		// definition du type "FarmTerritory"
 		DynamicLayerType farmTerritoryType = new DynamicLayerType("farm", FarmTerritory.class);
 		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("seed", Interval.class, Long.class));
+		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("profit", Interval.class, Integer.class));
 		farmTerritoryType.addElementType(parcelType);
 		farmTerritoryType.addElementType(facilityType);
 		

@@ -28,7 +28,19 @@ public class MatrixMetricManager {
 	
 	private static Set<String> setMetrics;
 	
-	private static Set<String> qualitativeMetrics;
+	//private static Set<String> qualitativeMetrics;
+	
+	private static Set<String> valuesMetrics;
+	
+	private static Set<String> couplesMetrics;
+	
+	private static Set<String> patchMetrics;
+	
+	private static Set<String> connectivityMetrics;
+	
+	private static Set<String> diversityMetrics;
+	
+	private static Set<String> grainMetrics;
 	
 	private static Set<String> quantitativeMetrics;
 	
@@ -41,14 +53,21 @@ public class MatrixMetricManager {
 		valueMetrics = new HashSet<String>();
 		coupleMetrics = new HashSet<String>();
 		setMetrics = new HashSet<String>();
-		qualitativeMetrics = new HashSet<String>();
+		//qualitativeMetrics = new HashSet<String>();
+		valuesMetrics = new HashSet<String>();
+		couplesMetrics = new HashSet<String>();
+		patchMetrics = new HashSet<String>();
+		connectivityMetrics = new HashSet<String>();
+		diversityMetrics = new HashSet<String>();
+		grainMetrics = new HashSet<String>();
 		quantitativeMetrics = new TreeSet<String>();
 		statsMetrics = new TreeSet<String>();
 		metrics = new HashMap<String, String>();
 		CsvReader cr = null;
 		try{
 			//String buf = "c://Hugues/workspace/apiland-0.9.3.v4-analysis/src/fr/inra/sad_paysage/apiland/analysis/metric/metrics.csv";
-			BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics.csv")));
+			//BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics.csv")));
+			BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics_2017.csv")));
 			cr = new CsvReader(buf);
 			cr.setDelimiter(';');
 			cr.readHeaders();
@@ -58,11 +77,35 @@ public class MatrixMetricManager {
 					if(cr.get("basic").equalsIgnoreCase("true")){
 						basicMetrics.add(cr.get("name"));
 					}
+					switch(cr.get("process")){
+					case "value" :
+						valuesMetrics.add(cr.get("name"));
+						break;
+					case "couple" :
+						couplesMetrics.add(cr.get("name"));
+						break;
+					case "patch" :
+						patchMetrics.add(cr.get("name"));
+						break;
+					case "connectivity" :
+						connectivityMetrics.add(cr.get("name"));
+						break;
+					case "diversity" :
+						diversityMetrics.add(cr.get("name"));
+						break;
+					case "grain" :
+						grainMetrics.add(cr.get("name"));
+						break;
+					case "quantitative" :
+						quantitativeMetrics.add(cr.get("name"));
+						break;
+					}
+					/*
 					if(cr.get("process").equalsIgnoreCase("qualitative")){
 						qualitativeMetrics.add(cr.get("name"));
 					}else if(cr.get("process").equalsIgnoreCase("quantitative")){
 						quantitativeMetrics.add(cr.get("name"));
-					}
+					}*/
 					if(cr.get("type").equalsIgnoreCase("value")){
 						valueMetrics.add(cr.get("name"));
 					}else if(cr.get("type").equalsIgnoreCase("couple")){
@@ -124,7 +167,7 @@ public class MatrixMetricManager {
 	
 	private static boolean isCoupleMetric(String m){
 		for(String metric : coupleMetrics){
-			if(m.startsWith(metric)){
+			if(m.startsWith(metric+"_")){
 				return true;
 			}
 		}
@@ -209,10 +252,9 @@ public class MatrixMetricManager {
 	
 	public static MatrixMetric get(String m){
 		// redecoupage de la metrique
-		
+		//System.out.println(m);
 		try {
 			if(isSetMetric(m)){
-				
 				String metric = getSetMetric(m);
 				Class<?> c = Class.forName(metrics.get(metric));
 				Set<Integer> set = new HashSet<Integer>();
@@ -226,6 +268,7 @@ public class MatrixMetricManager {
 			}else if(isCoupleMetric(m)){
 				
 				String metric = getCoupleMetric(m);
+				//System.out.println(m+" "+metric);
 				Class<?> c = Class.forName(metrics.get(metric));
 				metric = m.replace(metric+"_", "");
 				StringTokenizer st = new StringTokenizer(metric, "-");
@@ -247,7 +290,6 @@ public class MatrixMetricManager {
 				
 			}else{
 				
-				//System.out.println(m);
 				Class<?> c = Class.forName(metrics.get(m));
 				return (MatrixMetric) c.getConstructor().newInstance();
 				
@@ -290,6 +332,175 @@ public class MatrixMetricManager {
 		return metrics;
 	}
 	
+	public static Set<String> getGrainMetricNames(Set<Integer> values){
+		Set<String> metrics = new TreeSet<String>();
+		
+		for(String m : grainMetrics){
+			if(valueMetrics.contains(m)){
+				if(values.size() < 50){
+					for(int v : values){
+						metrics.add(m+"_"+(int)v);
+					}
+				}
+			}else if(coupleMetrics.contains(m)){
+				if(values.size() < 250){
+					for(String cou : getCouples(values)){
+						metrics.add(m+"_"+cou);
+					}
+				}
+			}else if(setMetrics.contains(m)){
+				for(String comb : getCombinations(values)){
+					metrics.add(m+"_"+comb);
+				}
+			}else{
+				metrics.add(m);
+			}
+		}
+		
+		return metrics;
+	}
+	
+	public static Set<String> getDiversityMetricNames(Set<Integer> values){
+		Set<String> metrics = new TreeSet<String>();
+		
+		for(String m : diversityMetrics){
+			if(valueMetrics.contains(m)){
+				if(values.size() < 50){
+					for(int v : values){
+						metrics.add(m+"_"+(int)v);
+					}
+				}
+			}else if(coupleMetrics.contains(m)){
+				if(values.size() < 250){
+					for(String cou : getCouples(values)){
+						metrics.add(m+"_"+cou);
+					}
+				}
+			}else if(setMetrics.contains(m)){
+				for(String comb : getCombinations(values)){
+					metrics.add(m+"_"+comb);
+				}
+			}else{
+				metrics.add(m);
+			}
+		}
+		
+		return metrics;
+	}
+	
+	public static Set<String> getConnectivityMetricNames(Set<Integer> values){
+		Set<String> metrics = new TreeSet<String>();
+		
+		for(String m : connectivityMetrics){
+			if(valueMetrics.contains(m)){
+				if(values.size() < 50){
+					for(int v : values){
+						metrics.add(m+"_"+(int)v);
+					}
+				}
+			}else if(coupleMetrics.contains(m)){
+				if(values.size() < 250){
+					for(String cou : getCouples(values)){
+						metrics.add(m+"_"+cou);
+					}
+				}
+			}else if(setMetrics.contains(m)){
+				for(String comb : getCombinations(values)){
+					metrics.add(m+"_"+comb);
+				}
+			}else{
+				metrics.add(m);
+			}
+		}
+		
+		return metrics;
+	}
+	
+	public static Set<String> getPatchMetricNames(Set<Integer> values){
+		Set<String> metrics = new TreeSet<String>();
+		
+		for(String m : patchMetrics){
+			if(valueMetrics.contains(m)){
+				if(values.size() < 50){
+					for(int v : values){
+						metrics.add(m+"_"+(int)v);
+					}
+				}
+			}else if(coupleMetrics.contains(m)){
+				if(values.size() < 250){
+					for(String cou : getCouples(values)){
+						metrics.add(m+"_"+cou);
+					}
+				}
+			}else if(setMetrics.contains(m)){
+				for(String comb : getCombinations(values)){
+					metrics.add(m+"_"+comb);
+				}
+			}else{
+				metrics.add(m);
+			}
+		}
+		
+		return metrics;
+	}
+	
+	public static Set<String> getCoupleMetricNames(Set<Integer> values){
+		Set<String> metrics = new TreeSet<String>();
+		
+		for(String m : couplesMetrics){
+			if(valueMetrics.contains(m)){
+				if(values.size() < 50){
+					for(int v : values){
+						metrics.add(m+"_"+(int)v);
+					}
+				}
+			}else if(coupleMetrics.contains(m)){
+				if(values.size() < 250){
+					for(String cou : getCouples(values)){
+						metrics.add(m+"_"+cou);
+					}
+				}
+			}else if(setMetrics.contains(m)){
+				for(String comb : getCombinations(values)){
+					metrics.add(m+"_"+comb);
+				}
+			}else{
+				metrics.add(m);
+			}
+		}
+		
+		return metrics;
+	}
+	
+	public static Set<String> getValueMetricNames(Set<Integer> values){
+		Set<String> metrics = new TreeSet<String>();
+		
+		for(String m : valuesMetrics){
+			if(valueMetrics.contains(m)){
+				if(values.size() < 50){
+					for(int v : values){
+						metrics.add(m+"_"+(int)v);
+					}
+				}
+			}else if(coupleMetrics.contains(m)){
+				if(values.size() < 250){
+					for(String cou : getCouples(values)){
+						metrics.add(m+"_"+cou);
+					}
+				}
+			}else if(setMetrics.contains(m)){
+				for(String comb : getCombinations(values)){
+					metrics.add(m+"_"+comb);
+				}
+			}else{
+				metrics.add(m);
+			}
+		}
+		
+		return metrics;
+	}
+	
+	/*
 	public static Set<String> getQualitativeMetricNames(Set<Integer> values){
 		Set<String> metrics = new TreeSet<String>();
 		
@@ -316,7 +527,7 @@ public class MatrixMetricManager {
 		}
 		
 		return metrics;
-	}
+	}*/
 
 	private static Set<String> getCombinations(Set<Integer> values) {
 		Set<String> combinations = new HashSet<String>();

@@ -23,7 +23,7 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 
 	private EconomicProfil ep;
 	
-	private IntVar profit, unprofit, work;
+	private IntVar profit, unprofit/*, work*/;
 	
 	private IntVar[] coverAreas, coverCounts;
 	
@@ -45,10 +45,10 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		
 		super.buildVariables();
 	
-		profit = VF.bounded("profit", 0, 999999999, solver); 
-		unprofit = VF.bounded("unprofit", -999999999, 0, solver);
+		profit = VF.bounded("profit", 0, 2000000000, solver); 
+		unprofit = VF.bounded("unprofit", -2000000000, 0, solver);
 		
-		work = VF.bounded("work", 0, 999999999, solver);
+		//work = VF.bounded("work", 0, 999999999, solver);
 		
 		coverAreas = new IntVar[covers().size()];
 		coverCounts = new IntVar[covers().size()];
@@ -69,6 +69,7 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		}
 		for(Parcel p : parcels().keySet()){
 			areas[parcels().get(p)] = p.getArea()/100;  // surface en ares
+			//areas[parcels().get(p)] = p.getArea();  // surface en m²
 		}
 					
 		for(CoverUnit c : covers().keySet()){
@@ -82,7 +83,7 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		solver().post(ICF.arithm(profit, "+", unprofit, "=", 0));
 		solver().post(ICF.scalar(coverAreas, ep.profits(), profit));
 			
-		solver().post(ICF.scalar(coverCounts, ep.works(), work));
+		//solver().post(ICF.scalar(coverCounts, ep.works(), work));
 	}
 	
 	@Override
@@ -93,45 +94,51 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		AbstractStrategy<?> as2 = ISF.random(parcelsImplantedCoverContinue, r);
 		solver.set(ISF.lastConflict(solver, new StrategiesSequencer(as1, as2)));
 
-		SMF.limitFail(solver, 1000);
+		//SMF.limitFail(solver, 100000);
+		SMF.limitTime(solver, 1000);
 	}
 	
 	@Override
 	protected boolean solve() {
 		int ip, ic;
 				
-		solver.findParetoFront(ResolutionPolicy.MINIMIZE, unprofit, work);
+		solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, profit);
+		//solver.findParetoFront(ResolutionPolicy.MINIMIZE, unprofit/*, work*/);
 		//solver.findOptimalSolution(ResolutionPolicy.MAXIMIZE, profit);
-		try {
-			solver.restoreLastSolution();
-			System.out.println(time().year());
-			System.out.println("profit = "+profit.getValue());
-			System.out.println("travail = "+work.getValue());
-			//int[] areas = new int[coverAreas.length];
-			//int index = 0;
-			//for(CoverUnit c : covers().keySet()){
-			//	int it = covers().get(c);
-			//	System.out.println(c+" "+coverAreas[it].getValue()+" "+coverCounts[it].getValue());
-			//	areas[index++] = coverAreas[it].getValue();
-			//}
-			//ep.display(areas);
-			for(Parcel p : parcels().keySet()){
-				ip = parcels().get(p);
-				if(((IntVar) parcelsImplantedCoverContinue[ip]).getValue() == 0){
-					for(Cover c : covers().keySet()){
-						ic = covers().get(c);	
-						if(((IntVar) coversAndParcels(ic, ip)).getValue() == 1){
-							p.getAttribute("cover").setValue(time(), c);
-							//p.getAttribute("cov").setValue(t, c.getCode());
-							break;
+		if(solver.findSolution()){
+			try {
+				solver.restoreLastSolution();
+				//System.out.println(time().year());
+				System.out.println("profit = "+profit.getValue());
+				allocator().getTerritory().getAttribute("profit").setValue(time(), profit.getValue());
+				//System.out.println("travail = "+work.getValue());
+				//int[] areas = new int[coverAreas.length];
+				//int index = 0;
+				//for(CoverUnit c : covers().keySet()){
+				//	int it = covers().get(c);
+				//	System.out.println(c+" "+coverAreas[it].getValue()+" "+coverCounts[it].getValue());
+				//	areas[index++] = coverAreas[it].getValue();
+				//}
+				//ep.display(areas);
+				for(Parcel p : parcels().keySet()){
+					ip = parcels().get(p);
+					if(((IntVar) parcelsImplantedCoverContinue[ip]).getValue() == 0){
+						for(Cover c : covers().keySet()){
+							ic = covers().get(c);	
+							if(((IntVar) coversAndParcels(ic, ip)).getValue() == 1){
+								p.getAttribute("cover").setValue(time(), c);
+								//p.getAttribute("cov").setValue(t, c.getCode());
+								break;
+							}
 						}
 					}
 				}
+				return true;
+			} catch (ContradictionException e) {
+				e.printStackTrace();
 			}
-			return true;
-		} catch (ContradictionException e) {
-			e.printStackTrace();
 		}
+		
 		
 		return false;
 	}

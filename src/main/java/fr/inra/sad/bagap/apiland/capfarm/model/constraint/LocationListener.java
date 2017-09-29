@@ -9,6 +9,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface LocationListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link LocationParser#area}.
+	 * @param ctx the parse tree
+	 */
+	void enterArea(@NotNull LocationParser.AreaContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LocationParser#area}.
+	 * @param ctx the parse tree
+	 */
+	void exitArea(@NotNull LocationParser.AreaContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link LocationParser#plusminus}.
 	 * @param ctx the parse tree
 	 */

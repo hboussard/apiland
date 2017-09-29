@@ -1,14 +1,9 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import fr.inra.sad.bagap.apiland.analysis.VariableManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.PatchMetric;
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
-import fr.inra.sad.bagap.apiland.patch.Envelope;
 import fr.inra.sad.bagap.apiland.patch.Patch;
 import fr.inra.sad.bagap.apiland.patch.PatchComposite;
 import fr.inra.sad.bagap.apiland.patch.PatchManager;
@@ -17,10 +12,8 @@ public class HanskiConnectivityClassMetric extends MatrixMetric implements Patch
 
 	private int classMetric;
 	
-	private int index = 0;
-	
 	public HanskiConnectivityClassMetric(Integer cm) {
-		super(VariableManager.get("HCC_"+cm));
+		super(VariableManager.get("HC-class_"+cm));
 		classMetric = cm;
 	}
 
@@ -28,18 +21,14 @@ public class HanskiConnectivityClassMetric extends MatrixMetric implements Patch
 	protected void doCalculate(Counting co) {
 		value = 0;
 		int nb = 0;
-		//Set<Patch> ever = new HashSet<Patch>();
 		for(Patch p1 : ((PatchComposite) co.patches()).patches()){
 			if(classMetric == p1.getValue()){
-				//ever.add(p1);
 				nb++;
 				for(Patch p2 : ((PatchComposite) co.patches()).patches()){
-					if(classMetric == p2.getValue() /*&& !ever.contains(p2)*/ && p1 != p2){
-						//double d = (PatchManager.distance(p1, p2)* Raster.getCellSize()) / 1000.0;
-						double d = (Envelope.distance(p1.getEnvelope(), p2.getEnvelope())*Raster.getCellSize()) / 1000.0;
-						//System.out.println("raster : distance (en km) = "+d);
+					if(classMetric == p2.getValue() && p1 != p2){
+						//double d = (Envelope.distance(p1.getEnvelope(), p2.getEnvelope())*Raster.getCellSize()) / 1000.0;
+						double d = PatchManager.distance(p1, p2) / 1000.0;
 						double a = p2.getArea() / 10000.0;
-						//System.out.println("raster : aire (en hectare) = "+a);
 					
 						value += Math.exp(-1*d)*a;
 					}
@@ -48,8 +37,6 @@ public class HanskiConnectivityClassMetric extends MatrixMetric implements Patch
 			
 		}
 		value /= nb;
-		//System.out.println("raster "+index++);
-		System.out.println("raster "+(index++)+": value = "+value+" ("+nb+")");
 	}
 
 }

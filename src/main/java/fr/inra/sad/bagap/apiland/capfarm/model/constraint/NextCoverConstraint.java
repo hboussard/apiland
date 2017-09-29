@@ -15,6 +15,7 @@ import fr.inra.sad.bagap.apiland.capfarm.model.domain.SetDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.composition.DynamicAttribute;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
+import fr.inra.sad.bagap.apiland.core.time.Interval;
 
 public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, CoverUnit> {
 
@@ -34,13 +35,18 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 				int i;
 				switch(mode()){
 				case ONLY :
-					cons = new Constraint[((SetDomain<CoverUnit>) domain()).set().size()];
-					i = 0;
-					for(CoverUnit cu : ((SetDomain<CoverUnit>) domain()).set()){
-						cons[i++] = ICF.arithm(cap.coversAndParcels(cap.covers().get(cu), ip), "=", 1);
-					}
-					if(cons.length > 0){
-						LCF.ifThen(cap.parcelsImplantedCoverContinue(ip).not(), LCF.or(cons));
+					if(((SetDomain<CoverUnit>) domain()).set().size() > 0){
+						cons = new Constraint[((SetDomain<CoverUnit>) domain()).set().size()];
+						i = 0;
+						for(CoverUnit cu : ((SetDomain<CoverUnit>) domain()).set()){
+							//System.out.println(covers()+" "+cu);
+							cons[i++] = ICF.arithm(cap.coversAndParcels(cap.covers().get(cu), ip), "=", 1);
+						}
+						if(cons.length > 0){
+							LCF.ifThen(cap.parcelsImplantedCoverContinue(ip).not(), LCF.or(cons));
+						}
+					}else{ // pas de suivant, le couvert continue
+						cap.solver().post(ICF.arithm(cap.parcelsImplantedCoverContinue(ip), "=", 1));
 					}
 					break;
 				case NEVER : 
@@ -66,9 +72,10 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 		//sb.append("next cover ");
 		Set<CoverUnit> next = new HashSet<CoverUnit>();
 		CoverUnit prec;
+		Interval t = new Interval(start, end);
 		for(Parcel p : location()){
 			prec = null;
-			for(CoverUnit c : ((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).values()){
+			for(CoverUnit c : ((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).values(t)){
 				if(covers().contains(prec)){
 					
 					switch(mode()){

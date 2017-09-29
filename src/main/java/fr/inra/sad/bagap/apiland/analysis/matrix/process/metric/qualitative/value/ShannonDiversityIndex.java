@@ -17,8 +17,8 @@ public class ShannonDiversityIndex extends MatrixMetric implements ValueMetric {
 	@Override
 	public void doCalculate(Counting co) {
 		//System.out.println("indice "+((SimpleWindowMatrixProcess) co.process()).window().pixel());
+		value = 0;
 		if(co.countValues() > 0){
-			value = 0;
 			double p; 
 			for(int v : co.values()){
 				p = co.countValue(v) / (double)co.validValues();

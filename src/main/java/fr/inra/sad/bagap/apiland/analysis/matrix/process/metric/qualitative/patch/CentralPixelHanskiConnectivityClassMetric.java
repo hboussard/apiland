@@ -26,8 +26,8 @@ public class CentralPixelHanskiConnectivityClassMetric extends MatrixMetric impl
 		value = 0;
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
 			if(p.getValue() == classMetric){
-				double d = PatchManager.distance(p, pixel) ;
-				double a = p.getArea();
+				double d = PatchManager.distance(p, pixel) / 1000.0;
+				double a = p.getArea() / 10000;
 				
 				//System.out.println(d+" "+Math.exp(-1*d));
 				

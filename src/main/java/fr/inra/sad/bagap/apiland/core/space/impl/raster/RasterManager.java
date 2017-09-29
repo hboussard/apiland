@@ -15,7 +15,6 @@ import fr.inra.sad.bagap.apiland.core.element.DynamicFeature;
 import fr.inra.sad.bagap.apiland.core.element.DynamicLayer;
 import fr.inra.sad.bagap.apiland.core.space.Geometry;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.ArrayMatrixFactory;
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.JaiMatrixFactory;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixFactory;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
@@ -41,11 +40,17 @@ public class RasterManager {
 	}
 	
 	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, String> map, Polygon cercle, double buffer){
-		
 		double minX = cercle.getEnvelopeInternal().getMinX() - buffer;
 		double maxX = cercle.getEnvelopeInternal().getMaxX() + buffer;
 		double minY = cercle.getEnvelopeInternal().getMinY() - buffer;
 		double maxY = cercle.getEnvelopeInternal().getMaxY() + buffer;
+		
+		return exportMatrix(layer, name, t, map, minX, maxX, minY, maxY);
+	}
+	
+	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, String> map, double minX, double maxX, double minY, double maxY){
+		
+		
 		/*
 		int tx, ty;
 		tx = new Double((Math.floor((minX - layer.minX()) / Raster.getCellSize())) + 1).intValue();
@@ -90,11 +95,10 @@ public class RasterManager {
 	}
 	
 	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, Integer> map){
-		return exportMatrix(layer, name, t, map, layer.minX(), layer.maxX(), layer.minY(), layer.maxY());
+		return exportMatrix2(layer, name, t, map, layer.minX(), layer.maxX(), layer.minY(), layer.maxY());
 	}
 	
-	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, Integer> map, 
-			double minX, double maxX, double minY, double maxY){
+	public static Matrix exportMatrix2(DynamicLayer<?> layer, String name, Instant t, Map<String, Integer> map, double minX, double maxX, double minY, double maxY){
 		
 		int tx, ty;
 		

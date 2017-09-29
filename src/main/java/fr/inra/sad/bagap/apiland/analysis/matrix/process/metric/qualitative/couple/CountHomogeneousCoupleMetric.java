@@ -9,7 +9,7 @@ import fr.inra.sad.bagap.apiland.core.util.Couple;
 public class CountHomogeneousCoupleMetric extends MatrixMetric implements CoupleMetric {
 
 	public CountHomogeneousCoupleMetric() {
-		super(VariableManager.get("counthomo"));
+		super(VariableManager.get("NC-homo"));
 	}
 
 	@Override

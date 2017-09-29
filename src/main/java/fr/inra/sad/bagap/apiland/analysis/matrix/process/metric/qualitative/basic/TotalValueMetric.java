@@ -8,7 +8,7 @@ import fr.inra.sad.bagap.apiland.analysis.process.metric.BasicMetric;
 public class TotalValueMetric extends MatrixMetric implements BasicMetric {
 	
 	public TotalValueMetric() {
-		super(VariableManager.get("total_value"));
+		super(VariableManager.get("N-total"));
 	}
 
 	@Override

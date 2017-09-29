@@ -105,11 +105,13 @@ public class ConstraintFactoryFromExcel {
 				genericCovers.put(r.getCell(1).getStringCellValue(), r.getCell(0).getStringCellValue());
 				if(r.getCell(3) != null){
 					String group = r.getCell(3).getStringCellValue();
-					if(!groups.containsKey(group)){
-						groups.put(group, new HashSet<String>());
-						
+					if(!group.equalsIgnoreCase("")){
+						if(!groups.containsKey(group)){
+							groups.put(group, new HashSet<String>());
+							
+						}
+						groups.get(group).add(r.getCell(0).getStringCellValue());
 					}
-					groups.get(group).add(r.getCell(0).getStringCellValue());
 				}
 			}
 		}
@@ -150,22 +152,22 @@ public class ConstraintFactoryFromExcel {
 	private void integrateNextCovers(XSSFWorkbook workbook){
 		
 		XSSFSheet sheet = workbook.getSheet("suivants-txt");
-		integrateSingleNextCovers(sheet);
+		integrateSingleNextCovers(sheet, 1);
 		
 		sheet = workbook.getSheet("suivants-2-txt");
-		integrateSingleNextCovers(sheet);
+		integrateSingleNextCovers(sheet, 2);
 		
 		sheet = workbook.getSheet("suivants-3-txt");
-		integrateSingleNextCovers(sheet);
+		integrateSingleNextCovers(sheet, 3);
 		
 		sheet = workbook.getSheet("suivants-4-txt");
-		integrateSingleNextCovers(sheet);
+		integrateSingleNextCovers(sheet, 4);
 		
 		sheet = workbook.getSheet("suivants-5-txt");
-		integrateSingleNextCovers(sheet);
+		integrateSingleNextCovers(sheet, 5);
 	}
 	
-	private void integrateSingleNextCovers(XSSFSheet sheet){
+	private void integrateSingleNextCovers(XSSFSheet sheet, int nb){
 		
 		// récupération de la localisation
 		String location = sheet.getRow(0).getCell(0).getStringCellValue();
@@ -189,20 +191,22 @@ public class ConstraintFactoryFromExcel {
 				}
 			}
 			
-			writeNextCovers(mycovers, next, location);
+			writeNextCovers(mycovers, next, location, nb);
 			
 			builder.setCode(conscode+(iconscode++));
 			builder.setLocation(location);
 			builder.setType(ConstraintType.NextCover);
-			builder.setParams(output+"next-"+location+".txt");
+			//builder.setParams(output+"next-"+nb+"-"+location+".txt");
+			builder.setParams(output+"next-"+nb+".txt");
 			builder.build();
 		}
 	}
 	
-	private void writeNextCovers(List<String> mycovers, boolean[][] next, String location){
+	private void writeNextCovers(List<String> mycovers, boolean[][] next, String location, int nb){
 		// écriture du fichier précédents-suivants
 		try {
-			CsvWriter cw2 = new CsvWriter(output+"next-"+location+".txt");
+			//CsvWriter cw2 = new CsvWriter(output+"next-"+nb+"-"+location+".txt");
+			CsvWriter cw2 = new CsvWriter(output+"next-"+nb+".txt");
 			cw2.setDelimiter(';');
 			cw2.write("previous");
 			for(String cover : mycovers){
@@ -270,46 +274,49 @@ public class ConstraintFactoryFromExcel {
 		}
 		
 		// récupération des parcelles
-		parcelles = new ArrayList<String>();
-		Set<Set<String>> links = new HashSet<Set<String>>();
-		for(Row r : sheet){
-			if(r.getRowNum() > 0){
-				String parcelle = r.getCell(entetes.get("id")).getStringCellValue();
-				parcelles.add(parcelle);
-				for(String z : zones.keySet()){
-					if(r.getCell(entetes.get(z)).toString().equalsIgnoreCase("1.0")){
-						zones.get(z).add(parcelle);
-					}
-				}
-				if(entetes.containsKey("parcellink")){
-					if(!r.getCell(entetes.get("parcellink")).toString().equalsIgnoreCase("")){
-						boolean ever = false;
-						for(Set<String> l : links){
-							if(l.contains(parcelle)){
-								ever = true;
-								break;
-							}
+		if(entetes.containsKey("id")){
+			parcelles = new ArrayList<String>();
+			Set<Set<String>> links = new HashSet<Set<String>>();
+			for(Row r : sheet){
+				if(r.getRowNum() > 0){
+					String parcelle = r.getCell(entetes.get("id")).getStringCellValue();
+					parcelles.add(parcelle);
+					for(String z : zones.keySet()){
+						if(r.getCell(entetes.get(z)).toString().equalsIgnoreCase("1.0")){
+							zones.get(z).add(parcelle);
 						}
-						if(!ever){
-							String[] linked = r.getCell(entetes.get("parcellink")).toString().split(",");
-							Set<String> link = new HashSet<String>();
-							link.add(parcelle);
-							for(String s : linked){
-								link.add(s);
+					}
+					if(entetes.containsKey("parcellink")){
+						if(!r.getCell(entetes.get("parcellink")).toString().equalsIgnoreCase("")){
+							boolean ever = false;
+							for(Set<String> l : links){
+								if(l.contains(parcelle)){
+									ever = true;
+									break;
+								}
 							}
-							links.add(link);	
+							if(!ever){
+								String[] linked = r.getCell(entetes.get("parcellink")).toString().split(",");
+								Set<String> link = new HashSet<String>();
+								link.add(parcelle);
+								for(String s : linked){
+									link.add(s.replace(".0", ""));
+								}
+								links.add(link);	
+							}
 						}
 					}
 				}
 			}
+			
+			for(Set<String> l : links){
+				builder.setCode(conscode+(iconscode++));
+				builder.setLocation(l.toString().replace(" ", ""));
+				builder.setType(ConstraintType.LinkedFields);
+				builder.build();
+			}
 		}
 		
-		for(Set<String> l : links){
-			builder.setCode(conscode+(iconscode++));
-			builder.setLocation(l.toString());
-			builder.setType(ConstraintType.LinkedFields);
-			builder.build();
-		}
 		
 		/*
 		for(Entry<String, Set<String>> z : zones.entrySet()){
@@ -343,6 +350,7 @@ public class ConstraintFactoryFromExcel {
 					break;
 				}
 				String parcelles = r.getCell(entetes.get("parcelles")).getStringCellValue();
+				boolean locationConstraint = true;
 				
 				// gestion des delay
 				String delai_min = r.getCell(entetes.get("delai_min")).toString();
@@ -360,14 +368,17 @@ public class ConstraintFactoryFromExcel {
 					}
 					builder.setType(ConstraintType.Delay);
 					builder.setDomain("["+delai_min+","+delai_max+"]");
-					
 					builder.build();
+					locationConstraint = false;
 				}
 	
 				// gestion des repetitions
 				String repetition_min = r.getCell(entetes.get("repetition_min")).toString();
 				String repetition_max = r.getCell(entetes.get("repetition_max")).toString();
 				String repetition_repart = r.getCell(entetes.get("repetition_repart")).toString();
+				if(repetition_repart.equalsIgnoreCase("")){
+					repetition_repart = "middle";
+				}
 				if(!repetition_min.equalsIgnoreCase("") || !repetition_max.equalsIgnoreCase("")){
 					builder.setCode(conscode+(iconscode++));
 					builder.setLocation(parcelles);
@@ -380,12 +391,16 @@ public class ConstraintFactoryFromExcel {
 					builder.setDomain("["+repetition_min+","+repetition_max+"]");
 					builder.setParams(repetition_repart);
 					builder.build();
+					locationConstraint = false;
 				}
 				
 				// gestion des durees
 				String duree_min = r.getCell(entetes.get("duree_min")).toString();
 				String duree_max = r.getCell(entetes.get("duree_max")).toString();
 				String duree_repart = r.getCell(entetes.get("duree_repart")).toString();
+				if(duree_repart.equalsIgnoreCase("")){
+					duree_repart = "middle";
+				}
 				if(!duree_min.equalsIgnoreCase("") || !duree_max.equalsIgnoreCase("")){
 					builder.setCode(conscode+(iconscode++));
 					builder.setLocation(parcelles);
@@ -398,6 +413,7 @@ public class ConstraintFactoryFromExcel {
 					builder.setDomain("["+duree_min+","+duree_max+"]");
 					builder.setParams(duree_repart);
 					builder.build();
+					locationConstraint = false;
 				}
 				
 				// gestion des surfaces totales
@@ -414,6 +430,7 @@ public class ConstraintFactoryFromExcel {
 					builder.setType(ConstraintType.TotalArea);
 					builder.setDomain("["+aire_min+","+aire_max+"]");
 					builder.build();
+					locationConstraint = false;
 				}
 				
 				// gestion des distances au siège
@@ -431,6 +448,7 @@ public class ConstraintFactoryFromExcel {
 					builder.setDomain("["+distance_siege_min+","+distance_siege_max+"]");
 					builder.setParams("siege");
 					builder.build();
+					locationConstraint = false;
 				}
 				
 				// gestion des surfaces de parcelles
@@ -447,6 +465,7 @@ public class ConstraintFactoryFromExcel {
 					builder.setType(ConstraintType.ParcelArea);
 					builder.setDomain("["+surface_parcelle_min+","+surface_parcelle_max+"]");
 					builder.build();
+					locationConstraint = false;
 				}
 				
 				// gestion des distances entre couverts
@@ -464,6 +483,20 @@ public class ConstraintFactoryFromExcel {
 					}
 					builder.setType(ConstraintType.DistanceBetweenCovers);
 					builder.setDomain("["+distance_entre_couverts_min+","+distance_entre_couverts_max+"]");
+					builder.build();
+					locationConstraint = false;
+				}
+				
+				// gestion des localisation de couvert
+				if(locationConstraint){
+					builder.setCode(conscode+(iconscode++));
+					builder.setLocation(parcelles);
+					if(genericCovers.get(culture) == null){
+						builder.setCover(culture);
+					}else{
+						builder.setCover(genericCovers.get(culture));
+					}
+					builder.setType(ConstraintType.OnLocation);
 					builder.build();
 				}
 			}

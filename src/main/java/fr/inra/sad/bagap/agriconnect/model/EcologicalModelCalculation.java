@@ -42,7 +42,7 @@ public class EcologicalModelCalculation extends Pixel2PixelMatrixCalculation {
 		if(coeffH != 0){
 			double[] valMetrics = new double[this.coeffMetrics.length];
 			for(int i=0; i<coeffMetrics.length; i++){
-				valMetrics[i+1] = wholeMatrix()[i+1].get(p);
+				valMetrics[i] = wholeMatrix()[i+1].get(p);
 			}
 			return calculate(intercept, coeffH, coeffMetrics, valMetrics);
 		}else{

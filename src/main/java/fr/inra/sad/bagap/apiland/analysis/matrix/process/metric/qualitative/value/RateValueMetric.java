@@ -10,12 +10,13 @@ public class RateValueMetric extends MatrixMetric implements ValueMetric {
 	private int v;
 	
 	public RateValueMetric(Integer v) {
-		super(VariableManager.get("rate_value_"+v));
+		super(VariableManager.get("pNV_"+v));
 		this.v = v;
 	}
 
 	@Override
 	public void doCalculate(Counting co) {
+		value = 0;
 		if(co.countValues() > 0){
 			value = new Double(co.countValue(v))/co.validValues();
 		}
