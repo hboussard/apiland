@@ -178,7 +178,9 @@ public class MultipleWindow extends Window {
 
 	@Override
 	public void export(int x, int y, Matrix m, String path) {
-		throw new UnsupportedOperationException();
+		for(Window w : windows){
+			w.export(x, y, m, path);
+		}
 	}
 
 	@Override

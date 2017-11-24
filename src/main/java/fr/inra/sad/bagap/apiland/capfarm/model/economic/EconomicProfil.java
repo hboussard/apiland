@@ -62,7 +62,7 @@ public class EconomicProfil {
 		return profits;
 	}
 	
-	// en millième d'euros par m²
+	// en millieme d'euros par mcarre
 	private int profit(int index){
 		//System.out.println(yields[index]+" "+prices[index]+" "+new Double(((prices[index] / 1000.0) * (yields[index] / 10000.0) * 1000.0)).intValue());
 		//return new Double(((prices[index] / 1000.0) * (yields[index] / 10000.0) + (bonus[index] / 10000.0) - (charges[index] / 10000.0)) * 1000.0).intValue();
@@ -80,7 +80,7 @@ public class EconomicProfil {
 	public void display(int[] areas){
 		int profit_total = 0;
 		for(int i=0; i<covers.length; i++){
-			//System.out.println(covers[i].getName()+", rendement = "+yields[i]+"kg/ha et prix = "+prices[i]+"€/t ==> profit = "+profit(i)+" millièmes d'euro/m²");
+			//System.out.println(covers[i].getName()+", rendement = "+yields[i]+"kg/ha et prix = "+prices[i]+"€/t ==> profit = "+profit(i)+" milliemes d'euro/mcarre");
 			//System.out.println("surface = "+areas[i]);
 			profit_total += areas[i]*profit(i);
 		}

@@ -9,7 +9,7 @@ import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
 public abstract class Analysis {
 
 	private Object result;
-	
+
 	private Set<AnalysisObserver> observers;
 	
 	private AnalysisState state;

@@ -28,7 +28,7 @@ public class CfmSimulation extends Simulation {
 	protected void initModel(){
 		for(CoverLocationModel model : (GlobalCoverLocationModel) model().get("agriculture")){
 			model.getCoverAllocator().clearParcels();
-			MemoryFactory.init(model, manager().start(), manager().paramProcessMode());
+			MemoryFactory.init(model, manager().start(), manager().paramProcessMode(), manager().methodProcessMode());
 			HistoricFactory.init((Farm) model.getCoverAllocator(), manager().start());
 			FixedFactory.init((Farm) model.getCoverAllocator(), manager().start());
 		}
@@ -91,7 +91,7 @@ public class CfmSimulation extends Simulation {
 					//System.out.println(sb_cover);
 					sb_cover.delete(sb_cover.length()-3, sb_cover.length());
 					seq_cover = sb_cover.toString();
-					
+					//System.out.println(seq_cover);
 					// sequence stricte en rapport aux couverts et a leurs durees
 					sb_cover = new StringBuilder();
 					for(TemporalValue<CoverUnit> tv : ((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).getDynamics().cut(manager().start(), manager().end())){

@@ -27,58 +27,58 @@ import com.csvreader.CsvWriter;
 
 public class SpatialCsvManager {
 	
-	public static void exportAsciiGrid(String csv, String folder, Matrix matrix) {
-		exportAsciiGrid(csv, folder, null, matrix.width(), matrix.height(), matrix.minX(), matrix.minY(), 1, matrix.cellsize(), matrix.noDataValue());
+	public static void exportAsciiGrid(String csv, String folder, String outputName, Matrix matrix) {
+		exportAsciiGrid(csv, folder, outputName, null, matrix.width(), matrix.height(), matrix.minX(), matrix.minY(), 1, matrix.cellsize(), matrix.noDataValue());
 	}
 	
-	public static void exportAsciiGridAndVisualize(String csv, String folder, Matrix matrix) {
+	public static void exportAsciiGridAndVisualize(String csv, String folder, String outputName, Matrix matrix) {
 	
-		exportAsciiGrid(csv, folder, matrix);
+		exportAsciiGrid(csv, folder, outputName, matrix);
 		
 		MatrixManager.visualize(folder);
 	}
 	
-	public static void exportAsciiGrid(String csv, String folder, Matrix matrix, int delta) {
-		exportAsciiGrid(csv, folder, null, matrix.width(), matrix.height(), matrix.minX(), matrix.minY(), delta, matrix.cellsize(), matrix.noDataValue());
+	public static void exportAsciiGrid(String csv, String folder, String outputName, Matrix matrix, int delta) {
+		exportAsciiGrid(csv, folder, outputName, null, matrix.width(), matrix.height(), matrix.minX(), matrix.minY(), delta, matrix.cellsize(), matrix.noDataValue());
 	}
 	
-	public static void exportAsciiGridAndVisualize(String csv, String folder, Matrix matrix, int delta) {
+	public static void exportAsciiGridAndVisualize(String csv, String folder, String outputName, Matrix matrix, int delta) {
 		
-		exportAsciiGrid(csv, folder, matrix, delta);
+		exportAsciiGrid(csv, folder, outputName, matrix, delta);
 		
 		MatrixManager.visualize(folder);
 	}
 	
-	public static void exportAsciiGrid(String csv, String folder, Set<String> metrics, Matrix matrix, int delta) {
-		exportAsciiGrid(csv, folder, metrics, matrix.width(), matrix.height(), matrix.minX(), matrix.minY(), delta, matrix.cellsize(), matrix.noDataValue());
+	public static void exportAsciiGrid(String csv, String folder, String outputName, Set<String> metrics, Matrix matrix, int delta) {
+		exportAsciiGrid(csv, folder, outputName, metrics, matrix.width(), matrix.height(), matrix.minX(), matrix.minY(), delta, matrix.cellsize(), matrix.noDataValue());
 	}
 	
-	public static void exportAsciiGridAndVisualize(String csv, String folder, Set<String> metrics, Matrix matrix, int delta) {
+	public static void exportAsciiGridAndVisualize(String csv, String folder, String outputName, Set<String> metrics, Matrix matrix, int delta) {
 		
-		exportAsciiGrid(csv, folder, metrics, matrix, delta);
+		exportAsciiGrid(csv, folder, outputName, metrics, matrix, delta);
 		
 		MatrixManager.visualize(folder);
 	}
 
-	public static void exportAsciiGrid(Set<String> csvFiles, String folder, Set<String> metrics, 
+	public static void exportAsciiGrid(Set<String> csvFiles, String folder, String outputName, Set<String> metrics, 
 			int width, int height, double minX, double minY, int delta, double cellSize, int noDataValue) {
 		
 		String name;
 		for(String csv : csvFiles){
 			name = new File(csv).getName().replace(".csv", "");
-			exportAsciiGrid(csv, folder+"/"+name+"_", metrics, width, height, minX, minY, delta, cellSize, noDataValue);
+			exportAsciiGrid(csv, folder+"/"+name+"_", outputName, metrics, width, height, minX, minY, delta, cellSize, noDataValue);
 		}
 	}
 	
-	public static void exportAsciiGridAndVisualize(Set<String> csvFiles, String folder, Set<String> metrics, 
+	public static void exportAsciiGridAndVisualize(Set<String> csvFiles, String folder, String outputName, Set<String> metrics, 
 			int width, int height, double minX, double minY, int delta, double cellSize, int noDataValue) {
 		
-		exportAsciiGrid(csvFiles, folder, metrics, width, height, minX, minY, delta, cellSize, noDataValue);
+		exportAsciiGrid(csvFiles, folder, outputName, metrics, width, height, minX, minY, delta, cellSize, noDataValue);
 		
 		MatrixManager.visualize(folder);
 	}
 	
-	public static void exportAsciiGrid2(String csv, String folder, Set<String> metrics, 
+	public static void exportAsciiGrid2(String csv, String folder, String outputName, Set<String> metrics, 
 		int width, int height, double minX, double minY, int delta, double cellSize, int noDataValue) {
 		
 		try{
@@ -156,7 +156,7 @@ public class SpatialCsvManager {
 		}
 	}
 	
-	public static void exportAsciiGrid(String csv, String folder, Set<String> metrics, 
+	public static void exportAsciiGrid(String csv, String folder, String outputName, Set<String> metrics, 
 			int width, int height, double minX, double minY, int delta, double cellSize, int noDataValue) {
 			
 		try{
@@ -167,7 +167,13 @@ public class SpatialCsvManager {
 			cr.setDelimiter(';');
 			cr.readHeaders();
 				
-			if(metrics != null && metrics.size() != 0){
+			if(metrics.size() == 1 && outputName != null){
+				for(String header : cr.getHeaders()){
+					if(header.contains(metrics.iterator().next())){
+						writers.put(header, new BufferedWriter(new FileWriter(folder+outputName)));	
+					}
+				}
+			}else if(metrics != null && metrics.size() != 0){
 				for(String metric : metrics){
 					for(String header : cr.getHeaders()){
 						if(header.contains(metric)){

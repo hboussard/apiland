@@ -1,17 +1,22 @@
 package fr.inra.sad.bagap.apiland.treatment.window;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
+import fr.inra.sad.bagap.apiland.analysis.matrix.output.DeltaAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.SelectedAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.SelectedCsvOutput;
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.MultipleWindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetricManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysisBuilder;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.CenteredWindow;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.MultipleWindow;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.WindowShapeType;
 import fr.inra.sad.bagap.apiland.analysis.window.WindowAnalysisType;
@@ -25,11 +30,9 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 	
 	private Matrix matrix;
 	
-	private boolean qualitative;
-	
 	private WindowShapeType shape;
 	
-	private int windowSize;
+	private List<Integer> windowSizes;
 	
 	private Set<Pixel> pixels;
 	
@@ -50,12 +53,11 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 	public SelectedWindowMatrixTreatment() {
 		super("selected", GlobalTreatmentManager.get());
 		defineInput("matrix", Matrix.class);
-		defineInput("qualitative", Boolean.class);
 		defineInput("shape", WindowShapeType.class);
 		defineInput("friction_map", Friction.class);
 		defineInput("friction_matrix", Matrix.class);
 		defineInput("min_rate", Double.class);
-		defineInput("window_size", Integer.class);
+		defineInput("window_sizes", List.class);
 		defineInput("pixels", Set.class);
 		defineInput("metrics", Set.class);
 		defineInput("csv", String.class);
@@ -66,11 +68,10 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 	@Override
 	protected void doInit() {
 		matrix = (Matrix) getInput("matrix");
-		qualitative = (Boolean) getInput("qualitative");
 		shape = (WindowShapeType) getInput("shape");
 		frictionMap = (Friction) getInput("friction_map");
 		frictionMatrix = (Matrix) getInput("friction_matrix");
-		windowSize = (Integer) getInput("window_size");
+		windowSizes = (List<Integer>) getInput("window_sizes");
 		minRate = (Double) getInput("min_rate");
 		metrics = (Set<String>) getInput("metrics");
 		csv = (String) getInput("csv");
@@ -81,21 +82,41 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 
 	@Override
 	protected void doRun() {
-		
-		WindowMatrixProcessType pt = new WindowMatrixProcessType(matrix);
+		WindowMatrixProcessType pt;
+		if(windowSizes.size() == 1){
+			pt = new WindowMatrixProcessType(matrix);
+		}else{
+			pt = new MultipleWindowMatrixProcessType(matrix);
+		}
+		//WindowMatrixProcessType pt = new WindowMatrixProcessType(matrix);
 		
 		for(String metric : metrics){
 			pt.addMetric(MatrixMetricManager.get(metric));
 		}
 			
 		Window w;
-		if(frictionMap != null){
-			w = new CenteredWindow(shape.create(matrix, windowSize*matrix.cellsize()/2, frictionMap, pt));
-		}else if(frictionMatrix != null){
-			w = new CenteredWindow(shape.create(matrix, windowSize*matrix.cellsize()/2, frictionMatrix, pt));
-			System.out.println(w.width()+" "+w.height());
+		if(windowSizes.size() == 1){
+			if(frictionMap != null){
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMap, pt));
+			}else if(frictionMatrix != null){
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMatrix, pt));
+			}else{
+				w = new CenteredWindow(shape.create(windowSizes.get(0)));
+			}
 		}else{
-			w = new CenteredWindow(shape.create(windowSize));
+			Collections.sort(windowSizes);
+			Collections.reverse(windowSizes);
+			Window[] ws = new Window[windowSizes.size()];
+			for(int i=0; i<windowSizes.size(); i++){
+				if(frictionMap != null){
+					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMap, pt));
+				}else if(frictionMatrix != null){
+					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMatrix, pt));
+				}else{
+					ws[i] = new CenteredWindow(shape.create(windowSizes.get(i)));
+				}
+			}
+			w = new MultipleWindow(ws);
 		}
 		
 		WindowMatrixAnalysisBuilder builder = new WindowMatrixAnalysisBuilder(WindowAnalysisType.SELECTED);
@@ -109,8 +130,21 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 			builder.addObserver(new SelectedCsvOutput(matrix, csv, pixels));
 		}
 		if(ascii != null){
-			for(String metric : metrics){
-				builder.addObserver(new SelectedAsciiGridOutput(metric, ascii+metric+".asc", matrix.width(), matrix.height()/*, pixels*/));
+			if(ascii.endsWith(".asc") && metrics.size() == 1 && windowSizes.size() == 1){
+				String metric = metrics.iterator().next();
+				builder.addObserver(new SelectedAsciiGridOutput(metric, ascii, matrix.width(), matrix.height()));
+			}else{
+				for(String metric : metrics){
+					if(windowSizes.size() == 1){
+						//builder.addObserver(new DeltaAsciiGridOutput(metric, ascii+"w"+windowSizes.get(0)+"_"+metric+"_d_"+delta+".asc", delta));
+						builder.addObserver(new SelectedAsciiGridOutput(metric, ascii+"w"+windowSizes.get(0)+"_"+metric+".asc", matrix.width(), matrix.height()));
+					}else{
+						for(int size : windowSizes){
+							//builder.addObserver(new DeltaAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+".asc", delta));
+							builder.addObserver(new SelectedAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+".asc", matrix.width(), matrix.height()));
+						}
+					}
+				}
 			}
 		}
 		

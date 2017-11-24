@@ -11,6 +11,7 @@ import org.geotools.data.shapefile.shp.ShapefileReader;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
+import fr.inra.sad.bagap.apiland.core.composition.Attribute;
 import fr.inra.sad.bagap.apiland.core.element.DynamicFeature;
 import fr.inra.sad.bagap.apiland.core.element.DynamicLayer;
 import fr.inra.sad.bagap.apiland.core.space.Geometry;
@@ -50,7 +51,6 @@ public class RasterManager {
 	
 	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, String> map, double minX, double maxX, double minY, double maxY){
 		
-		
 		/*
 		int tx, ty;
 		tx = new Double((Math.floor((minX - layer.minX()) / Raster.getCellSize())) + 1).intValue();
@@ -70,18 +70,41 @@ public class RasterManager {
 			f = ite.next();
 
 			value = Raster.getNoDataValue();
-			if(f.getAttribute(name).getValue(t) != null){
-				value = Integer.parseInt(map.get(f.getAttribute(name).getValue(t).toString()));
-			}
-			
-			if(f.getRepresentation("raster").isActive(t)){
-				for(Pixel p : (Raster) f.getRepresentation("raster").getGeometry(t).get()){
-					x = p.x();// - tx;
-					y = p.y();// - ty;
-					//System.out.println(x+" "+y);
-					if(m.contains(x, y)){
-						//System.out.println(x+" "+y+" "+value);
-						m.put(x, y, value);
+			if(f.hasAttribute(name)){
+				if(f.getAttribute(name).getValue(t) != null){
+					if(map != null){
+						value = Integer.parseInt(map.get(f.getAttribute(name).getValue(t).toString()));
+					}else{
+						value = Integer.parseInt(f.getAttribute(name).getValue(t).toString());
+					}
+				}
+				
+				if(f.getRepresentation("raster").isActive(t)){
+					for(Pixel p : (Raster) f.getRepresentation("raster").getGeometry(t).get()){
+						x = p.x();// - tx;
+						y = p.y();// - ty;
+						if(m.contains(x, y)){
+							//System.out.println(x+" "+y+" "+value);
+							m.put(x, y, value);
+						}
+					}
+				}
+			}else if(f.getLayer().getType().hasIdName(name)){
+				String lid = f.getLayer().getId();
+				if(map != null){
+					value = Integer.parseInt(map.get(lid));
+				}else{
+					value = Integer.parseInt(lid);
+				}
+					
+				if(f.getRepresentation("raster").isActive(t)){
+					for(Pixel p : (Raster) f.getRepresentation("raster").getGeometry(t).get()){
+						x = p.x();// - tx;
+						y = p.y();// - ty;
+						if(m.contains(x, y)){
+							//System.out.println(x+" "+y+" "+value);
+							m.put(x, y, value);
+						}
 					}
 				}
 			}

@@ -19,7 +19,7 @@ import fr.inra.sad.bagap.apiland.core.time.Interval;
 
 public class MemoryFactory {
 
-	public static void init(CoverLocationModel model, Instant t, String farmFolder){
+	public static void init(CoverLocationModel model, Instant t, String farmFolder, String method){
 		
 		CoverAllocator farm = model.getCoverAllocator();
 		if(farm.hasMemory()){
@@ -31,14 +31,40 @@ public class MemoryFactory {
 					CsvReader cr = new CsvReader(memoryFile);
 					cr.setDelimiter(';');
 					cr.readHeaders();
-					List<Integer> memories = new ArrayList<Integer>(); 
-					while(cr.readRecord()){
-						memories.add(Integer.parseInt(cr.get("memory")));
+					
+					if(method == null || method.equalsIgnoreCase("")){
+						List<Integer> memories = new ArrayList<Integer>(); 
+						while(cr.readRecord()){
+							memories.add(Integer.parseInt(cr.get("memory")));
+						}
+						memory = memories.get(new Double(Math.random() * memories.size()).intValue());
+					}else{
+						if(method.startsWith("max")){
+							method = method.replace("max(", "").replace(")", "");
+							int max = -1;
+							while(cr.readRecord()){
+								int profit = Integer.parseInt(cr.get("profit"));
+								if(profit > max){
+									memory = Integer.parseInt(cr.get("memory"));
+									max = profit;
+								}
+							}
+							System.out.println(farm.getCode()+" "+memory+" "+max);
+						}else if(method.startsWith("selected")){
+							method = method.replace("selected(", "").replace(")", "");
+							String[] farms = method.split(":");
+							for(String f : farms){
+								if(f.startsWith(farm.getCode()+"=")){
+									//System.out.println(f+" "+farm.getCode()+"= "+f.replace(farm.getCode()+"=", ""));
+									memory = Integer.parseInt(f.replace(farm.getCode()+"=", ""));
+								}
+							}
+						}else{
+							throw new IllegalArgumentException("method "+method+" is taken into account yet");
+						}
 					}
-					cr.close();
-					//System.out.println(farm.getCode());
-					memory = memories.get(new Double(Math.random() * memories.size()).intValue());
 					farm.setMemory(memory);
+					cr.close();
 				}
 				
 				AttributeType type = DynamicElementTypeFactory.createAttributeType("memory", Interval.class, CoverUnit.class);

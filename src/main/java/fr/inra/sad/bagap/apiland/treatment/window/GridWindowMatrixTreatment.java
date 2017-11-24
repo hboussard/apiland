@@ -5,8 +5,6 @@ import java.util.Set;
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
-import fr.inra.sad.bagap.apiland.analysis.matrix.output.AsciiGridOutput;
-import fr.inra.sad.bagap.apiland.analysis.matrix.output.CsvOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.GridAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.GridCsvOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
@@ -25,8 +23,6 @@ public class GridWindowMatrixTreatment extends Treatment implements AnalysisObse
 	
 	private Matrix matrix;
 	
-	private boolean qualitative;
-	
 	private int gridSize;
 
 	private String csv;
@@ -40,7 +36,6 @@ public class GridWindowMatrixTreatment extends Treatment implements AnalysisObse
 	public GridWindowMatrixTreatment() {
 		super("grid", GlobalTreatmentManager.get());
 		defineInput("matrix", Matrix.class);
-		defineInput("qualitative", Boolean.class);
 		defineInput("grid_size", Integer.class);
 		defineInput("min_rate", Double.class);
 		defineInput("metrics", Set.class);
@@ -51,7 +46,6 @@ public class GridWindowMatrixTreatment extends Treatment implements AnalysisObse
 	@Override
 	protected void doInit() {
 		matrix = (Matrix) getInput("matrix");
-		qualitative = (Boolean) getInput("qualitative");
 		gridSize = (Integer) getInput("grid_size");
 		minRate = (Double) getInput("min_rate");
 		metrics = (Set<String>) getInput("metrics");
@@ -80,8 +74,14 @@ public class GridWindowMatrixTreatment extends Treatment implements AnalysisObse
 			builder.addObserver(new GridCsvOutput(gridSize, matrix, csv));
 		}
 		if(ascii != null){
-			for(String metric : metrics){
-				builder.addObserver(new GridAsciiGridOutput(gridSize, metric, ascii+metric+".asc", gridSize));
+			if(ascii.endsWith(".asc") && metrics.size() == 1){
+				for(String metric : metrics){
+					builder.addObserver(new GridAsciiGridOutput(gridSize, metric, ascii, gridSize));
+				}
+			}else{
+				for(String metric : metrics){
+					builder.addObserver(new GridAsciiGridOutput(gridSize, metric, ascii+metric+".asc", gridSize));
+				}
 			}
 		}
 		WindowMatrixAnalysis wa = builder.build();

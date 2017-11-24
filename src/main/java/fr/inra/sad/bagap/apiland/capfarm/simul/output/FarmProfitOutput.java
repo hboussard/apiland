@@ -12,7 +12,7 @@ import fr.inra.sad.bagap.apiland.simul.OutputAnalysis;
 import fr.inra.sad.bagap.apiland.simul.Scenario;
 import fr.inra.sad.bagap.apiland.simul.Simulation;
 
-public class ProfitOutput extends OutputAnalysis {
+public class FarmProfitOutput extends OutputAnalysis {
 	
 	private Map<String, CsvWriter> cws;
 	

@@ -3,11 +3,6 @@ package fr.inra.sad.bagap.apiland.treatment.window;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import fr.inra.sad.bagap.apiland.analysis.Analysis;
-import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
-import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
-import fr.inra.sad.bagap.apiland.analysis.matrix.output.AsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.CsvOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.DeltaAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.HeaderAsciiGridOutput;
@@ -32,8 +27,6 @@ import fr.inra.sad.bagap.apiland.treatment.Treatment;
 public class SlidingWindowMatrixTreatment extends Treatment /*implements AnalysisObserver*/ {
 	
 	private Matrix matrix;
-	
-	private boolean qualitative;
 	
 	private boolean interpolation;
 	
@@ -60,7 +53,6 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 	public SlidingWindowMatrixTreatment() {
 		super("sliding", GlobalTreatmentManager.get());
 		defineInput("matrix", Matrix.class);
-		defineInput("qualitative", Boolean.class);
 		defineInput("shape", WindowShapeType.class);
 		defineInput("friction_map", Friction.class);
 		defineInput("friction_matrix", Matrix.class);
@@ -79,7 +71,6 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 	protected void doInit() {
 		
 		matrix = (Matrix) getInput("matrix");
-		qualitative = (Boolean) getInput("qualitative");
 		shape = (WindowShapeType) getInput("shape");
 		frictionMap = (Friction) getInput("friction_map");
 		frictionMatrix = (Matrix) getInput("friction_matrix");
@@ -113,10 +104,8 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 		if(windowSizes.size() == 1){
 			if(frictionMap != null){
 				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMap, pt));
-				//w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0)-1)*matrix.cellsize()/2, frictionMap, pt));
 			}else if(frictionMatrix != null){
 				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMatrix, pt));
-				//w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0)-1)*matrix.cellsize()/2, frictionMatrix, pt));
 			}else{
 				w = new CenteredWindow(shape.create(windowSizes.get(0)));
 			}
@@ -125,13 +114,10 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 			Collections.reverse(windowSizes);
 			Window[] ws = new Window[windowSizes.size()];
 			for(int i=0; i<windowSizes.size(); i++){
-				//ws[i] = new CenteredWindow(shape.create(windowSizes.get(i)));
 				if(frictionMap != null){
 					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMap, pt));
-					//ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i)-1)*matrix.cellsize()/2, frictionMap, pt));
 				}else if(frictionMatrix != null){
 					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMatrix, pt));
-					//ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i)-1)*matrix.cellsize()/2, frictionMatrix, pt));
 				}else{
 					ws[i] = new CenteredWindow(shape.create(windowSizes.get(i)));
 				}
@@ -158,23 +144,30 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 			}
 		}
 		if(ascii != null){
-			for(String metric : metrics){
+			if(ascii.endsWith(".asc") && metrics.size() == 1 && windowSizes.size() == 1){
+				String metric = metrics.iterator().next();
 				if(delta != 1 && interpolation){
-					if(windowSizes.size() == 1){
-						builder.addObserver(new InterpolateLinearSplineAsciiGridOutput(metric, ascii+"w"+windowSizes.get(0)+"_"+metric+".asc", delta));
-					}else{
-						for(int size : windowSizes){
-							builder.addObserver(new InterpolateLinearSplineAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+".asc", delta));
-						}
-					}
-					//builder.addObserver(new InterpolateLinearSplineAsciiGridOutput(metric, ascii+metric+".asc", delta));
-					//builder.addObserver(new InterpolateCubicSplineAsciiGridOutput(metric, ascii+metric+".asc", delta));
+					builder.addObserver(new InterpolateLinearSplineAsciiGridOutput(metric, ascii, delta));
 				}else{
-					if(windowSizes.size() == 1){
-						builder.addObserver(new DeltaAsciiGridOutput(metric, ascii+"w"+windowSizes.get(0)+"_"+metric+"_d_"+delta+".asc", delta));
+					builder.addObserver(new DeltaAsciiGridOutput(metric, ascii, delta));
+				}
+			}else{
+				for(String metric : metrics){
+					if(delta != 1 && interpolation){
+						if(windowSizes.size() == 1){
+							builder.addObserver(new InterpolateLinearSplineAsciiGridOutput(metric, ascii+"w"+windowSizes.get(0)+"_"+metric+".asc", delta));
+						}else{
+							for(int size : windowSizes){
+								builder.addObserver(new InterpolateLinearSplineAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+".asc", delta));
+							}
+						}
 					}else{
-						for(int size : windowSizes){
-							builder.addObserver(new DeltaAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+".asc", delta));
+						if(windowSizes.size() == 1){
+							builder.addObserver(new DeltaAsciiGridOutput(metric, ascii+"w"+windowSizes.get(0)+"_"+metric+"_d_"+delta+".asc", delta));
+						}else{
+							for(int size : windowSizes){
+								builder.addObserver(new DeltaAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+".asc", delta));
+							}
 						}
 					}
 				}

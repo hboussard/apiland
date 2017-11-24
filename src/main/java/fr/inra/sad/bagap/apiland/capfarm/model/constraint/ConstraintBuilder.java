@@ -30,12 +30,8 @@ import fr.inra.sad.bagap.apiland.capfarm.model.domain.NumberDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.SetDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.VariableBooleanDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.VariableValueDomain;
-import fr.inra.sad.bagap.apiland.capfarm.model.economic.EconomicProfil;
-import fr.inra.sad.bagap.apiland.capfarm.model.economic.EconomicProfilFactory;
 import fr.inra.sad.bagap.apiland.capfarm.model.economic.constraint.ProfitConstraint;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
-import fr.inra.sad.bagap.apiland.core.util.Manager;
-import fr.inra.sad.bagap.apiland.simul.SimulationManager;
 
 public class ConstraintBuilder {
 

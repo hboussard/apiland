@@ -24,7 +24,7 @@ public class CsvView implements TreatmentObserver {
 	public void notify(Treatment t, TreatmentState s) {
 		switch(s){
 		case DONE : 
-			SpatialCsvManager.exportAsciiGrid((String)t.getInput(csvPort), asciiFolder, (Matrix) t.getInput(matrixPort));
+			SpatialCsvManager.exportAsciiGrid((String)t.getInput(csvPort), asciiFolder, null, (Matrix) t.getInput(matrixPort));
 			break;
 		}
 	}

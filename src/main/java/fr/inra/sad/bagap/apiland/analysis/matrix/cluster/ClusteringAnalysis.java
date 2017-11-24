@@ -64,7 +64,9 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 				if(v != Raster.getNoDataValue()){
 					if(interest == null || interest.contains((int) v)){
 						value = (int) v;
+						//System.out.println("diffusion a partir deu pixel "+p);
 						PixelComposite pc = diffuseFromPixel(matrix(), p, ever, new PixelComposite(p, ++index, value));
+						//System.out.println("fin");
 						r.addSimplePixelComposite(pc);
 					}else{
 						value = (int) v;
@@ -110,6 +112,7 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 			}
 		}
 		ite = null;
+		//System.out.println("fin");
 		return true;
 	}
 	

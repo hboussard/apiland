@@ -25,6 +25,8 @@ public class CfmManager extends SimulationManager {
 	
 	private String paramProcessMode;
 	
+	private String methodProcessMode;
+	
 	private String probaTimeFolder;
 	
 	private String economicProfil;
@@ -55,9 +57,19 @@ public class CfmManager extends SimulationManager {
 		this.mode = mode;
 	}
 	
+	public void setProcessMode(CfmProcessMode mode, String paramProcessMode, String methodProcessMode){
+		this.processMode = mode;
+		this.paramProcessMode = paramProcessMode;
+		this.methodProcessMode = methodProcessMode;
+	}
+	
 	public void setProcessMode(CfmProcessMode mode, String paramProcessMode){
 		this.processMode = mode;
 		this.paramProcessMode = paramProcessMode;
+	}
+	
+	public String methodProcessMode(){
+		return methodProcessMode;
 	}
 	
 	public String paramProcessMode(){

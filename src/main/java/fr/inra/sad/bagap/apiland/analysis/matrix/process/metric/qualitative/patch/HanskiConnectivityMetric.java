@@ -1,13 +1,17 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch;
 
+import java.util.Set;
+
 import fr.inra.sad.bagap.apiland.analysis.VariableManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.PatchMetric;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.patch.Envelope;
 import fr.inra.sad.bagap.apiland.patch.Patch;
 import fr.inra.sad.bagap.apiland.patch.PatchComposite;
+import fr.inra.sad.bagap.apiland.patch.PatchManager;
 
 public class HanskiConnectivityMetric extends MatrixMetric implements PatchMetric {
 	
@@ -23,7 +27,7 @@ public class HanskiConnectivityMetric extends MatrixMetric implements PatchMetri
 			v1 = p1.getValue();
 			for(Patch p2 : ((PatchComposite) co.patches()).patches()){
 				if(v1 == p2.getValue() && p1 != p2){
-					//double d = PatchManager.distance(p1, p2) / 1000.0;
+					//double d = PatchManager.distance(p1, p2)*Raster.getCellSize() / 1000.0;
 					double d = Envelope.distance(p1.getEnvelope(), p2.getEnvelope())*Raster.getCellSize() / 1000.0;
 					double a = p2.getArea() / 10000;
 				

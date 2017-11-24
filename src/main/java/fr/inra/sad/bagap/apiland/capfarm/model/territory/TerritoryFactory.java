@@ -86,10 +86,6 @@ public class TerritoryFactory {
 				parcelType.addAttributeType(DynamicElementTypeFactory.createAttributeType(c, null, e.getKey()));
 			}	
 		}
-		// ajout des attributs de comptage d'occurence de couverts
-		for(Cover c  : CoverManager.coverUnits()){
-			System.out.println(c);
-		}
 		parcelType.setCondition("parcel");
 			
 		// definition du type "Facility"

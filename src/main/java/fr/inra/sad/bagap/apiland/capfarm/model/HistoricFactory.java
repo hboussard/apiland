@@ -47,7 +47,7 @@ public class HistoricFactory {
 					int nb;
 					String parcel;
 					parcel = cr.get("parcel");
-					sequence = cr.get("historic").replaceAll(" ", "").split("-");
+					sequence = cr.get("seq_cover").replaceAll(" ", "").split("-");
 					int nbYear = 0;
 					for(String cover : sequence){
 						nb = 1;

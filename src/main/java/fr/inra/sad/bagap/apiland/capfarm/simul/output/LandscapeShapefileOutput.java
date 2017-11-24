@@ -14,7 +14,7 @@ public class LandscapeShapefileOutput extends OutputAnalysis {
 		if(! simulation.isCancelled()){
 			Instant t = simulation.manager().start();
 			
-			simulation.model().map().get("territory").getType().addAttributeType(DynamicElementTypeFactory.createAttributeType("test", Interval.class, Double.class));
+			//simulation.model().map().get("territory").getType().addAttributeType(DynamicElementTypeFactory.createAttributeType("test", Interval.class, Double.class));
 			
 			while(t.isBefore(simulation.manager().end()) || t.equals(simulation.manager().end())){
 				DynamicLayerFactory.exportShape(simulation.model().map().get("territory"), 

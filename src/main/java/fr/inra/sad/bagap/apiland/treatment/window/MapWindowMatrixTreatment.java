@@ -24,8 +24,6 @@ public class MapWindowMatrixTreatment extends Treatment implements AnalysisObser
 	
 	private Matrix matrix;
 	
-	private boolean qualitative;
-	
 	private CsvWriter csv;
 	
 	private Set<String> metrics;
@@ -33,7 +31,6 @@ public class MapWindowMatrixTreatment extends Treatment implements AnalysisObser
 	public MapWindowMatrixTreatment() {
 		super("whole map", GlobalTreatmentManager.get());
 		defineInput("matrix", Matrix.class); 
-		defineInput("qualitative", Boolean.class);
 		defineInput("metrics", Set.class);
 		defineInput("csv", CsvWriter.class);
 	}
@@ -41,7 +38,6 @@ public class MapWindowMatrixTreatment extends Treatment implements AnalysisObser
 	@Override
 	protected void doInit() {
 		matrix = (Matrix) getInput("matrix");
-		qualitative = (Boolean) getInput("qualitative");
 		metrics = (Set<String>) getInput("metrics");
 		csv = (CsvWriter) getInput("csv");		
 	}

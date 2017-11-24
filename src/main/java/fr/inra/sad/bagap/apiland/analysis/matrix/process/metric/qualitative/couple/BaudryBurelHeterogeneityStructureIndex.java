@@ -9,7 +9,7 @@ import fr.inra.sad.bagap.apiland.core.util.Couple;
 public class BaudryBurelHeterogeneityStructureIndex extends MatrixMetric implements CoupleMetric {
 	
 	public BaudryBurelHeterogeneityStructureIndex() {
-		super(VariableManager.get("BBHSI"));
+		super(VariableManager.get("HET-frag"));
 	}
 	
 	@Override

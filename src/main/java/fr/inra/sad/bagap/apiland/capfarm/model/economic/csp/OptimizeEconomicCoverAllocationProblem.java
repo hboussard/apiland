@@ -95,7 +95,7 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		solver.set(ISF.lastConflict(solver, new StrategiesSequencer(as1, as2)));
 
 		//SMF.limitFail(solver, 100000);
-		SMF.limitTime(solver, 1000);
+		SMF.limitTime(solver, 100);
 	}
 	
 	@Override

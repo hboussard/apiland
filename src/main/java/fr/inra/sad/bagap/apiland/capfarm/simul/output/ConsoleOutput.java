@@ -17,7 +17,7 @@ public class ConsoleOutput extends OutputAnalysis {
 				for(Parcel p : model.getCoverAllocator().parcels()){
 					System.out.print(p.getId()+" : ");
 					Instant t = simulation.manager().end();
-					System.out.println(p.getAttribute("seq_cover").getValue(t));
+					System.out.println(p.getAttribute("strict_seq").getValue(t));
 				}
 			}
 		}
