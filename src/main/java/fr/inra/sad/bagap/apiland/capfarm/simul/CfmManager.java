@@ -1,5 +1,6 @@
 package fr.inra.sad.bagap.apiland.capfarm.simul;
 
+import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -38,8 +39,8 @@ public class CfmManager extends SimulationManager {
 		setDelay(new YearDelay(1));
 		outputs = new LinkedList<OutputAnalysis>();
 		check = false;
-		probaTimeFolder = CfmManager.class.getResource("proba_times/").toString();
-		System.out.println("probaTimeFolder: " + probaTimeFolder);
+		URL url = CfmManager.class.getResource("proba_times/");
+		if (url != null)probaTimeFolder = url.toString();
 	}
 	
 	@Override
