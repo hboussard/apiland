@@ -167,9 +167,10 @@ public class Simulation implements Serializable {
 		
 		// fermeture des sorties
 		outputs().close(this);
+		File folderFile = new File(folder);
 		
-		if(new File(folder).list().length == 0){
-			new File(folder).delete();
+		if(folderFile != null && folderFile.list() != null && folderFile.list().length == 0){
+			folderFile.delete();
 		}
 	}
 	

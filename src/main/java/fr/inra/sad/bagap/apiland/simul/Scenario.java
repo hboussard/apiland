@@ -210,8 +210,9 @@ public class Scenario implements Serializable{
 		// fermeture des sorties
 		outputs().close(this);
 		
-		if(new File(folder).list().length == 0){
-			new File(folder).delete();
+		File folderFile = new File(folder);
+		if(folderFile != null && folderFile.list() != null && folderFile.list().length == 0){
+			folderFile.delete();
 		}
 	}
 
