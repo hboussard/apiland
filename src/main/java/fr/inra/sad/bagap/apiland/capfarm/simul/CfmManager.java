@@ -39,6 +39,7 @@ public class CfmManager extends SimulationManager {
 		outputs = new LinkedList<OutputAnalysis>();
 		check = false;
 		probaTimeFolder = CfmManager.class.getResource("proba_times/").toString();
+		System.out.println("probaTimeFolder: " + probaTimeFolder);
 	}
 	
 	@Override
@@ -119,6 +120,11 @@ public class CfmManager extends SimulationManager {
 	public String economicProfil(){
 		return economicProfil;
 	}
+
+	public void setProbaTimeFolder(String probaTimeFolder) {
+		this.probaTimeFolder = probaTimeFolder;
+	}
+	
 	
 	
 }
