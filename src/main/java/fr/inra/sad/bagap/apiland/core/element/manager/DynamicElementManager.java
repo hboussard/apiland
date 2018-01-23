@@ -45,7 +45,6 @@ import fr.inra.sad.bagap.apiland.core.element.DynamicLayer;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicElementType;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicElementTypeFactory;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicLayerType;
-import fr.inra.sad.bagap.apiland.core.space.Geometry;
 import fr.inra.sad.bagap.apiland.core.space.GeometryType;
 import fr.inra.sad.bagap.apiland.core.space.impl.GeometryImplType;
 import fr.inra.sad.bagap.apiland.core.structure.MultipleStructure;

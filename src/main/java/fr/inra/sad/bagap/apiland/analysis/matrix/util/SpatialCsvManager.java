@@ -16,6 +16,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import au.com.bytecode.opencsv.CSVReader;
+import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
+import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixManager;
@@ -156,7 +158,7 @@ public class SpatialCsvManager {
 		}
 	}
 	
-	public static void exportAsciiGrid(String csv, String folder, String outputName, Set<String> metrics, 
+	public static void exportAsciiGrid(String csv, String folder, String outputAsc, Set<String> metrics, 
 			int width, int height, double minX, double minY, int delta, double cellSize, int noDataValue) {
 			
 		try{
@@ -167,10 +169,10 @@ public class SpatialCsvManager {
 			cr.setDelimiter(';');
 			cr.readHeaders();
 				
-			if(metrics.size() == 1 && outputName != null){
+			if(metrics.size() == 1 && outputAsc != null){
 				for(String header : cr.getHeaders()){
 					if(header.contains(metrics.iterator().next())){
-						writers.put(header, new BufferedWriter(new FileWriter(folder+outputName)));	
+						writers.put(header, new BufferedWriter(new FileWriter(outputAsc)));	
 					}
 				}
 			}else if(metrics != null && metrics.size() != 0){
@@ -240,6 +242,13 @@ public class SpatialCsvManager {
 			
 			for(Entry<String, BufferedWriter> e : writers.entrySet()){
 				e.getValue().close();
+				try {
+					//String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
+					//Tool.copy(prj_input, folder+name+"_"+e.getKey()+".prj");
+					Tool.copy(DynamicLayerFactory.class.getResourceAsStream("lambert93.prj"), folder+name+"_"+e.getKey()+".prj");
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 			}
 			
 			cr.close();
@@ -250,6 +259,8 @@ public class SpatialCsvManager {
 			ex.printStackTrace();
 		}catch(CatastrophicException ex){
 			ex.printStackTrace();
+		}finally{
+			
 		}
 	}
 

@@ -57,6 +57,10 @@ public interface Matrix extends Serializable, Iterable<Pixel> {
 	
 	int height();
 	
+	//void setHeight(int height);
+	
+	//void setWidth(int width);
+	
 	int tileWidth();
 	
 	int tileHeight();

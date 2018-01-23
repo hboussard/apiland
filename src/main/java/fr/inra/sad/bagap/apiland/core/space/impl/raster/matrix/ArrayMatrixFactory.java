@@ -143,14 +143,16 @@ public class ArrayMatrixFactory extends MatrixFactory{
 			double v;
 			//int index = 0;
 			int y = 0;
+			String s;
 			while (cr.readRecord()) {
 				//System.out.println(++index);
 				for (int x = 0; x < width; x++) {
-					if (!cr.get(x).equalsIgnoreCase("")) {
-						v = Double.parseDouble(cr.get(x));
+					s = cr.get(x);
+					if (!s.equalsIgnoreCase("")) {
+						v = Double.parseDouble(s);
 						tab[y][x] = v;
 						if (v != noDataValue) {
-							values.add((new Double(cr.get(x))).intValue());
+							values.add((new Double(s)).intValue());
 						}
 					}
 				}

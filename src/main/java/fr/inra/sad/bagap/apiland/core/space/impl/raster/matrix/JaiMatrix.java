@@ -12,6 +12,7 @@ import java.util.TreeSet;
 
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
+import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 import javax.media.jai.iterator.RandomIter;
 import javax.media.jai.iterator.RandomIterFactory;
@@ -521,6 +522,17 @@ public class JaiMatrix implements Matrix {
 		return maxV;
 	}
 
+	/*
+	@Override
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	@Override
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	*/
 
 }
 

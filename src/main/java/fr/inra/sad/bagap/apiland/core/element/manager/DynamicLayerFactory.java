@@ -36,12 +36,11 @@ package fr.inra.sad.bagap.apiland.core.element.manager;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.URL;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -85,6 +84,7 @@ import fr.inra.sad.bagap.apiland.core.structure.RepresentationType;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 import fr.inra.sad.bagap.apiland.core.time.Interval;
 import fr.inra.sad.bagap.apiland.core.time.Time;
+import fr.inra.sad.bagap.apiland.core.time.delay.Delay;
 
 public class DynamicLayerFactory {
 
@@ -548,8 +548,9 @@ public class DynamicLayerFactory {
 			return false;
 		} finally{
 			try {
-				String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
-				Tool.copy(prj_input, shape+".prj");
+				//String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
+				//Tool.copy(prj_input, shape+".prj");
+				Tool.copy(DynamicLayerFactory.class.getResourceAsStream("lambert93.prj"), shape+".prj");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -582,6 +583,211 @@ public class DynamicLayerFactory {
 					for(String id : setId){
 						record[index++] = element.getInheritedId(id);
 					}
+					
+					for(AttributeType att : setAtt){
+						//record[index++] = element.getInheritedAttribute(att.getName()).getValue(time);
+						if(element.getType().hasAttributeType(att.getName())){
+							//System.out.println("export de l'attribut "+ att.getName());
+							record[index++] = element.getInheritedAttribute(att.getName()).getValue(time);
+						}else{
+							record[index++] = null;
+						}
+					}
+					
+					dbfW.write(record);
+					
+					if(element.getGeometry(time) == null){
+						shapeW.writeGeometry(null);
+					}else{
+						//element.getGeometry(time).get().getJTS().setSRID(new Integer(element.getId()));
+						if(element.getGeometry(time).get().getJTS() instanceof LineString){
+							shapeW.writeGeometry(element.getGeometry(time).get().getJTS().getFactory().createMultiLineString(new LineString[]{(LineString)element.getGeometry(time).get().getJTS()}));
+						}else{
+							shapeW.writeGeometry(element.getGeometry(time).get().getJTS());
+						}
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static boolean exportTimeShape(DynamicElement element, Instant start, Instant end, Delay delay, String shape){
+		return exportTimeShape(element, start, end, delay, shape, ((DynamicLayerType)element.getType()).getFeatureTypes());
+	}
+	
+	private static boolean exportTimeShape(DynamicElement element, Instant start, Instant end, Delay delay,	String shape, List<DynamicFeatureType> types) {
+		DynamicElementType[] d = new DynamicElementType[types.size()];
+		int i=0;
+		for(DynamicElementType t : types){
+			d[i] = t;
+			i++;
+		}
+		return exportTimeShape(element, start, end, delay, shape, d);
+	}
+	
+	public static boolean exportTimeShape(DynamicElement element, Instant start, Instant end, Delay delay, String shape, DynamicElementType... types) {
+		return exportTimeShape(element, start, end, delay, shape, -1, -1, -1, -1, types);
+	}
+	
+	public static boolean exportTimeShape(DynamicElement element, Instant start, Instant end, Delay delay, String shape, 
+			double minx, double maxx, double miny, double maxy, DynamicElementType... types) {
+		try {
+			// revoir le nombre d'élément en fonction du nombre de pas de temps
+			int count = 0; 
+			Instant time = start;
+			while(time.isBefore(end) || time.equals(end)){
+				count += element.count(time, types);
+				time = delay.next(time);
+			}
+			
+			System.out.println("nombre d'élément = "+count);
+			
+			DbaseFileHeader header = new DbaseFileHeader();
+			header.setNumRecords(count);
+			
+			Set<String> setId = new TreeSet<String>();
+			for(DynamicElementType t : types){
+				setId = t.getInheritedIdNames(element.getType(),setId);
+			}
+			setId.remove(element.getType().getIdName());
+			
+			for(String id : setId){
+				//System.out.println(id);
+				header.addColumn(id, 'C', 8, 0);
+			}
+			
+			// ajout des colonnes 'start' et 'end' de type DATE
+			header.addColumn("start", 'D', 10, 0);
+			header.addColumn("end", 'D', 10, 0);
+			
+			Set<AttributeType> setAtt = new TreeSet<AttributeType>();
+			for(DynamicElementType t : types){
+				setAtt = t.getInheritedAttributeTypes(element.getType(),setAtt);
+			}
+			
+			for (AttributeType t : setAtt){ 
+				//System.out.println(t.getName()+" "+t.getBinding());
+				if (t.getBinding().equals(String.class)) {
+					header.addColumn(t.getName(), 'C', 80, 0);
+				} else if (t.getBinding().equals(Long.class)) {
+					header.addColumn(t.getName(), 'N', 12, 0);
+				} else if (t.getBinding().equals(Integer.class)) {
+					header.addColumn(t.getName(), 'N', 8, 0);
+				} else if (t.getBinding().equals(Double.class)) {
+					header.addColumn(t.getName(), 'N', 8, 3);
+				} else if (t.getBinding().equals(Boolean.class)) {
+					header.addColumn(t.getName(), 'L', 1, 0);
+				} else {
+					header.addColumn(t.getName(), 'C', 20, 0);
+				}
+			}
+			
+			WritableByteChannel out = new FileOutputStream(shape + ".dbf").getChannel();
+			DbaseFileWriter dbfW = new DbaseFileWriter(header, out);
+			FileOutputStream shp = new FileOutputStream(shape + ".shp");
+			FileOutputStream shx = new FileOutputStream(shape + ".shx");
+			ShapefileWriter shapeW = new ShapefileWriter(shp.getChannel(), shx.getChannel());
+			
+			if(minx == -1 && maxx == -1 && miny == -1 && maxy == -1){
+				
+				minx = Double.MAX_VALUE;
+				maxx = Double.MIN_VALUE;
+				miny = Double.MAX_VALUE;
+				maxy = Double.MIN_VALUE;
+				
+				Iterator<DynamicFeature> ite = ((DynamicLayer) element).deepIterator();
+				DynamicFeature f;
+				while(ite.hasNext()){
+					f = ite.next();
+					minx = Math.min(minx, f.minX());
+					maxx = Math.max(maxx, f.maxX());
+					miny = Math.min(miny, f.minY());
+					maxy = Math.max(maxy, f.maxY());
+				}
+			}
+		
+			if (types[0].getRepresentationType("the_geom").getSpatialBinding().equals(Surfacic.class)) {
+				shapeW.writeHeaders(new Envelope(minx, maxx, miny, maxy), ShapeType.POLYGON, count, 1000000);
+			} else if (types[0].getRepresentationType("the_geom").getSpatialBinding().equals(Linear.class)) {
+				shapeW.writeHeaders(new Envelope(minx, maxx, miny, maxy), ShapeType.ARC, count, 1000000);
+			} else if (types[0].getRepresentationType("the_geom").getSpatialBinding().equals(Local.class)) {
+				shapeW.writeHeaders(new Envelope(minx, maxx, miny, maxy), ShapeType.POINT, count, 1000000);
+			} else {
+				throw new IllegalArgumentException();
+			}
+			
+			// boucle sur le pas de temps pour l'export des elements
+			time = start;
+			while(time.isBefore(end) || time.equals(end)){
+				exportTimeElement(element, time, delay, dbfW, shapeW, setId, setAtt, types);
+				time = delay.next(time);
+			}
+
+			dbfW.close();
+			shapeW.close();
+			out.close();
+			shp.close();
+			shx.close();
+		} catch (DbaseFileException ex) {
+			ex.printStackTrace();
+			return false;
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+			return false;
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		} finally{
+			try {
+				//String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
+				//Tool.copy(prj_input, shape+".prj");
+				Tool.copy(DynamicLayerFactory.class.getResourceAsStream("lambert93.prj"), shape+".prj");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return true;
+	}
+
+	private static void exportTimeElement(DynamicElement element, Instant time, Delay delay, DbaseFileWriter dbfW, 
+			ShapefileWriter shapeW, Set<String> setId, Set<AttributeType> setAtt, DynamicElementType... types) {
+		
+		Instant next = delay.next(time);
+		boolean export = false;
+		for(DynamicElementType t : types){
+			if (element.getType().equals(t)){
+				export = true;
+			}
+		}
+		
+		if (!export) {
+			if(element instanceof DynamicLayer){
+				for(DynamicElement e : (DynamicLayer<DynamicElement>)element){
+					exportTimeElement(e, time, delay, dbfW, shapeW, setId, setAtt, types);
+				}
+			}
+		}else{
+			if(element.isActive(time)){
+				try {
+					Object[] record = new Object[setId.size()+setAtt.size()+2];
+					
+					int index = 0;
+					for(String id : setId){
+						record[index++] = element.getInheritedId(id);
+					}
+					
+					// export des dates "start" et "end"
+					Calendar c = new GregorianCalendar();
+					c.set(time.year(), time.month()-1, time.dayOfMonth());
+					record[index++] = c.getTime();
+					c.set(next.year(), next.month()-2, next.dayOfMonth());
+					record[index++] = c.getTime();
+					//record[index++] = new Date(time.year(), time.month(), time.dayOfMonth());
+					//record[index++] = new Date(next.year(), next.month(), next.dayOfMonth());
+					//record[index++] = time.year()+"-"+time.month()+"-"+time.dayOfMonth();
+					//record[index++] = next.year()+"-"+next.month()+"-"+next.dayOfMonth();
 					
 					for(AttributeType att : setAtt){
 						//record[index++] = element.getInheritedAttribute(att.getName()).getValue(time);
