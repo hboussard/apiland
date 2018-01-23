@@ -1,14 +1,11 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value;
 
 import fr.inra.sad.bagap.apiland.analysis.VariableManager;
-import fr.inra.sad.bagap.apiland.analysis.matrix.process.SimpleWindowMatrixProcess;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.ValueMetric;
 
 public class ShannonDiversityIndex extends MatrixMetric implements ValueMetric {
-
-	//int tot = 0;
 	
 	public ShannonDiversityIndex() {
 		super(VariableManager.get("SHDI"));
@@ -16,7 +13,6 @@ public class ShannonDiversityIndex extends MatrixMetric implements ValueMetric {
 	
 	@Override
 	public void doCalculate(Counting co) {
-		//System.out.println("indice "+((SimpleWindowMatrixProcess) co.process()).window().pixel());
 		value = 0;
 		if(co.countValues() > 0){
 			double p; 

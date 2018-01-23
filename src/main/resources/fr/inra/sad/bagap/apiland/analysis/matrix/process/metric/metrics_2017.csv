@@ -4,8 +4,6 @@ N-total;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qua
 N-valid;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.basic.ValidValueMetric
 pN-valid;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.basic.RateValidValueMetric
 average;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.AverageMetric
-maximum;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.MaximumMetric
-minimum;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.MinimumMetric
 variance;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.VarianceMetric
 sum;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.SumMetric
 square_sum;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.SquareSumMetric

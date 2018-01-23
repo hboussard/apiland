@@ -1,9 +1,5 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 /**
@@ -13,7 +9,7 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 public class QuantitativeCounting extends CountingDecorator {
 
 	/** les valeurs triées */
-	private List<Double> values;
+	//private List<Double> values;
 	
 	private int nb;
 	
@@ -111,8 +107,8 @@ public class QuantitativeCounting extends CountingDecorator {
 		if(size() == 0){
 			return Raster.getNoDataValue();
 		}
-		Collections.sort(values);
-		return values.get(values.size()-1);
+		return 0;
+		//return values.get(values.size()-1);
 	}
 	
 	@Override
@@ -120,13 +116,13 @@ public class QuantitativeCounting extends CountingDecorator {
 		if(size() == 0){
 			return Raster.getNoDataValue();
 		}
-		Collections.sort(values);
-		return values.get(0);
+		return 0;
+		//return values.get(0);
 	}
 
 	@Override
 	public void doInit(){
-		values = new ArrayList<Double>();
+		//values = new ArrayList<Double>();
 		nb = 0;
 		sum = 0;
 		squaresum = 0;
@@ -153,8 +149,8 @@ public class QuantitativeCounting extends CountingDecorator {
 			}
 			nb++;
 			sum += value;
-			squaresum += (value * value); 
-			values.add(value);
+			squaresum += (value * value);
+			//values.add(value);
 		}
 	}
 	
@@ -169,14 +165,17 @@ public class QuantitativeCounting extends CountingDecorator {
 			nb--;
 			sum -= value;
 			squaresum -= (value * value);
-			values.remove(value);
+			
+			//values.remove(value);
 		}
 	}
 
 	@Override
 	public void doDelete() {
+		/*
 		values.clear();
 		values = null;
+		*/
 	}
 	
 }

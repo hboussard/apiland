@@ -220,7 +220,21 @@ public class Tool {
 		//System.out.println(sourceFile);
 		//System.out.println(destFile);
 		try(InputStream input = new FileInputStream(sourceFile);
-				OutputStream output = new FileOutputStream(destFile)){ 
+				OutputStream output = new FileOutputStream(destFile)){
+			byte[] buf = new byte[8192]; 
+			int len;
+			while((len=input.read(buf)) >= 0) 
+				output.write(buf, 0, len); 
+		} 
+	}
+	
+	public static void copy(InputStream sourceFile, String destFile) throws IOException { 
+		//System.out.println(sourceFile);
+		//System.out.println(destFile);
+		/*try(InputStream input = new FileInputStream(sourceFile);
+				OutputStream output = new FileOutputStream(destFile)){*/
+		try(InputStream input = sourceFile;
+				OutputStream output = new FileOutputStream(destFile)){
 			byte[] buf = new byte[8192]; 
 			int len;
 			while((len=input.read(buf)) >= 0) 

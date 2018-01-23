@@ -58,7 +58,7 @@ public class SimpleWindowMatrixProcess extends WindowMatrixProcess {
 			int inX = window().toXWindow(x);
 			int inY = window().toYWindow(y);
 			//System.out.println(pixel().x()+" "+pixel().y()+" "+inX+" "+x+" "+inY+" "+y+" "+v);
-			values()[inY][inX] = v; // stockage de la valeur au niveau du process
+			values[inY][inX] = v; // stockage de la valeur au niveau du process
 			
 			int f = window().filter(inX, inY);
 			if(f != 0){
@@ -134,12 +134,14 @@ public class SimpleWindowMatrixProcess extends WindowMatrixProcess {
 				}
 			}
 		}
-		for(int y=1; y<values().length; y++){
-			for(int x=0; x<values()[y].length; x++){
-				values()[y-1][x] = values()[y][x];
+		
+		for(int y=1; y<values.length; y++){
+			for(int x=0; x<values[y].length; x++){
+				values[y-1][x] = values[y][x];
 			}
 		}
-		Arrays.fill(values()[values().length-1], -1);
+		
+		Arrays.fill(values[values.length-1], -1);
 		
 		// mise a jour du pixel central
 		pixel().setY(pixel().y()+1);

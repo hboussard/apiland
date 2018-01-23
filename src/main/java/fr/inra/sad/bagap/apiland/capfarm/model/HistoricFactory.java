@@ -65,6 +65,7 @@ public class HistoricFactory {
 					for(String cover : sequence){
 						nb = 1;
 						if(!cover.equalsIgnoreCase("")){
+							
 							if(cover.contains("(")){
 								infos = cover.replace(")", "").split("\\(");
 								cover = infos[0];

@@ -107,7 +107,7 @@ public class SimpleStructure extends Structure {
 	public Instant getLastChange() {
 		return representation.getLastChange();
 	}
-	
+	/*
 	@Override
 	public double minX() {
 		return minX;
@@ -127,7 +127,7 @@ public class SimpleStructure extends Structure {
 	public double maxY() {
 		return maxY;
 	}
-	/*
+	*/
 	
 	@Override
 	public double minX() {
@@ -148,7 +148,7 @@ public class SimpleStructure extends Structure {
 	public double maxY() {
 		return representation.maxY();
 	}
-	*/
+	
 	@Override
 	public void delete() {
 		super.delete();

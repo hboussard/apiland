@@ -36,6 +36,8 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
+import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
+import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
@@ -257,6 +259,13 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 
 	@Override
 	protected void doClose() {
+		try {
+			//String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
+			//Tool.copy(prj_input, ascii.replace(".asc", "")+".prj");
+			Tool.copy(DynamicLayerFactory.class.getResourceAsStream("lambert93.prj"), ascii.replace(".asc", "")+".prj");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		ascii = null;
 		shape = null;
 		attribute = null;

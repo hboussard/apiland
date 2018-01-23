@@ -340,5 +340,16 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		return max;
 	}
 
+	/*
+	@Override
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	@Override
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	 */
 	
 }

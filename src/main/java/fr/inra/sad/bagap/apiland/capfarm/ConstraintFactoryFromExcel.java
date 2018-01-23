@@ -1,12 +1,15 @@
 package fr.inra.sad.bagap.apiland.capfarm;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
@@ -35,9 +38,9 @@ public class ConstraintFactoryFromExcel {
 	
 	private int iconscode;
 	
-	private String codeFarm;
+	private String date, codeFarm, farmer, farmType, mail, address, tel;
 	
-	private int essai;
+	private int essai, nbYearHistoric, nbYearSimulation, nbSimulation;
 	
 	private String output;
 	
@@ -77,6 +80,7 @@ public class ConstraintFactoryFromExcel {
 			integrateGroups(workbook);
 			integrateConstraints(workbook);
 			
+			writeInfos();
 			writeCovers();
 			writeCoverGroups();
 			writeConstraints();
@@ -92,8 +96,17 @@ public class ConstraintFactoryFromExcel {
 	private void integrateInfos(XSSFWorkbook workbook){
 		XSSFSheet sheet = workbook.getSheet("infos");
 		
-		codeFarm = sheet.getRow(6).getCell(1).getStringCellValue();
-		essai = (int) sheet.getRow(7).getCell(1).getNumericCellValue();
+		codeFarm = sheet.getRow(0).getCell(1).getStringCellValue();
+		farmer = sheet.getRow(1).getCell(1).getStringCellValue();
+		farmType = sheet.getRow(2).getCell(1).getStringCellValue();
+		mail = sheet.getRow(3).getCell(1).getStringCellValue();
+		address = sheet.getRow(4).getCell(1).getStringCellValue();
+		tel = sheet.getRow(5).getCell(1).getStringCellValue();
+		essai = (int) sheet.getRow(6).getCell(1).getNumericCellValue();
+		date = sheet.getRow(7).getCell(1).getStringCellValue();
+		nbYearHistoric = (int) sheet.getRow(8).getCell(1).getNumericCellValue();
+		nbYearSimulation = (int) sheet.getRow(9).getCell(1).getNumericCellValue();
+		nbSimulation = (int) sheet.getRow(10).getCell(1).getNumericCellValue();
 	}
 	
 	private void integrateGenericsCovers(XSSFWorkbook workbook){
@@ -501,6 +514,33 @@ public class ConstraintFactoryFromExcel {
 				}
 			}
 		}
+	}
+	
+	private void writeInfos() {
+		try{
+			Properties properties = new Properties();
+			
+			properties.setProperty("date", date);
+			properties.setProperty("code", codeFarm);
+			properties.setProperty("exploitant", farmer);
+			properties.setProperty("type_exploitation", farmType);
+			properties.setProperty("mail", mail);
+			properties.setProperty("adresse", address);
+			properties.setProperty("tel", tel);
+			properties.setProperty("version", essai+"");
+			properties.setProperty("nb_annees_historique", nbYearHistoric+"");
+			properties.setProperty("nb_annees_simulations", nbYearSimulation+"");
+			properties.setProperty("nb_simulations", nbSimulation+"");
+			
+			
+			FileOutputStream out = new FileOutputStream(output+"infos.txt");
+			properties.store(out,"info file generated with CAPFarm");
+			out.close();
+		}catch(FileNotFoundException ex){
+			ex.printStackTrace();
+		}catch(IOException ex){
+			ex.printStackTrace();
+		} 
 	}
 	
 	private void writeCovers(){

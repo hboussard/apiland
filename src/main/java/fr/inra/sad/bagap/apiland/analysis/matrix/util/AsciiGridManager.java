@@ -37,6 +37,8 @@ import com.vividsolutions.jts.io.WKTReader;
 import fr.inra.sad.bagap.apiland.core.element.DynamicElement;
 import fr.inra.sad.bagap.apiland.core.element.DynamicFeature;
 import fr.inra.sad.bagap.apiland.core.element.DynamicLayer;
+import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
+import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicElementType;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.JaiMatrixFactory;
@@ -135,6 +137,14 @@ public class AsciiGridManager {
 			new File(tempAscii).renameTo(new File(outAscii));
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				//String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
+				//Tool.copy(prj_input, outAscii.replace(".asc", "")+".prj");
+				Tool.copy(DynamicLayerFactory.class.getResourceAsStream("lambert93.prj"), outAscii.replace(".asc", "")+".prj");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
