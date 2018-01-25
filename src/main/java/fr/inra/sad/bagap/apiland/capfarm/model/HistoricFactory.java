@@ -62,7 +62,7 @@ public class HistoricFactory {
 					
 					t = Instant.get(start.dayOfMonth(), start.month(), start.year() - nbYear);
 					
-					for(String cover : sequence){
+					for(String cover : sequence){	
 						nb = 1;
 						if(!cover.equalsIgnoreCase("")){
 							
