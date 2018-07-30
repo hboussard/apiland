@@ -7,7 +7,7 @@ import java.util.Set;
 import fr.inra.sad.bagap.apiland.capfarm.model.Cover;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverGroup;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
-import fr.inra.sad.bagap.apiland.capfarm.model.FarmingSystem;
+import fr.inra.sad.bagap.apiland.capfarm.model.ConstraintSystem;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.CoverAllocationConstraint;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.FarmTerritory;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
@@ -16,7 +16,7 @@ import fr.inra.sad.bagap.apiland.core.time.Instant;
 
 public class CoverAllocatorComposite implements CoverAllocator {
 	
-	private FarmingSystem system;
+	private ConstraintSystem system;
 	
 	private FarmTerritory territory;
 	
@@ -107,7 +107,7 @@ public class CoverAllocatorComposite implements CoverAllocator {
 	}
 
 	@Override
-	public FarmingSystem getFarmingSystem() {
+	public ConstraintSystem getConstraintSystem() {
 		return system;
 	}
 
@@ -118,13 +118,13 @@ public class CoverAllocatorComposite implements CoverAllocator {
 	}
 
 	@Override
-	public void clearFarmingSystem() {
+	public void clearConstraintSystem() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void checkFarmingSystem(Instant start, Instant end, boolean verbose) {
+	public void checkConstraintSystem(Instant start, Instant end, boolean verbose) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -161,6 +161,12 @@ public class CoverAllocatorComposite implements CoverAllocator {
 	
 	@Override
 	public void setMemory(boolean memory) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTerritory(DynamicElement element) {
 		// TODO Auto-generated method stub
 		
 	}

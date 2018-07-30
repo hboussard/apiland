@@ -108,9 +108,8 @@ public class AsciiGridManager {
 			int noData, Map<Integer, Number> changes) {
 
 		File f = new File(inAscii);
-		String tempAscii = f.getParent() + "/"
-				+ f.getName().replace(".asc", "") + "_c.asc";
-
+		String tempAscii = f.getParent() + "/" + f.getName().replace(".asc", "") + "_c.asc";
+		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(f));
 			BufferedWriter bw = new BufferedWriter(new FileWriter(tempAscii));

@@ -25,10 +25,13 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Lineal;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygonal;
 import com.vividsolutions.jts.geom.Puntal;
 import com.vividsolutions.jts.geom.prep.PreparedGeometry;
+import com.vividsolutions.jts.geom.prep.PreparedLineString;
 import com.vividsolutions.jts.geom.prep.PreparedPoint;
 import com.vividsolutions.jts.geom.prep.PreparedPolygon;
 import com.vividsolutions.jts.index.strtree.STRtree;
@@ -89,11 +92,11 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	protected void doRun() {
 		ShpFiles sf = getShape(shape);
 		int nb = getNumGeometries(sf);
-		if(nb < 100){
-			runFewGeometries();
-		}else{
+		//if(nb < 100){
+			//runFewGeometries();
+		//}else{
 			runLotGeometries();
-		}
+		//}
 	}
 	
 	protected void runFewGeometries() {
@@ -101,16 +104,27 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 		ShpFiles sf = getShape(shape);
 		int pos = getAttributePosition(sf, attribute);
 		ShapeType type = getShapeType(sf);
-		int ncols = new Double((Math.floor((maxX - minX) / cellsize)) + 1).intValue();
-		int nrows = new Double((Math.floor((maxY - minY) / cellsize)) + 1).intValue();
+		
+		int ncols;
+		if((maxX - minX)%cellsize == 0){
+			ncols = new Double((Math.floor((maxX - minX) / cellsize))).intValue();
+		}else{
+			ncols = new Double((Math.floor((maxX - minX) / cellsize)) + 1).intValue();
+		}
+		
+		int nrows;
+		if((maxY - minY)%cellsize == 0){
+			nrows = new Double((Math.floor((maxY - minY) / cellsize))).intValue();
+		}else{
+			nrows = new Double((Math.floor((maxY - minY) / cellsize)) + 1).intValue();
+		}
 			
-		Set<PreparedGeometry> geos = getPreparedGeometries(sf, pos, map);
+		Set<PreparedGeometry> geos = getPreparedGeometries(sf, type, pos, map);
 		
 		double x, y;
 		PreparedGeometry current = null;
-		
 		double yorigin;
-		if (maxY - minY % cellsize == 0) {
+		if((maxY - minY)%cellsize == 0) {
 			yorigin = minY + Math.floor((maxY - minY) / cellsize) * cellsize;
 		} else {
 			yorigin = minY + (Math.floor((maxY - minY) / cellsize) + 1)	* cellsize;
@@ -127,7 +141,9 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 			
 			GeometryFactory gf = new GeometryFactory();
 			Point p;
-			
+			//double distance = cellsize;
+			//double distance = cellsize/2.0;
+			double distance = Math.sqrt(2)*cellsize/2.0;
 			for(int j=0; j<nrows; j++) {
 				x = minX + (cellsize / 2.0);
 				y = yorigin - (cellsize / 2.0) - j * cellsize;
@@ -142,7 +158,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 						boolean ok = false;
 						for (PreparedGeometry g : geos) {
 							if((type.isPolygonType() && g.intersects(p))
-									|| (type.isLineType() && g.getGeometry().distance(p) <= cellsize)) {
+									|| (type.isLineType() && g.getGeometry().distance(p) <= distance)) {
 								current = g;
 								bw.write(current.getGeometry().getUserData()+" ");
 								ok = true;
@@ -169,9 +185,22 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 		ShpFiles sf = getShape(shape);
 		int pos = getAttributePosition(sf, attribute);
 		int nb = getNumGeometries(sf);
+		
 		ShapeType type = getShapeType(sf);
-		int ncols = new Double((Math.floor((maxX - minX) / cellsize)) + 1).intValue();
-		int nrows = new Double((Math.floor((maxY - minY) / cellsize)) + 1).intValue();
+		
+		int ncols;
+		if((maxX - minX)%cellsize == 0){
+			ncols = new Double((Math.floor((maxX - minX) / cellsize))).intValue();
+		}else{
+			ncols = new Double((Math.floor((maxX - minX) / cellsize)) + 1).intValue();
+		}
+		
+		int nrows;
+		if((maxY - minY)%cellsize == 0){
+			nrows = new Double((Math.floor((maxY - minY) / cellsize))).intValue();
+		}else{
+			nrows = new Double((Math.floor((maxY - minY) / cellsize)) + 1).intValue();
+		}
 				
 		double x, y;
 		Geometry current = null;
@@ -179,7 +208,8 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 		int decoup = nb / 1000000 + 1;
 		int d = -1;
 		double yorigin;
-		if (maxY - minY % cellsize == 0) {
+	
+		if((maxY - minY)%cellsize == 0) {
 			yorigin = minY + Math.floor((maxY - minY) / cellsize) * cellsize;
 		} else {
 			yorigin = minY + (Math.floor((maxY - minY) / cellsize) + 1)	* cellsize;
@@ -217,6 +247,9 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 				y = yorigin - (cellsize / 2.0) - j * cellsize;
 				pp.getGeometry().getCoordinate().y = y;	
 				//System.out.println(j+" 3");
+				//double distance = cellsize;
+				//double distance = cellsize/2.0;
+				double distance = Math.sqrt(2)*cellsize/2.0;
 				for(int i=0; i<ncols; i++) {
 					//System.out.println(j+" "+i+" "+1);
 					x = minX + (cellsize / 2.0) + i * cellsize;
@@ -224,18 +257,24 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 					pp.getGeometry().geometryChanged();
 					//System.out.println(j+" "+i+" "+2);
 					if(current != null && type.isPolygonType() && pp.intersects(current)) {
-						//System.out.println("ici");
+						//System.out.println("ici "+current.getUserData());
 						bw.write(current.getUserData()+" ");
 					}else{
+						
 						//System.out.println("là "+1);
-						List<Geometry> geometries = spatialIndex.query(new Envelope(new Coordinate(x-1, y+1), new Coordinate(x+1, y-1)));
+						//List<Geometry> geometries = spatialIndex.query(new Envelope(new Coordinate(x-1, y+1), new Coordinate(x+1, y-1))); // faux
+						List<Geometry> geometries = spatialIndex.query(new Envelope(new Coordinate(x-distance, y+distance), new Coordinate(x+distance, y-distance)));
+						
+						//System.out.println(geometries.size());
 						//System.out.println("là "+2);
 						boolean ok = false;
 						for (Geometry g : geometries) {
 							//System.out.println("là "+3);
+							
 							if((type.isPolygonType() && pp.intersects(g))
-									|| (type.isLineType() && pp.getGeometry().distance(g) <= cellsize)) {
+									|| (type.isLineType() && pp.getGeometry().distance(g) <= distance)) {
 								//System.out.println("là "+4);
+								
 								current = g;
 								bw.write(g.getUserData()+" ");
 								ok = true;
@@ -289,10 +328,9 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	
 	private int getNumGeometries(ShpFiles sf){
 		try {
-			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
 		
 			GeometryCollection gc;
-			Geometry g;
 			int size = 0;
 			while (sfr.hasNext()) {
 				gc = (GeometryCollection) sfr.nextRecord().shape();
@@ -371,7 +409,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 		throw new IllegalArgumentException();
 	}
 	
-	private Set<PreparedGeometry> getPreparedGeometries(ShpFiles sf, int pos, Map<String, String> map){
+	private Set<PreparedGeometry> getPreparedGeometries(ShpFiles sf, ShapeType type, int pos, Map<String, String> map){
 		try {
 			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new com.vividsolutions.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true,	Charset.defaultCharset());
@@ -395,7 +433,14 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 								g.setUserData(f);
 							}
 						}
-						set.add(new PreparedPolygon((Polygonal) g));
+						if(type.isLineType()){
+							set.add(new PreparedLineString((Lineal) g));
+						}else if(type.isPolygonType()){
+							set.add(new PreparedPolygon((Polygonal) g));
+						}else{
+							throw new IllegalArgumentException();
+						}
+						
 					}
 				}
 			}

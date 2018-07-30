@@ -183,6 +183,11 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		return width;
 	}
 
+	public int size(){
+		return height * width;
+	}
+			
+	
 	@Override
 	public Iterator<Pixel> iterator() {
 		return new IteratorMatrix(this);

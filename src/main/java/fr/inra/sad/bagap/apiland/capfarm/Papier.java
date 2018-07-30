@@ -2,8 +2,8 @@ package fr.inra.sad.bagap.apiland.capfarm;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverFactory;
 import fr.inra.sad.bagap.apiland.capfarm.model.Farm;
-import fr.inra.sad.bagap.apiland.capfarm.model.FarmingSystemFactory;
-import fr.inra.sad.bagap.apiland.capfarm.model.GenericFarmingSystem;
+import fr.inra.sad.bagap.apiland.capfarm.model.ConstraintSystemFactory;
+import fr.inra.sad.bagap.apiland.capfarm.model.GenericConstraintSystem;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.ConstraintBuilder;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.ConstraintMode;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.ConstraintType;
@@ -37,7 +37,7 @@ public class Papier {
 			
 		// création du type "laitier" ou "porcin"
 		//GenericFarmingSystem system = buildTypeLaitier();
-		GenericFarmingSystem system = buildTypePorcin();
+		GenericConstraintSystem system = buildTypePorcin();
 		
 		// affectation de ce système de production à une ferme
 		new ConstraintBuilder(farm).build(system);
@@ -55,11 +55,11 @@ public class Papier {
 		s.allRun();
 	}
 	
-	private static GenericFarmingSystem buildTypePorcin(){
+	private static GenericConstraintSystem buildTypePorcin(){
 		String type = "porcin";
 		
 		// création d'un type de ferme
-		GenericFarmingSystem system = new GenericFarmingSystem("type");
+		GenericConstraintSystem system = new GenericConstraintSystem("type");
 		
 		// intégration des couverts
 		CoverFactory.init(system, path+"type/"+type+"/covers.txt", null);
@@ -165,7 +165,7 @@ public class Papier {
 		cb.setDomain("[B]");
 		cb.build();
 		
-		FarmingSystemFactory.exportSystem(system, path+"type/"+type+"/system_"+type+".csv");
+		ConstraintSystemFactory.exportSystem(system, path+"type/"+type+"/system_"+type+".csv");
 		
 		//FarmingSystemFactory.importSystem(system, path+"type/"+type+"/system_"+type+".csv");
 		
@@ -174,11 +174,11 @@ public class Papier {
 		return system;
 	}
 	
-	private static GenericFarmingSystem buildTypeLaitier(){
+	private static GenericConstraintSystem buildTypeLaitier(){
 		String type = "laitier";
 		
 		// création d'un type de ferme
-		GenericFarmingSystem system = new GenericFarmingSystem(type);
+		GenericConstraintSystem system = new GenericConstraintSystem(type);
 				
 		// intégration des couverts
 		CoverFactory.init(system, path+"type/"+type+"/covers.txt", null);
@@ -313,7 +313,7 @@ public class Papier {
 		cb.setDomain("[M,B,R]");
 		cb.build();
 		
-		FarmingSystemFactory.exportSystem(system, path+"type/"+type+"/system_"+type+".csv");
+		ConstraintSystemFactory.exportSystem(system, path+"type/"+type+"/system_"+type+".csv");
 		
 		//FarmingSystemFactory.importSystem(system, path+"type/"+type+"/system_"+type+".csv");
 		

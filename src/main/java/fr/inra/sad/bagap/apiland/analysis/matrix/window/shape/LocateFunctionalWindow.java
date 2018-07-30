@@ -1,11 +1,13 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.window.shape;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
@@ -62,19 +64,27 @@ public class LocateFunctionalWindow extends WindowShape {
 	}
 	
 	@Override
-	public void export(int x, int y, Matrix m, String path){
+	public void export(Pixel p, Matrix m, String path){
 		try {
-			String file = path+"functional_"+width+"_"+CoordinateManager.getProjectedX(m, x)+"-"+CoordinateManager.getProjectedY(m, y)+".asc";
+			String name = new File(m.getFile()).getName().replace(".asc", "");
+			
+			String file = "";
+			if(p instanceof PixelWithID){
+				file = path+name+"_functional_"+width+"_"+((PixelWithID) p).getId()+".asc";
+			}else{
+				file = path+name+"_functional_"+width+"_"+CoordinateManager.getProjectedX(m, p.x())+"-"+CoordinateManager.getProjectedY(m, p.y())+".asc";
+			}
+			
 			//System.out.print(locate.x()+" "+CoordinateManager.getProjectedX(m, locate.x()));
 			//System.out.println(", "+locate.y()+" "+CoordinateManager.getProjectedY(m, locate.y()));
 			//System.out.println(theoricalSize);
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			
 			double delta = width/2.0;
-			double X = CoordinateManager.getProjectedX(m, x);
+			double X = CoordinateManager.getProjectedX(m, p.x());
 			double nX = X - delta * Raster.getCellSize();
 			
-			double Y = CoordinateManager.getProjectedY(m, y);
+			double Y = CoordinateManager.getProjectedY(m, p.y());
 			double nY = Y - delta * Raster.getCellSize();
 			
 			out.write("ncols ");
@@ -97,8 +107,8 @@ public class LocateFunctionalWindow extends WindowShape {
 			out.newLine();
 			
 			int index = 0;
-			for(int j=y-width/2; j<y+1+width/2; j++){
-				for(int i=x-width/2; i<x+1+width/2; i++){
+			for(int j=p.y()-width/2; j<p.y()+1+width/2; j++){
+				for(int i=p.x()-width/2; i<p.x()+1+width/2; i++){
 					if(filter[index++] == 0){
 						out.write("-1 ");
 					}else{

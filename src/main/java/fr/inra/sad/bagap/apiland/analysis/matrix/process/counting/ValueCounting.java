@@ -57,10 +57,10 @@ public class ValueCounting extends CountingDecorator {
 		return countV.keySet();
 	}
 	
-	@Override
+	/*@Override
 	public Collection<Count> counts(){
 		return countV.values();
-	}
+	}*/
 	
 	@Override
 	public int countValue(int v){

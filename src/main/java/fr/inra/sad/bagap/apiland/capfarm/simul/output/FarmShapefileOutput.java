@@ -22,7 +22,7 @@ public class FarmShapefileOutput extends OutputAnalysis {
 					DynamicLayerFactory.exportShape(
 							model.getCoverAllocator().getTerritory(), 
 							t,
-							simulation.scenario().folder()+model.getName()+"_"+t.year());
+							simulation.scenario().folder()+model.getName()+"_"+simulation.number()+"_"+t.year());
 				}
 				
 				t = simulation.manager().delay().next(t);

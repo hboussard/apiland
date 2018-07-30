@@ -69,7 +69,7 @@ public class SetPatch implements Patch {
 
 	@Override
 	public double getArea(){
-		return size() * Pixel.getCellSize();
+		return size() * Pixel.getCellSize() * Pixel.getCellSize();
 	}
 
 	@Override

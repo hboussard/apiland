@@ -1,18 +1,19 @@
 package fr.inra.sad.bagap.apiland.capfarm.model.economic;
 
 import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocationProblem;
+import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocationProblemFactory;
 import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.capfarm.model.economic.csp.EconomicCoverAllocationProblem;
-import fr.inra.sad.bagap.apiland.capfarm.simul.CoverAllocationProblemFactory;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 
 public class EconomicCoverAllocationProblemFactory extends CoverAllocationProblemFactory {
 
-	private String economicProfil;
+	private String economicProfil, managmentProfil;
 	
-	public EconomicCoverAllocationProblemFactory(String economicProfil){
+	public EconomicCoverAllocationProblemFactory(String economicProfil, String managmentProfil){
 		this.economicProfil = economicProfil;
+		this.managmentProfil = managmentProfil;
 	}
 	
 	@Override
@@ -25,9 +26,16 @@ public class EconomicCoverAllocationProblemFactory extends CoverAllocationProble
 		}
 		
 		//EconomicProfil ep = EconomicProfilFactory.create(covers);
-		EconomicProfil ep = EconomicProfilFactory.create(covers, economicProfil);
+		EconomicProfil ep = null;
+		if(economicProfil != null){
+			ep = EconomicProfilFactory.create(covers, economicProfil);
+		}
+		ManagmentProfil mp = null;
+		if(managmentProfil != null){
+			mp = ManagmentProfilFactory.create(covers, managmentProfil);
+		}
 		
-		return new EconomicCoverAllocationProblem(coverAllocator, t, ep);
+		return new EconomicCoverAllocationProblem(coverAllocator, t, ep, mp);
 	}
 	
 }

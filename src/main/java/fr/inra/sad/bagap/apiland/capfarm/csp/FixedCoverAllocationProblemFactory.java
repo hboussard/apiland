@@ -1,6 +1,5 @@
 package fr.inra.sad.bagap.apiland.capfarm.csp;
 
-import fr.inra.sad.bagap.apiland.capfarm.simul.CoverAllocationProblemFactory;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 
 public class FixedCoverAllocationProblemFactory extends CoverAllocationProblemFactory {

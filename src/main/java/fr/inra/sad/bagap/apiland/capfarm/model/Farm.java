@@ -8,13 +8,14 @@ import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.CoverAllocationConstraint;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.FarmTerritory;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
+import fr.inra.sad.bagap.apiland.core.element.DynamicElement;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 
 public class Farm implements CoverAllocator {
 
 	private String code;
 	
-	private FarmingSystem system;
+	private ConstraintSystem system;
 	
 	private FarmTerritory territory;
 	
@@ -22,7 +23,7 @@ public class Farm implements CoverAllocator {
 	
 	public Farm(String code){
 		this.code = code;
-		this.system = new FarmingSystem(this);
+		this.system = new ConstraintSystem(code);
 	}
 	
 	@Override
@@ -41,7 +42,7 @@ public class Farm implements CoverAllocator {
 	}
 
 	@Override
-	public FarmingSystem getFarmingSystem() {
+	public ConstraintSystem getConstraintSystem() {
 		return system;
 	}
 
@@ -50,7 +51,7 @@ public class Farm implements CoverAllocator {
 		return territory;
 	}
 
-	public void setFarmingSystem(FarmingSystem system) {
+	public void setConstraintSystem(ConstraintSystem system) {
 		this.system = system;
 	}
 
@@ -126,8 +127,8 @@ public class Farm implements CoverAllocator {
 	}
 
 	@Override
-	public void clearFarmingSystem() {
-		this.system = new FarmingSystem(this);
+	public void clearConstraintSystem() {
+		this.system = new ConstraintSystem(code);
 	}
 	
 	public void setHistoric(String historic){
@@ -143,7 +144,7 @@ public class Farm implements CoverAllocator {
 	}
 
 	@Override
-	public void checkFarmingSystem(Instant start, Instant end, boolean verbose) {
+	public void checkConstraintSystem(Instant start, Instant end, boolean verbose) {
 		for(CoverAllocationConstraint<?, ?> ca : system.getConstraints()){
 			ca.check(start, end, true);
 		}
@@ -199,6 +200,12 @@ public class Farm implements CoverAllocator {
 	@Override
 	public Map<Parcel, CoverUnit> getSolution() {
 		return solution;
+	}
+
+	
+	@Override
+	public void setTerritory(DynamicElement element) {
+		this.setTerritory((FarmTerritory) element); 
 	}
 
 }

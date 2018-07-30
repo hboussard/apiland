@@ -460,8 +460,8 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	}
 
 	@Override
-	public void export(int x, int y, Matrix m, String path) {
-		location.export(x, y, m, path);
+	public void export(Pixel p, Matrix m, String path) {
+		location.export(p, m, path);
 	}
 
 	public void infos(){

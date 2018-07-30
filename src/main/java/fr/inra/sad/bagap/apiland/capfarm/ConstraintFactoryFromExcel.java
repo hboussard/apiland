@@ -23,14 +23,14 @@ import com.csvreader.CsvWriter.FinalizedException;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverFactory;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverManager;
-import fr.inra.sad.bagap.apiland.capfarm.model.FarmingSystemFactory;
-import fr.inra.sad.bagap.apiland.capfarm.model.GenericFarmingSystem;
+import fr.inra.sad.bagap.apiland.capfarm.model.ConstraintSystemFactory;
+import fr.inra.sad.bagap.apiland.capfarm.model.GenericConstraintSystem;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.ConstraintType;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.GenericConstraintBuilder;
 
 public class ConstraintFactoryFromExcel {
 
-	private GenericFarmingSystem system;
+	private GenericConstraintSystem system;
 	
 	private GenericConstraintBuilder builder;
 	
@@ -67,7 +67,7 @@ public class ConstraintFactoryFromExcel {
 			XSSFWorkbook workbook = new XSSFWorkbook(new File(input));
 			
 			// 1. construire un genericfarmingsystem
-			system = new GenericFarmingSystem("contraintes");
+			system = new GenericConstraintSystem("contraintes");
 			builder = new GenericConstraintBuilder(system);
 			conscode = "CO";
 			iconscode = 1;
@@ -553,7 +553,7 @@ public class ConstraintFactoryFromExcel {
 	
 	private void writeConstraints(){
 		// 3. exporter le fichier via le farmingsystemfactory
-		FarmingSystemFactory.exportSystem(system, output+"contraintes_"+codeFarm+"_"+essai+".csv");
+		ConstraintSystemFactory.exportSystem(system, output+"contraintes_"+codeFarm+"_"+essai+".csv");
 	}
 	
 }

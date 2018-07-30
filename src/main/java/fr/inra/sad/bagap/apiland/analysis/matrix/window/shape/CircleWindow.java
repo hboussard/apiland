@@ -1,6 +1,7 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.window.shape;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
@@ -235,16 +237,23 @@ public class CircleWindow extends WindowShape{
 	}
 	
 	@Override
-	public void export(int x, int y, Matrix m, String path) {
+	public void export(Pixel p, Matrix m, String path) {
 		try {
-			String file = path+"circle_"+diameter+"_"+CoordinateManager.getProjectedX(m, x)+"-"+CoordinateManager.getProjectedY(m, y)+".asc";
+			String name = new File(m.getFile()).getName().replace(".asc", "");
+			String file = "";
+			if(p instanceof PixelWithID){
+				file = path+name+"_circle_"+diameter+"_"+((PixelWithID) p).getId()+".asc";
+			}else{
+				file = path+name+"_circle_"+diameter+"_"+CoordinateManager.getProjectedX(m, p.x())+"-"+CoordinateManager.getProjectedY(m, p.y())+".asc";
+			}
+			
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			
 			double delta = diameter/2.0;
-			double X = CoordinateManager.getProjectedX(m, x);
+			double X = CoordinateManager.getProjectedX(m, p.x());
 			double nX = X - delta * Raster.getCellSize();
 				
-			double Y = CoordinateManager.getProjectedY(m, y);
+			double Y = CoordinateManager.getProjectedY(m, p.y());
 			double nY = Y - delta * Raster.getCellSize();
 				
 			out.write("ncols ");
@@ -267,8 +276,8 @@ public class CircleWindow extends WindowShape{
 			out.newLine();
 			
 			int index = 0;
-			for(int j=y-diameter/2; j<y+1+diameter/2; j++){
-				for(int i=x-diameter/2; i<x+1+diameter/2; i++){
+			for(int j=p.y()-diameter/2; j<p.y()+1+diameter/2; j++){
+				for(int i=p.x()-diameter/2; i<p.x()+1+diameter/2; i++){
 					if(filter[index++] == 0){
 						out.write("-1 ");
 					}else{

@@ -177,9 +177,9 @@ public class MultipleWindow extends Window {
 	}
 
 	@Override
-	public void export(int x, int y, Matrix m, String path) {
+	public void export(Pixel p, Matrix m, String path) {
 		for(Window w : windows){
-			w.export(x, y, m, path);
+			w.export(p, m, path);
 		}
 	}
 

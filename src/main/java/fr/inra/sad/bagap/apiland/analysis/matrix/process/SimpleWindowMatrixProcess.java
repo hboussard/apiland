@@ -27,7 +27,7 @@ public class SimpleWindowMatrixProcess extends WindowMatrixProcess {
 		super(w, p, wpt);
 		values = new double[w.height()][w.width()];
 		for(int y=0; y<values.length; y++){
-			Arrays.fill(values[y], -1);
+			Arrays.fill(values[y], Raster.getNoDataValue());
 		}
 	}
 	
@@ -141,7 +141,7 @@ public class SimpleWindowMatrixProcess extends WindowMatrixProcess {
 			}
 		}
 		
-		Arrays.fill(values[values.length-1], -1);
+		Arrays.fill(values[values.length-1], Raster.getNoDataValue());
 		
 		// mise a jour du pixel central
 		pixel().setY(pixel().y()+1);

@@ -68,13 +68,14 @@ public class SimulationManager implements Serializable{
 	/** count of scenarios, default = 1 */
 	private int scenarios = 1; 
 	
-	/**
-	 * scenario number
-	 */
+	/** scenario number */
 	private int number;
 	
-	/** count of good endeed simulations, default = 0*/
+	/** count of good endeed simulations, default = 0 */
 	private int success = 0;
+	
+	/** count of maximum simulations, default = MaxInteger */
+	private int max = Integer.MAX_VALUE;
 	
 	/** work path */
 	private String path; 
@@ -197,6 +198,14 @@ public class SimulationManager implements Serializable{
 	
 	public int success(){
 		return success;
+	}
+	
+	public void setMax(int m){
+		this.max = m;
+	}
+	
+	public int max(){
+		return max;
 	}
 	
 	public void setSettings(String key, String value){

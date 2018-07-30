@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.GenericCoverAllocationConstraint;
 
-public class GenericFarmingSystem implements Covering {
+public class GenericConstraintSystem implements Covering {
 
 	private String name;
 	
@@ -16,7 +16,7 @@ public class GenericFarmingSystem implements Covering {
 	
 	private Map<String, GenericCoverAllocationConstraint> constraints;
 	
-	public GenericFarmingSystem(String name){
+	public GenericConstraintSystem(String name){
 		this.name = name;
 		this.covers = new TreeSet<Cover>();
 		this.constraints = new TreeMap<String, GenericCoverAllocationConstraint>();

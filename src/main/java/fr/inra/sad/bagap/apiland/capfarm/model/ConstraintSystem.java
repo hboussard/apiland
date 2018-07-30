@@ -6,36 +6,31 @@ import java.util.TreeSet;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.CoverAllocationConstraint;
 
-public class FarmingSystem implements Covering {
+public class ConstraintSystem implements Covering {
 
-	private Farm farm;
-	
 	private Set<Cover> covers;
 	
 	private Set<CoverAllocationConstraint<?,?>> constraints;
 	
-	private GenericFarmingSystem generic;
+	private GenericConstraintSystem generic;
 	
-	public FarmingSystem(Farm farm){
-		this.farm = farm;
+	public ConstraintSystem(String code){
 		this.covers = new TreeSet<Cover>();
 		this.constraints = new TreeSet<CoverAllocationConstraint<?,?>>();
-		this.generic = new GenericFarmingSystem("unknown_"+farm.getCode());
+		this.generic = new GenericConstraintSystem("unknown_"+code);
 	}
 
+	@Override
 	public String toString(){
 		return generic.toString();
 	}
-	
-	public Farm getFarm() {
-		return farm;
-	}
 
-	public GenericFarmingSystem getGenericFarmingSystem(){
+
+	public GenericConstraintSystem getGenericConstraintSystem(){
 		return generic;
 	}
 	
-	public void setGenericFarmingSystem(GenericFarmingSystem generic){
+	public void setGenericConstraintSystem(GenericConstraintSystem generic){
 		this.generic = generic;
 	}
 	

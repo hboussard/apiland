@@ -27,7 +27,6 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 
 	@Override
 	public void post(CoverAllocationProblem cap) {
-	
 		for(Parcel p : location()){
 			int ip = cap.parcels().get(p);
 			if(cap.previous(ip) != null && covers().contains(cap.previous(ip).getValue())){
@@ -39,7 +38,6 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 						cons = new Constraint[((SetDomain<CoverUnit>) domain()).set().size()];
 						i = 0;
 						for(CoverUnit cu : ((SetDomain<CoverUnit>) domain()).set()){
-							//System.out.println(covers()+" "+cu);
 							cons[i++] = ICF.arithm(cap.coversAndParcels(cap.covers().get(cu), ip), "=", 1);
 						}
 						if(cons.length > 0){
@@ -53,6 +51,7 @@ public class NextCoverConstraint extends CoverAllocationConstraint<CoverUnit, Co
 					cons = new Constraint[((SetDomain<CoverUnit>) domain()).set().size()];
 					i = 0;
 					for(CoverUnit cu : ((SetDomain<CoverUnit>) domain()).set()){
+						//System.out.println(covers()+" "+cu);
 						cons[i++] = ICF.arithm(cap.coversAndParcels(cap.covers().get(cu), ip), "=", 0);
 					}
 					if(cons.length > 0){

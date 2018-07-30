@@ -48,6 +48,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.shapefile.dbf.DbaseFileException;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
@@ -209,9 +211,9 @@ public class DynamicLayerFactory {
 			for(DynamicElementType t : types){
 				t.addRepresentationType(rType);
 			}
-			int index = 0;
+			int index = 1;
 			while (sfr.hasNext()) {
-				
+				//System.out.println(index++);
 				Object shape = sfr.nextRecord().shape();
 				
 				if(geometryClass.equals(Surfacic.class)){
@@ -333,6 +335,8 @@ public class DynamicLayerFactory {
 				}
 			}
 			
+			//System.out.println("id : "+element.getId());
+			
 		}else{
 			
 			if(layer.getType().getElementTypes().size() > 1){
@@ -366,8 +370,8 @@ public class DynamicLayerFactory {
 					id = (entry[posIds.get(type.getIdName())]).toString();
 				}
 			}
-			//System.out.println(id);
-			
+			//System.out.println("id "+id);
+			//element = null;
 			element = layer.get(id);
 			if(element == null){
 				builder = new DynamicElementBuilder(type);
@@ -383,6 +387,7 @@ public class DynamicLayerFactory {
 					}
 				}
 				element = builder.build();
+				
 				element.setId(id);
 			}
 			

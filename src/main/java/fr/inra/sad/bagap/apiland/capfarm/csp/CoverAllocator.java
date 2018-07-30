@@ -5,7 +5,7 @@ import java.util.Set;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverGroup;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.capfarm.model.Covering;
-import fr.inra.sad.bagap.apiland.capfarm.model.FarmingSystem;
+import fr.inra.sad.bagap.apiland.capfarm.model.ConstraintSystem;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.CoverAllocationConstraint;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.element.DynamicElement;
@@ -16,6 +16,8 @@ public interface CoverAllocator extends Covering {
 	String getCode();
 	
 	DynamicElement getTerritory();
+	
+	void setTerritory(DynamicElement element);
 	
 	int getArea();
 	
@@ -43,13 +45,13 @@ public interface CoverAllocator extends Covering {
 	
 	void clearParcels();
 
-	FarmingSystem getFarmingSystem();
+	ConstraintSystem getConstraintSystem();
 	
-	void clearFarmingSystem();
+	void clearConstraintSystem();
 	
 	//void setGenericFarmingSystem(GenericFarmingSystem system);
 	
-	void checkFarmingSystem(Instant start, Instant end, boolean verbose);
+	void checkConstraintSystem(Instant start, Instant end, boolean verbose);
 	
 	boolean hasMemory();
 	

@@ -212,6 +212,10 @@ public class CompositeModel<M extends Model> extends Model implements Collection
 		return true;
 	}
 
+	public boolean contains(String name) {
+		return models.containsKey(name);
+	}
+	
 	@Override
 	public boolean contains(Object o) {
 		return models.values().contains(o);

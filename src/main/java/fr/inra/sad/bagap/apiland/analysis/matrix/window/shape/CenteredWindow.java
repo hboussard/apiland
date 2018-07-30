@@ -15,6 +15,14 @@ public class CenteredWindow extends SimpleWindow{
 		centerY = height()/2;
 	}
 	
+	public int getCenterX(){
+		return centerX;
+	}
+	
+	public int getCenterY(){
+		return centerY;
+	}
+	
 	@Override
 	public Pixel getPixel(int wx, int wy) {
 		return new Pixel(pixel().x() - width()/2 + wx, pixel().y() - height()/2 + wy);

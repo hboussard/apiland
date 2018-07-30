@@ -18,9 +18,11 @@ public class LargestPatchIndex extends MatrixMetric implements PatchMetric {
 		value = 0;
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
 			if(p.getValue() != 0){
+				//System.out.println(p.size()+" "+p.getArea()+" "+p.getClass());
 				value = Math.max(value, p.getArea());
 			}
 		}
+		value /= 10000.0; // en hectares
 	}
 
 }

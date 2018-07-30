@@ -133,7 +133,7 @@ public class Stats implements QuantitativeCountingInterface {
 			average = getSum() / size();
 			variance = Math.abs(getSquareSum()/size() - getAverage()*getAverage());
 			stddeviation = Math.sqrt(getVariance());
-			varK = getStandardDeviation()/getAverage()*100.0;
+			varK = getStandardDeviation()/getAverage();
 			stderror = getStandardDeviation()/Math.sqrt(values.size());
 		}
 		/*

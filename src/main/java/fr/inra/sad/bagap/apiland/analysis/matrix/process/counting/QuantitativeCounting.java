@@ -141,10 +141,12 @@ public class QuantitativeCounting extends CountingDecorator {
 	
 	@Override
 	protected void doAddValue(double value, int x, int y) {
+		
 		if(value != Raster.getNoDataValue()){
 			if(value > 0){
 				nbPos++;
 			}else if(value < 0){
+				//System.out.println(value);
 				nbNeg++;
 			}
 			nb++;

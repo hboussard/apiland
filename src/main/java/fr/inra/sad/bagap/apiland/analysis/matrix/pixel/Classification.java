@@ -20,6 +20,10 @@ public class Classification extends Pixel2PixelMatrixCalculation {
 	@Override
 	protected double treatPixel(Pixel p) {
 		double v = matrix().get(p);
+		//System.out.println(p);
+		//if(p.y()%100 == 0 && p.x() == 0){
+		//	System.out.println(p.y());
+		//}
 		if(v != Raster.getNoDataValue()){
 			for(Entry<Domain<Double, Double>, Integer> e : domains.entrySet()) {
 				if(e.getKey().accept(v)){

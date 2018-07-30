@@ -16,6 +16,7 @@ import fr.inra.sad.bagap.apiland.capfarm.model.Cover;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverManager;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.capfarm.model.Farm;
+import fr.inra.sad.bagap.apiland.capfarm.model.FarmsAllocator;
 import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicElementTypeFactory;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicFeatureType;
@@ -39,6 +40,10 @@ public class TerritoryFactory {
 			}
 		}
 		throw new IllegalArgumentException("wrong farm code under territory");
+	}
+	
+	public static void init(Territory territory, FarmsAllocator farmsAllocator){
+		farmsAllocator.setTerritory((AgriculturalArea) territory.get("AA"));
 	}
 	
 	public static Territory init(String shape, Instant t){
@@ -81,6 +86,7 @@ public class TerritoryFactory {
 		parcelType.addAttributeType(DynamicElementTypeFactory.createAttributeType("repet", null, Integer.class));
 		parcelType.addAttributeType(DynamicElementTypeFactory.createAttributeType("cover", Interval.class, CoverUnit.class));
 		parcelType.addAttributeType(DynamicElementTypeFactory.createAttributeType("area", Interval.class, Double.class));
+		//parcelType.addAttributeType(DynamicElementTypeFactory.createAttributeType("codef", null, Integer.class));
 		for(Entry<Class<?>, Set<String>> e : conditions.entrySet()){
 			for(String c : e.getValue()){
 				parcelType.addAttributeType(DynamicElementTypeFactory.createAttributeType(c, null, e.getKey()));
@@ -94,17 +100,20 @@ public class TerritoryFactory {
 		facilityType.addAttributeType(DynamicElementTypeFactory.createAttributeType("type", null, String.class));
 		facilityType.addAttributeType(DynamicElementTypeFactory.createAttributeType("facility", null, String.class));
 		facilityType.addAttributeType(DynamicElementTypeFactory.createAttributeType("cover", Interval.class, CoverUnit.class));
+		//facilityType.addAttributeType(DynamicElementTypeFactory.createAttributeType("codef", null, Integer.class));
 		facilityType.setCondition("facility");
 						
 		// definition du type "FarmTerritory"
 		DynamicLayerType farmTerritoryType = new DynamicLayerType("farm", FarmTerritory.class);
 		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("seed", Interval.class, Long.class));
 		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("profit", Interval.class, Integer.class));
+		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("zoneprofit", Interval.class, Integer.class));
 		farmTerritoryType.addElementType(parcelType);
 		farmTerritoryType.addElementType(facilityType);
 		
 		// definition du type "AgriculturalArea"
 		DynamicLayerType agriculturalAreaType = new DynamicLayerType("area", AgriculturalArea.class);
+		agriculturalAreaType.addAttributeType(DynamicElementTypeFactory.createAttributeType("prairies", Interval.class, Integer.class));
 		agriculturalAreaType.addElementType(farmTerritoryType);
 			
 		// definition du type "TrameUnit"

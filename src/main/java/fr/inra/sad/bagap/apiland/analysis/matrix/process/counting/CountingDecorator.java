@@ -126,10 +126,10 @@ public abstract class CountingDecorator extends Counting {
 		return decorate.values();
 	}
 	
-	@Override
-	public Collection<Count> counts(){
+	//@Override
+	/*public Collection<Count> counts(){
 		return decorate.counts();
-	}
+	}*/
 
 	@Override
 	public int countValues() {

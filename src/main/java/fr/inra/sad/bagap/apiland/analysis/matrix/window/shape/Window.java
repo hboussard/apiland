@@ -96,7 +96,7 @@ public abstract class Window implements Comparable<Window>{
 	
 	public abstract void display();
 	
-	public abstract void export(int x, int y, Matrix m, String path);
+	public abstract void export(Pixel p, Matrix m, String path);
 	
 	public abstract void infos();
 }

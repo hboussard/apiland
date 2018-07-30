@@ -12,9 +12,9 @@ import fr.inra.sad.bagap.apiland.capfarm.model.constraint.GenericCoverAllocation
 
 import com.csvreader.CsvWriter;
 
-public class FarmingSystemFactory {
+public class ConstraintSystemFactory {
 	
-	public static void importSystem(GenericFarmingSystem system, String constraints){
+	public static void importSystem(GenericConstraintSystem system, String constraints){
 		GenericConstraintBuilder gcb = new GenericConstraintBuilder(system);
 		try {
 			// initialisation des contraintes
@@ -45,11 +45,11 @@ public class FarmingSystemFactory {
 		}
 	}
 	
-	public static void exportSystem(FarmingSystem system, String constraints) {
-		exportSystem(system.getGenericFarmingSystem(), constraints);
+	public static void exportSystem(ConstraintSystem system, String constraints) {
+		exportSystem(system.getGenericConstraintSystem(), constraints);
 	}
 	
-	public static void exportSystem(GenericFarmingSystem system, String constraints) {
+	public static void exportSystem(GenericConstraintSystem system, String constraints) {
 		try {
 			// initialisation des contraintes
 			CsvWriter cw = new CsvWriter(constraints);

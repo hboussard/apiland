@@ -172,16 +172,18 @@ public class Scenario implements Serializable{
 		}
 	}
 	
-	public void run(){
+	public boolean run(){
 		manager().display("run scenario "+simulator().number()+"_"+number);
+		boolean scenarioOk = true;
 		if(!run){
 			Simulation s;
 			int success = 0;
-			for(int i=0; conditionContinuation(i, success)/*i<manager().simulations()*/; i++){
+			int index = 0;
+			while(conditionContinuation(index, success)){
 				// reinitialisation du manager
 				manager().setCancelled(false);
 				
-				s = factory().createSimulation(this,(i+1));
+				s = factory().createSimulation(this,(index+1));
 				add(s);
 				s.init();
 				if(s.run()){
@@ -191,15 +193,25 @@ public class Scenario implements Serializable{
 				
 				// progression de la barre
 				//simulator.up(100/(manager().scenarios()*manager().simulations()));
+				
+				index++;
+			}
+			
+			//System.out.println(index+" "+manager().simulations()+" "+success+" "+manager().success());
+			
+			if(index < manager().simulations() || success < manager().success()){
+				scenarioOk = false;
 			}
 			
 			// calcul des sorties
 			outputs().calculate(this);
+			
 		}
+		return scenarioOk;
 	}
 	
 	protected boolean conditionContinuation(int index, int success) {
-		return index<manager().simulations() || success<manager().success();
+		return (index < manager().simulations() || success < manager().success()) && (index < manager().max());
 	}
 
 	protected void close(){

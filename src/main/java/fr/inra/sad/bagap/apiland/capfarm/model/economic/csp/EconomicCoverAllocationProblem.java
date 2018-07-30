@@ -1,7 +1,6 @@
 package fr.inra.sad.bagap.apiland.capfarm.model.economic.csp;
 
 import org.chocosolver.solver.constraints.ICF;
-import org.chocosolver.solver.exception.ContradictionException;
 import org.chocosolver.solver.search.loop.monitors.SMF;
 import org.chocosolver.solver.search.strategy.ISF;
 import org.chocosolver.solver.search.strategy.strategy.AbstractStrategy;
@@ -16,6 +15,7 @@ import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad.bagap.apiland.capfarm.model.Cover;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.capfarm.model.economic.EconomicProfil;
+import fr.inra.sad.bagap.apiland.capfarm.model.economic.ManagmentProfil;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 
@@ -23,15 +23,22 @@ public class EconomicCoverAllocationProblem extends CoverAllocationProblem {
 	
 	private IntVar[] coverAreas;
 	
-	private EconomicProfil economiProfil;
+	private EconomicProfil economicProfil;
 	
-	public EconomicCoverAllocationProblem(CoverAllocator allocator, Instant t, EconomicProfil ep) {
+	private ManagmentProfil managmentProfil;
+	
+	public EconomicCoverAllocationProblem(CoverAllocator allocator, Instant t, EconomicProfil ep, ManagmentProfil mp) {
 		super(allocator, t);
-		this.economiProfil = ep;
+		this.economicProfil = ep;
+		this.managmentProfil = mp;
 	}
 	
 	public EconomicProfil getEconomicProfil(){
-		return economiProfil;
+		return economicProfil;
+	}
+	
+	public ManagmentProfil getManagmentProfil(){
+		return managmentProfil;
 	}
 	
 	public IntVar[] coverAreas(){
@@ -92,6 +99,72 @@ public class EconomicCoverAllocationProblem extends CoverAllocationProblem {
 					allocator().getTerritory().getAttribute("profit").setValue(time(), ((IntVar) v).getValue());
 					//System.out.println("profit = "+((IntVar) v).getValue());
 				}
+				if(v.getName().equalsIgnoreCase("sum")){
+					//allocator().getTerritory().getAttribute("profit").setValue(time(), ((IntVar) v).getValue());
+					//System.out.println("sum = "+((IntVar) v).getValue()/100.0+" euros");
+				}
+				for(CoverUnit c : covers().keySet()){
+					int ic = covers().get(c);
+					if(v.getName().equalsIgnoreCase("a_cvs_"+ic)){
+						//System.out.println("a_cvs_"+ic+" = "+((IntVar) v).getValue());
+						//System.out.println(((IntVar) v).getValue());
+					}
+				}
+				if(v.getName().equalsIgnoreCase("coeffvar")){
+					//allocator().getTerritory().getAttribute("profit").setValue(time(), ((IntVar) v).getValue());
+					//System.out.println("coeffvar = "+((IntVar) v).getValue()/10000.0);
+					//System.out.println("coeffvar = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("profit")){
+					//System.out.println("profit = "+((IntVar) v).getValue());
+				}
+				
+				for(int h=0; h<10; h++){
+					if(v.getName().equalsIgnoreCase("profit"+h)){
+						//System.out.println("profit"+h+" = "+((IntVar) v).getValue());
+					}
+					if(v.getName().equalsIgnoreCase("profit"+h+"div10000")){
+						//System.out.println("profit"+h+"div10000 = "+((IntVar) v).getValue());
+					}
+					if(v.getName().equalsIgnoreCase("profit"+h+"carre")){
+						//System.out.println("profit"+h+"carre = "+((IntVar) v).getValue());
+					}
+				}
+				
+				if(v.getName().equalsIgnoreCase("profitdiv1000")){
+					//System.out.println("profitdiv1000 = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("profitcarre")){
+					//System.out.println("profitcarre = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("sum")){
+					//System.out.println("sum = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("moyenne")){
+					//System.out.println("moyenne = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("moyennecarre")){
+					//System.out.println("moyennecarre = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("sumprofitcarres")){
+					//System.out.println("sumprofitcarres = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("sumprofitcarressurtaille")){
+					//System.out.println("sumprofitcarressurtaille = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("variance")){
+					//System.out.println("variance = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("racinevariance")){
+					//System.out.println("racinevariance = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("ecarttype")){
+					//System.out.println("ecarttype = "+((IntVar) v).getValue());
+				}
+				if(v.getName().equalsIgnoreCase("ecarttype10000")){
+					//System.out.println("ecarttype10000 = "+((IntVar) v).getValue());
+				}
+				
 			}
 			for(Parcel p : parcels().keySet()){
 				int ip = parcels().get(p);

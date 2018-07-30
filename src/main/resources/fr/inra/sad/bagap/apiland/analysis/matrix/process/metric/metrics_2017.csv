@@ -37,6 +37,8 @@ HET-frag;false;diversity;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metr
 AI;false;connectivity;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.AggregationClassIndex
 NC-homo;true;couple;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.CountHomogeneousCoupleMetric
 NC-hete;true;couple;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.CountHeterogeneousCoupleMetric
+pNC-homo;true;couple;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.RateHomogeneousCoupleMetric
+pNC-hete;true;couple;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.RateHeterogeneousCoupleMetric
 E-homo;true;couple;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.EdgeHomogeneousCoupleMetric
 E-hete;true;couple;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.EdgeHeterogeneousCoupleMetric
 E;true;couple;couple;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.EdgeCoupleMetric

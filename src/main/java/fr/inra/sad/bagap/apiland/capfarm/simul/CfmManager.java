@@ -32,6 +32,8 @@ public class CfmManager extends SimulationManager {
 	
 	private String economicProfil;
 	
+	private String managmentProfil;
+	
 	private boolean check;
 
 	public CfmManager(int s){
@@ -86,6 +88,10 @@ public class CfmManager extends SimulationManager {
 		this.economicProfil = economicProfil;
 	}
 	
+	public void setManagmentProfil(String managmentProfil){
+		this.managmentProfil = managmentProfil;
+	}
+	
 	public void addOutput(OutputAnalysis output) {
 		this.outputs.add(output);
 	}
@@ -120,6 +126,10 @@ public class CfmManager extends SimulationManager {
 	
 	public String economicProfil(){
 		return economicProfil;
+	}
+	
+	public String managmentProfil(){
+		return managmentProfil;
 	}
 
 	public void setProbaTimeFolder(String probaTimeFolder) {

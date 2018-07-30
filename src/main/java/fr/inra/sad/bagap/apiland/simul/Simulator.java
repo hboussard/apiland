@@ -208,9 +208,9 @@ public class Simulator implements Serializable {
 	/**
 	 * to run
 	 */
-	public void run() {
+	public boolean run() {
 		manager.display("run simulator");
-		
+		boolean simulationOk = true;
 		if(state == SimulatorState.INIT){
 			state = SimulatorState.RUN;
 			Scenario s;
@@ -221,7 +221,9 @@ public class Simulator implements Serializable {
 				}else{
 					s.init();
 				}
-				s.run();
+				if(!s.run()){
+					simulationOk = false;
+				}
 				s.close();
 			}
 			
@@ -230,6 +232,7 @@ public class Simulator implements Serializable {
 			
 			state = SimulatorState.FINISHED;
 		}
+		return simulationOk;
 	}
 	
 	public void runAndDelete() {

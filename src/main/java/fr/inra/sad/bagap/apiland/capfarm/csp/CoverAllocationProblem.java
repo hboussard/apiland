@@ -58,7 +58,7 @@ public class CoverAllocationProblem extends AbstractProblem {
 
 	@Override
 	protected void createSolver() {
-		solver = new Solver("allocateur de cultures annuelles");
+		solver = new Solver("allocateur de cultures annuelles");	
 	}
 	
 	@Override

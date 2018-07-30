@@ -105,6 +105,7 @@ public class ChamferDistance extends MatrixCalculation {
 		
 		// initialize distance
 		for(int y=0; y<height; y++){
+			//System.out.println("1 : "+y);
 			for(int x=0; x<width; x++){
 				double v = input.get(x, y);
 				boolean ok = false;
@@ -124,6 +125,7 @@ public class ChamferDistance extends MatrixCalculation {
 		}
 		// forward
 		for(int y=0; y<=height-1; y++) {
+			//System.out.println("2 : "+y);
 			for(int x=0; x<=width-1; x++) {
 				double v = output.get(x, y);
 				if(v<0) {
@@ -151,6 +153,7 @@ public class ChamferDistance extends MatrixCalculation {
 		
 		// backward
 		for(int y=height-1; y>=0; y--) {
+			//System.out.println("3 : "+y);
 			for(int x=width-1; x>=0; x--) {
 				double v = output.get(x, y);
 				if(v<0) {
@@ -176,6 +179,7 @@ public class ChamferDistance extends MatrixCalculation {
 		
 		// normalize
 		for(int y=0; y<height; y++){
+			//System.out.println("4 : "+y);
 			for(int x=0; x<width; x++){
 				output.put(x, y, (output.get(x, y)/normalizer) * input.cellsize());
 				updateProgression(total);

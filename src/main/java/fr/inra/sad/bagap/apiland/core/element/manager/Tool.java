@@ -1,6 +1,8 @@
 package fr.inra.sad.bagap.apiland.core.element.manager;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -144,11 +146,7 @@ public class Tool {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally{
-			try {
-				copy(input+".prj", output+".prj");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			copy(input+".prj", output+".prj");
 		}
 	}
 	
@@ -208,24 +206,81 @@ public class Tool {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally{
-			try {
-				copy(input+".prj", output+".prj");
-			} catch (IOException e) {
-				e.printStackTrace();
+			copy(input+".prj", output+".prj");
+		}
+	}
+	
+	public static void copyFolder(String source, String target){
+		
+		File fs = new File(source);
+		
+		File ft = new File(target);
+		ft.mkdirs();
+		
+		for(File ffs : fs.listFiles()){
+			if(ffs.isDirectory()){
+				copyFolder(ffs.getAbsolutePath(), target+"/"+ffs.getName());
+			}else{
+				copy(ffs.getAbsolutePath(), target+"/"+ffs.getName());
 			}
 		}
 	}
 	
-	public static void copy(String sourceFile, String destFile) throws IOException { 
+	public static void deleteFolder(String folder){
+		File fs = new File(folder);
+		
+		for(File f : fs.listFiles()){
+			if(f.isDirectory()){
+				deleteFolder(f.getAbsolutePath());
+			}else{
+				f.delete();
+			}
+		}
+		fs.delete();
+	}
+	
+	public static void copyFolderAndDelete(String source, String target){
+		
+		File fs = new File(source);
+		
+		File ft = new File(target);
+		ft.mkdirs();
+		
+		for(File ffs : fs.listFiles()){
+			if(ffs.isDirectory()){
+				copyFolder(ffs.getAbsolutePath(), target+ffs.getName());
+			}else{
+				copy(ffs.getAbsolutePath(), target+ffs.getName());
+			}
+			ffs.delete();
+		}
+		fs.delete();
+	}
+	
+	public static void copy(String sourceFile, String destFile) { 
+		
 		//System.out.println(sourceFile);
 		//System.out.println(destFile);
+		
+		File f = new File (destFile);
+		new File(f.getParent()).mkdirs();
+		
 		try(InputStream input = new FileInputStream(sourceFile);
 				OutputStream output = new FileOutputStream(destFile)){
 			byte[] buf = new byte[8192]; 
 			int len;
 			while((len=input.read(buf)) >= 0) 
 				output.write(buf, 0, len); 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		} 
+	}
+	
+	public static void copyAndDelete(String sourceFile, String destFile) throws IOException { 
+		copy(sourceFile, destFile);
+		new File(sourceFile).delete();
 	}
 	
 	public static void copy(InputStream sourceFile, String destFile) throws IOException { 

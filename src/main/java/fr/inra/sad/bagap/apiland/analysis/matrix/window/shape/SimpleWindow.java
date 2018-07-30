@@ -20,9 +20,6 @@ public abstract class SimpleWindow extends Window {
 	
 	@Override
 	public void locate(Pixel p) {
-		/*if(p.x() == 10){
-			System.out.println("locate "+p.x()+" "+p.y());
-		}*/
 		if(pixel() != p){
 			setPixel(p);
 			shape.locate(p.x(), p.y());
@@ -79,8 +76,8 @@ public abstract class SimpleWindow extends Window {
 	}
 
 	@Override
-	public void export(int x, int y, Matrix m, String path) {
-		shape.export(x, y, m, path);
+	public void export(Pixel p, Matrix m, String path) {
+		shape.export(p, m, path);
 	}
 	
 	public void infos(){

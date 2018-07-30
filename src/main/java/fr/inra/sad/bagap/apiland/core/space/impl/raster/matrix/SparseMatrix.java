@@ -305,5 +305,11 @@ public class SparseMatrix implements Matrix{
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public int size() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

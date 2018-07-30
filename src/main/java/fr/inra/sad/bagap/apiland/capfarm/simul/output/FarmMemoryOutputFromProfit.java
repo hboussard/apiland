@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.csvreader.CsvWriter;
 import com.csvreader.CsvWriter.FinalizedException;
-
-import fr.inra.sad.bagap.apiland.capfarm.model.Farm;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.capfarm.simul.CoverLocationModel;
 import fr.inra.sad.bagap.apiland.capfarm.simul.GlobalCoverLocationModel;
@@ -25,16 +22,19 @@ public class FarmMemoryOutputFromProfit extends OutputAnalysis {
 	
 	private String path;
 	
+	private String system;
+	
 	public FarmMemoryOutputFromProfit(){
 		// do nothing
 	}
 	
-	public FarmMemoryOutputFromProfit(String path){
+	public FarmMemoryOutputFromProfit(String path, String system){
 		if(path == null){
 			// do nothing
 		}else{
 			this.path = path;
 		}
+		this.system = system;
 	}
 	
 	@Override
@@ -48,12 +48,13 @@ public class FarmMemoryOutputFromProfit extends OutputAnalysis {
 			CsvWriter cw;
 			for(CoverLocationModel model : (GlobalCoverLocationModel) scenario.model().get("agriculture")){
 				
-				new File(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getFarmingSystem()+"/memory/").mkdirs();
-				cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getFarmingSystem()+"/"+model.getCoverAllocator().getCode()+"_memory.csv");
+				new File(path+model.getCoverAllocator().getCode()+"/"+system+"/memory/").mkdirs();
+				cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+system+"/"+model.getCoverAllocator().getCode()+"_memory.csv");
 				cw.setDelimiter(';');
 				cw.write("memory");
 				cw.write("file");
 				cw.write("profit");
+				cw.write("zoneprofit");
 				cw.endRecord();
 				cws.put(model.getCoverAllocator().getCode(), cw);
 			}
@@ -86,14 +87,21 @@ public class FarmMemoryOutputFromProfit extends OutputAnalysis {
 					for(int y=simulation.manager().start().year(); y<=simulation.manager().end().year(); y++){
 						profit += (Integer) model.getCoverAllocator().getTerritory().getAttribute("profit").getValue(new Instant(simulation.manager().start().dayOfYear(), simulation.manager().start().month(), y));
 					}
+					
+					int zoneprofit = 0;
+					for(int y=simulation.manager().start().year(); y<=simulation.manager().end().year(); y++){
+						zoneprofit += (Integer) model.getCoverAllocator().getTerritory().getAttribute("zoneprofit").getValue(new Instant(simulation.manager().start().dayOfYear(), simulation.manager().start().month(), y));
+					}
+					
 					cw.write(simulation.number()+"");
 					//cw.write(numbers.get(model.getCoverAllocator().getCode())+"");
 					//numbers.put(model.getCoverAllocator().getCode(), numbers.get(model.getCoverAllocator().getCode())+1);
 					cw.write("memory/"+model.getCoverAllocator().getCode()+"_memory_"+simulation.number()+".csv");
 					cw.write(profit+"");
+					cw.write(zoneprofit+"");
 					cw.endRecord();
 					
-					cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getFarmingSystem()+"/memory/"+model.getCoverAllocator().getCode()+"_memory_"+simulation.number()+".csv");
+					cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+system+"/memory/"+model.getCoverAllocator().getCode()+"_memory_"+simulation.number()+".csv");
 					cw.setDelimiter(';');
 					cw.write("parcel");
 					cw.write("seq_cover");

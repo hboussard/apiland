@@ -50,8 +50,8 @@ public class FarmMemoryOutput extends OutputAnalysis {
 			try {
 				CsvWriter cw;
 				for(CoverLocationModel model : (GlobalCoverLocationModel) simulation.model().get("agriculture")){
-					new File(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getFarmingSystem()+"/memory/").mkdirs();
-					cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getFarmingSystem()+"/"+model.getCoverAllocator().getCode()+"_memory.csv");
+					new File(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getConstraintSystem()+"/memory/").mkdirs();
+					cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getConstraintSystem()+"/"+model.getCoverAllocator().getCode()+"_memory.csv");
 					cw.setDelimiter(';');
 					cw.write("memory");
 					cw.write("file");
@@ -87,7 +87,7 @@ public class FarmMemoryOutput extends OutputAnalysis {
 					cw.write("memory/"+model.getCoverAllocator().getCode()+"_memory_"+simulation.number()+".csv");
 					cw.endRecord();
 					
-					cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getFarmingSystem()+"/memory/"+model.getCoverAllocator().getCode()+"_memory_"+simulation.number()+".csv");
+					cw = new CsvWriter(path+model.getCoverAllocator().getCode()+"/"+model.getCoverAllocator().getConstraintSystem()+"/memory/"+model.getCoverAllocator().getCode()+"_memory_"+simulation.number()+".csv");
 					cw.setDelimiter(';');
 					cw.write("parcel");
 					cw.write("seq_cover");

@@ -41,7 +41,7 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 		Set<Pixel> ever = new TreeSet<Pixel>();
 		double v;
 		int oldy = -1;
-		int index = 0;
+		int index = 100;
 		int total = matrix().width() * matrix().height();
 		for(Pixel p : matrix()){
 			//System.out.println(p);
@@ -75,6 +75,7 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 				}
 			}
 			
+			//System.out.println(p);
 			updateProgression(total);
 		}
 		setResult(r.smooth());
@@ -99,8 +100,9 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 	}
 	
 	private boolean treatPixel(Matrix m, Pixel p, Set<Pixel> ever, LinkedList<Pixel> next){
-		//System.out.println(++nbPixel+" / "+size);
+		//System.out.println("la "+(++nbPixel)+" / "+size);
 		Iterator<Pixel> ite = getMargins(p);
+		//System.out.println("après");
 		Pixel np;
 		while(ite.hasNext()){
 			np = ite.next();

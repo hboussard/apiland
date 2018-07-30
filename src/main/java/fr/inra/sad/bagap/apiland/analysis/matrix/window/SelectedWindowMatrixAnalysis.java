@@ -35,7 +35,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 		this.pixels = pixels;
 		this.path = path;
 		for(Pixel p : pixels){
-			System.out.println(p);
+			System.out.println("##"+p);
 		}
 	}
 	
@@ -176,7 +176,19 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 	private void notifyProcessReady(WindowMatrixProcess p) {
 		p.calculateMetrics();
 		if(path != null){
-			p.window().export(p.x(), p.y(), matrix(), path+"filters/");
+			Pixel pixel = null;
+			for(Pixel pix : pixels){
+				if(pix.x() == p.x() && pix.y() == p.y()){
+					pixel = pix;
+					break;
+				}
+			}
+			if(pixel != null){
+				p.window().export(pixel, matrix(), path+"filters/");
+			}else{
+				p.window().export(p.pixel(), matrix(), path+"filters/");
+			}
+			
 		}
 	}
 

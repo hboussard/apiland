@@ -28,7 +28,7 @@ public class CfmSimulation extends Simulation {
 	protected void initModel(){
 		for(CoverLocationModel model : (GlobalCoverLocationModel) model().get("agriculture")){
 			model.getCoverAllocator().clearParcels();
-			MemoryFactory.init(model, manager().start(), manager().paramProcessMode(), manager().methodProcessMode());
+			MemoryFactory.init(model, manager().start(), manager().paramProcessMode(), manager().methodProcessMode(), number());
 			HistoricFactory.init((Farm) model.getCoverAllocator(), manager().start());
 			FixedFactory.init((Farm) model.getCoverAllocator(), manager().start());
 		}
@@ -47,7 +47,7 @@ public class CfmSimulation extends Simulation {
 		
 		if(!isCancelled() && manager().checkConstraints()){
 			for(CoverLocationModel model : (GlobalCoverLocationModel) model().get("agriculture")){
-				model.getCoverAllocator().checkFarmingSystem(manager().start(), manager().end(), true);
+				model.getCoverAllocator().checkConstraintSystem(manager().start(), manager().end(), true);
 			}
 		}
 		
@@ -77,6 +77,7 @@ public class CfmSimulation extends Simulation {
 						if(tv.getTime().end() instanceof Future){
 							length = manager().end().year() + 1 - tv.getTime().start().year();
 						}else{
+							//System.out.println(tv.getTime());
 							length = tv.getTime().end().year()-tv.getTime().start().year();
 						}
 						if(tv.getTime().intersects(interval)){

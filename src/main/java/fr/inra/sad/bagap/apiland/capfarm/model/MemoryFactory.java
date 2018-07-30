@@ -19,13 +19,13 @@ import fr.inra.sad.bagap.apiland.core.time.Interval;
 
 public class MemoryFactory {
 
-	public static void init(CoverLocationModel model, Instant t, String farmFolder, String method){
+	public static void init(CoverLocationModel model, Instant t, String farmFolder, String method, int simulationNumber){
 		
 		CoverAllocator farm = model.getCoverAllocator();
 		if(farm.hasMemory()){
 			int memory = farm.getMemory();
 			try {
-				String memoryFile = farmFolder+"/"+farm.getCode()+"/"+farm.getFarmingSystem()+"/"+farm.getCode()+"_memory.csv";
+				String memoryFile = farmFolder+"/"+farm.getCode()+"/"+farm.getConstraintSystem()+"/"+farm.getCode()+"_memory.csv";
 				//System.out.println(memoryFile);
 				if(memory == 0){
 					CsvReader cr = new CsvReader(memoryFile);
@@ -43,13 +43,14 @@ public class MemoryFactory {
 							method = method.replace("max(", "").replace(")", "");
 							int max = -1;
 							while(cr.readRecord()){
-								int profit = Integer.parseInt(cr.get("profit"));
-								if(profit > max){
+								//System.out.println(method);
+								int value = Integer.parseInt(cr.get(method));
+								if(value > max){
 									memory = Integer.parseInt(cr.get("memory"));
-									max = profit;
+									max = value;
 								}
 							}
-							System.out.println(farm.getCode()+" "+memory+" "+max);
+							//System.out.println(farm.getCode()+" "+memory+" "+max);
 						}else if(method.startsWith("selected")){
 							method = method.replace("selected(", "").replace(")", "");
 							String[] farms = method.split(":");
@@ -57,6 +58,36 @@ public class MemoryFactory {
 								if(f.startsWith(farm.getCode()+"=")){
 									//System.out.println(f+" "+farm.getCode()+"= "+f.replace(farm.getCode()+"=", ""));
 									memory = Integer.parseInt(f.replace(farm.getCode()+"=", ""));
+								}
+							}
+						}else if(method.startsWith("each")){
+							int index = 0;
+							while(cr.readRecord()){
+								index++;
+								memory = Integer.parseInt(cr.get("memory"));
+								if(index == simulationNumber){
+									 break;
+								}
+							}
+						}else if(method.startsWith("base")){
+							method = method.replace("base(", "").replace(")", "");
+							String[] farms = method.split(":");
+							boolean ok = false;
+							for(String f : farms){
+								if(f.startsWith(farm.getCode()+"=")){
+									//System.out.println(f+" "+farm.getCode()+"= "+f.replace(farm.getCode()+"=", ""));
+									memory = Integer.parseInt(f.replace(farm.getCode()+"=", ""));
+									ok = true;
+								}
+							}
+							if(!ok){
+								int index = 0;
+								while(cr.readRecord()){
+									index++;
+									memory = Integer.parseInt(cr.get("memory"));
+									if(index == simulationNumber){
+										 break;
+									}
 								}
 							}
 						}else{
@@ -75,7 +106,7 @@ public class MemoryFactory {
 				while(cr.readRecord()){
 					if(Integer.parseInt(cr.get("memory")) == memory){
 						initMemoryFile((MemoryCoverLocationModel) model, t, (DynamicAttributeType) type,
-								farmFolder+"/"+farm.getCode()+"/"+farm.getFarmingSystem()+"/"+cr.get("file"));
+								farmFolder+"/"+farm.getCode()+"/"+farm.getConstraintSystem()+"/"+cr.get("file"));
 						break;
 					}
 				}

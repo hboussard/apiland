@@ -9,7 +9,7 @@ public interface ValueCountingInterface {
 
 	Set<Integer> values();
 	
-	Collection<Count> counts();
+	//Collection<Count> counts();
 	
 	int countValue(int v);
 	

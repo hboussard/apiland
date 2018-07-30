@@ -24,6 +24,8 @@ public abstract class Counting implements
 		public int get(){return value;};
 	}
 	
+	// note : the only possible MatrixProcess known by a Counting Object is a SimpleWindowProcess Object 
+	// implies that the Counting Object has always access to the matrix of data while casting it
 	public void setProcess(MatrixProcess process){
 		this.process = process;
 	}
@@ -76,10 +78,10 @@ public abstract class Counting implements
 		throw new UnsupportedOperationException();
 	}
 	
-	@Override
+	/*@Override
 	public Collection<Count> counts() {
 		throw new UnsupportedOperationException();
-	}
+	}*/
 
 	@Override
 	public int countValues() {

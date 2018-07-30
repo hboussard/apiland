@@ -176,6 +176,9 @@ public class CoupleCounting extends CountingDecorator {
 		countC = null;
 	}
 
+	// attention : la gestion du dodown des couples sera à revoir car non seulement elle va être dupliquéz au niveau de la classe DistanceCoupleCounting
+	// mais en plus il y aura doublon de remove et de add des couples si présence de 2 métriques de couple (une threshold et une distance)
+	// remonter le code de cette fonction dans BasicCounting peut être une solution à partir du moment ou ca ne rajoute pas de temps de calcul.
 	@Override
 	protected void doDown() {
 		int outx, outy;

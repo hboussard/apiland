@@ -21,7 +21,7 @@ import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad.bagap.apiland.capfarm.model.Cover;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverGroup;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
-import fr.inra.sad.bagap.apiland.capfarm.model.GenericFarmingSystem;
+import fr.inra.sad.bagap.apiland.capfarm.model.GenericConstraintSystem;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.AllDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.AndDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.BoundedDomain;
@@ -31,6 +31,8 @@ import fr.inra.sad.bagap.apiland.capfarm.model.domain.SetDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.VariableBooleanDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.domain.VariableValueDomain;
 import fr.inra.sad.bagap.apiland.capfarm.model.economic.constraint.ProfitConstraint;
+import fr.inra.sad.bagap.apiland.capfarm.model.economic.constraint.ProfitVariabilityConstraint;
+import fr.inra.sad.bagap.apiland.capfarm.model.economic.constraint.WorkConstraint;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 
 public class ConstraintBuilder {
@@ -66,7 +68,7 @@ public class ConstraintBuilder {
 	public void initCoverAllocator(CoverAllocator allocator){
 		reset();
 		this.allocator = allocator;
-		genericBuilder = new GenericConstraintBuilder(allocator.getFarmingSystem().getGenericFarmingSystem());
+		genericBuilder = new GenericConstraintBuilder(allocator.getConstraintSystem().getGenericConstraintSystem());
 	}
 	
 	private void reset(){
@@ -170,7 +172,7 @@ public class ConstraintBuilder {
 		checkOnly = check;
 	}
 	
-	public void build(GenericFarmingSystem system){
+	public void build(GenericConstraintSystem system){
 		
 		// affectation des couverts
 		allocator.addCovers(system.getCovers());
@@ -189,7 +191,7 @@ public class ConstraintBuilder {
 			build();
 		}
 		
-		allocator.getFarmingSystem().setGenericFarmingSystem(system);
+		allocator.getConstraintSystem().setGenericConstraintSystem(system);
 	}
 	
 	public void build() {
@@ -242,6 +244,12 @@ public class ConstraintBuilder {
 			break;
 		case Profit : 
 			initProfitConstraints();
+			break;
+		case Work : 
+			initWorkConstraints();
+			break;
+		case ProfitVariability : 
+			initProfitVariabilityConstraints();
 			break;
 		default : throw new IllegalArgumentException("constraint type '"+type+"' not implemented yet.");
 		}
@@ -372,6 +380,7 @@ public class ConstraintBuilder {
 			allocator.addConstraint(constraint);
 		}else if(params != null){
 			try {	
+				//System.out.println("ici");
 				CsvReader cr = new CsvReader(params[0]);
 				cr.setDelimiter(';');
 				cr.readHeaders();
@@ -463,6 +472,21 @@ public class ConstraintBuilder {
 		CoverAllocationConstraint<?, ?> constraint = new ProfitConstraint(code, checkOnly, mode, covers, location, domain);
 		allocator.addConstraint(constraint);
 	}
+	
+	private void initProfitVariabilityConstraints(){
+		Domain<Integer, Integer> domain = buildIntDomain(100);
+		
+		CoverAllocationConstraint<?, ?> constraint = new ProfitVariabilityConstraint(code, checkOnly, mode, covers, location, domain);
+		allocator.addConstraint(constraint);
+	}
+	
+	private void initWorkConstraints(){
+		Domain<Integer, Integer> domain = buildIntDomain(1);
+		
+		CoverAllocationConstraint<?, ?> constraint = new WorkConstraint(code, checkOnly, mode, covers, location, domain);
+		allocator.addConstraint(constraint);
+	}
+	
 	
 	/*public CoverAllocationConstraint<Integer, Integer> initLinkedFieldsConstraint(Arc arc){
 		setCover("ALL");
@@ -566,9 +590,7 @@ public class ConstraintBuilder {
 					throw new IllegalArgumentException(domain);
 				}
 			}else if(d[0].contains("max")){
-				System.out.println(d[0]);
 				String[] dd = d[0].replace("max(", "").replace(")", "").split("\\|", 2);
-				System.out.println(dd[0]+" "+dd[1]);
 				if(dd[0].contains("%") && !dd[1].contains("%")){
 					double a = new Double(dd[0].replace("%", ""));
 					a = new Double(a * area / 100.0).intValue();

@@ -26,9 +26,12 @@ public class SearchAndReplaceAsciiGridCleaner implements AsciiGridCleaner {
 		if(index > 6){
 			StringBuffer outLine = new StringBuffer();
 			for(String v : line.split(" ")){
+				//System.out.println(v);
 				if(changes.containsKey(v)){
+					//System.out.println("true "+changes.get(v));
 					outLine.append(changes.get(v)+' ');
 				}else{
+					//System.out.println("false");
 					outLine.append(v+' ');
 				}
 			}

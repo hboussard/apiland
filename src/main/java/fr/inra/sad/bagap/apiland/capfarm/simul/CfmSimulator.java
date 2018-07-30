@@ -24,10 +24,12 @@ public abstract class CfmSimulator extends Simulator {
 		return (CfmManager) super.manager();
 	}
 	
-	public void allRun() {
+	public boolean allRun() {
+		boolean simulationOk = true;
 		init(1);
-		run();
+		simulationOk = run();
 		close();
+		return simulationOk;
 	}
 	
 	@Override

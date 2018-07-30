@@ -14,6 +14,7 @@ import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.variables.VF;
 import org.chocosolver.util.tools.ArrayUtils;
 
+import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocationProblemFactory;
 import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.ConstraintBuilder;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;

@@ -33,7 +33,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 */
 package fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -91,6 +93,49 @@ public abstract class MatrixFactory {
 	
 	public abstract Matrix create(int width, int height, double cellsize, 
 			double minX, double maxX, double minY, double maxY, int noData, PlanarImage ref);
+	
+	public static ProxyMatrix readHeader(String ascii){
+		
+		ProxyMatrix matrix = new ProxyMatrix();
+		
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(ascii));
+			String line = br.readLine();
+			String sep = String.valueOf(line.charAt(5));
+			
+			String[] s = line.split(sep);
+			matrix.setWidth(Integer.parseInt(s[s.length-1]));
+
+			s = br.readLine().split(sep);
+			matrix.setHeight(Integer.parseInt(s[s.length-1]));
+
+			s = br.readLine().split(sep);
+			matrix.setMinX(Double.parseDouble(s[s.length-1]));
+
+			s = br.readLine().split(sep);
+			matrix.setMinY(Double.parseDouble(s[s.length-1]));
+
+			s = br.readLine().split(sep);
+			matrix.setCellSize(Double.parseDouble(s[s.length-1]));
+
+			matrix.setMaxX(matrix.minX() + matrix.width() * matrix.cellsize());
+			matrix.setMaxY(matrix.minY() + matrix.height() * matrix.cellsize());
+
+			s = br.readLine().split(sep);
+			if (s[0].equalsIgnoreCase("NODATA_value")) {
+				matrix.setNoDataValue(Integer.parseInt(s[s.length-1]));
+				Raster.setNoDataValue(matrix.noDataValue());
+			} else {
+				matrix.setNoDataValue(Raster.getNoDataValue());
+			}
+			br.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		return matrix;
+	}
 	
 	public Matrix init(String in){
 		Matrix m = null;

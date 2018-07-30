@@ -1,10 +1,10 @@
 package fr.inra.sad.bagap.apiland.capfarm.model.constraint;
 
-import fr.inra.sad.bagap.apiland.capfarm.model.GenericFarmingSystem;
+import fr.inra.sad.bagap.apiland.capfarm.model.GenericConstraintSystem;
 
 public class GenericConstraintBuilder {
 	
-	private GenericFarmingSystem system;
+	private GenericConstraintSystem system;
 	
 	private String code;
 	
@@ -20,7 +20,7 @@ public class GenericConstraintBuilder {
 	
 	private String[] params;
 	
-	public GenericConstraintBuilder(GenericFarmingSystem system) {
+	public GenericConstraintBuilder(GenericConstraintSystem system) {
 		this.system = system;
 		reset();
 	}

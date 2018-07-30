@@ -4,6 +4,10 @@ import fr.inra.sad.bagap.apiland.analysis.matrix.process.SimpleWindowMatrixProce
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
+// BasicCounting is available both for Threshold Window and Distance Window
+// implies that as the (classic) threshold window counting (ex : ValueCounting, CoupleCounting, etc)
+// is managed by decorating BasicCounting, Distance window counting could be managed by decorating BasicCoutning
+// is it the same decoration ?
 public class BasicCounting extends Counting {
 
 	/** the count of known values (different to 0 and Raster.noDataValues) */
@@ -102,12 +106,6 @@ public class BasicCounting extends Counting {
 		}
 	}
 	
-	/** to delete properly the counting */
-	@Override
-	public void delete() {
-		// do nothing
-	}
-	
 	@Override
 	public int totalValues(){
 		return totalValues;
@@ -126,6 +124,11 @@ public class BasicCounting extends Counting {
 	@Override
 	public int countValues(){
 		return countValues;
+	}
+
+	@Override
+	public void delete() {
+		// do nothing
 	}
 	
 }

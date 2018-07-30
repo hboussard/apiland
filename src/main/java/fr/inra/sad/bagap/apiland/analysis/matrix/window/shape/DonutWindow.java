@@ -230,7 +230,7 @@ public class DonutWindow extends WindowShape{
 	}
 
 	@Override
-	public void export(int x, int y, Matrix m, String path) {
+	public void export(Pixel p, Matrix m, String path) {
 		// TODO Auto-generated method stub
 		
 	}

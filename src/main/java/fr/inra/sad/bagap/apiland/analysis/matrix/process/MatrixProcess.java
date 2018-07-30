@@ -58,6 +58,9 @@ public abstract class MatrixProcess extends Process<MatrixMetric> {
 	 * to init properly the process
 	 */
 	public void init(){
+		//TODO change that because only the SimpleWindowProcess call it
+		// --> refactor
+		// --> for the moment, implies that only the SimpleWindowProcess is know by the Counting Object 
 		if(state().equals(ProcessState.IDLE)){
 			counting = CountingFactory.create(this);
 			counting.init();

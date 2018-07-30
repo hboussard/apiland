@@ -23,11 +23,18 @@ public class CountClassValue90Metric extends MatrixMetric implements ValueMetric
 			int total = 0;
 			int v;
 			List<Integer> areas = new ArrayList<Integer>();
-			for(Count c : co.counts()){
-				v = c.get();
+			
+			for(int value : co.values()){
+				v = co.countValue(value);
 				areas.add(v);
 				total += v;
 			}
+			
+			/*for(Count c : co.counts()){
+				v = c.get();
+				areas.add(v);
+				total += v;
+			}*/
 			Collections.sort(areas);
 			Collections.reverse(areas);
 			double tot90 = 0.9 * total;

@@ -17,6 +17,8 @@ public enum ConstraintType {
 	SpatialPattern,
 	LinkedFields,
 	OnLocation,
-	Profit;
+	Profit,
+	ProfitVariability,
+	Work;
 	
 }

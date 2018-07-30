@@ -522,6 +522,11 @@ public class JaiMatrix implements Matrix {
 		return maxV;
 	}
 
+	
+	public int size(){
+		return height * width;
+	}
+
 	/*
 	@Override
 	public void setHeight(int height) {
