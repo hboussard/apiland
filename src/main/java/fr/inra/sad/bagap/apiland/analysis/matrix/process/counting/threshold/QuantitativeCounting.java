@@ -1,5 +1,7 @@
-package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting;
+package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.threshold;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.CountingDecorator;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 /**
@@ -30,6 +32,9 @@ public class QuantitativeCounting extends CountingDecorator {
 		if(size() == 0){
 			return Raster.getNoDataValue();
 		}
+		if(sum < 0.000001 && sum > -0.000001){
+			sum = 0;
+		}
 		return sum;
 	}
 	
@@ -42,7 +47,7 @@ public class QuantitativeCounting extends CountingDecorator {
 	}
 	
 	@Override
-	public int countPositives(){
+	public double countPositives(){
 		if(size() == 0){
 			return Raster.getNoDataValue();
 		}
@@ -50,7 +55,7 @@ public class QuantitativeCounting extends CountingDecorator {
 	}
 	
 	@Override
-	public int countNegatives(){
+	public double countNegatives(){
 		if(size() == 0){
 			return Raster.getNoDataValue();
 		}
@@ -58,7 +63,7 @@ public class QuantitativeCounting extends CountingDecorator {
 	}
 	
 	@Override
-	public int size(){
+	public double size(){
 		return nb;
 	}
 	
@@ -99,27 +104,20 @@ public class QuantitativeCounting extends CountingDecorator {
 		if(size() == 0){
 			return Raster.getNoDataValue();
 		}
-		return getStandardDeviation()/getAverage()*100.0;
-	}
-	
-	@Override
-	public double getMaximum(){
-		if(size() == 0){
+		double a = getAverage();
+		if(a == 0 || a == -0){
 			return Raster.getNoDataValue();
 		}
-		return 0;
-		//return values.get(values.size()-1);
-	}
-	
-	@Override
-	public double getMinimum(){
-		if(size() == 0){
+		double st = getStandardDeviation();
+		if(Double.isNaN(st)){
 			return Raster.getNoDataValue();
 		}
-		return 0;
-		//return values.get(0);
+		if(st == 0){
+			return 0;
+		}
+		return 100.0 * st / a;
 	}
-
+	
 	@Override
 	public void doInit(){
 		//values = new ArrayList<Double>();

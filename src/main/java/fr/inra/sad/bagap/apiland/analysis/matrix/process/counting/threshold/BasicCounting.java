@@ -1,6 +1,7 @@
-package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting;
+package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.threshold;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.SimpleWindowMatrixProcess;
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
@@ -13,44 +14,42 @@ public class BasicCounting extends Counting {
 	/** the count of known values (different to 0 and Raster.noDataValues) */
 	private int countValues;
 	
-	//private int theoricalSize;
-	
 	/** the total count of values (including 0 and Raster.noDataValues)*/
 	private int totalValues;
 	
 	/** the total count of valid values (including 0 but different to Raster.noDataValue() */
 	private int validValues;
 	
-	/** to init properly the counting */
 	@Override
 	public void init() {
 		countValues = 0;
 		totalValues = 0;
 		validValues = 0;
-		//theoricalSize = process().window().theoricalSize();
 	}
 	
 	@Override
 	public SimpleWindowMatrixProcess process(){
 		return (SimpleWindowMatrixProcess) super.process();
 	}
-	
-	/**
-	 * to add a value to the counting
-	 * @param value : the value to add
-	 * @param filter : the filter
-	 * @param ch : horizontal couple
-	 * @param cv : vertical couple
-	 */
+		
 	@Override
 	public void add(double value, int x, int y, int filter, double ch, double cv) {
+		//System.out.println("add (BasicCounting)");
 		addValue(value, x, y);
 	}
 	
 	@Override
 	public void addValue(double value, int x, int y) {
+		//System.out.println("addValue (BasicCounting) "+value);
+		//System.out.println("add "+value+" "+x+" "+y+" "+totalValues);
+		/*
+		if(process().window().pixel().x() == 0){
+			System.out.println("add "+process().window().diameter()+" "+process().window().pixel()+" "+x+" "+y+" --> "+value);
+		}*/
+		
 		totalValues++;
 		if(value != Raster.getNoDataValue()){
+			
 			validValues++;
 			if(value != 0){
 				countValues++;
@@ -59,12 +58,18 @@ public class BasicCounting extends Counting {
 	}
 	
 	@Override
-	public void addCouple(double couple) {
+	public void addCouple(double couple, int x1, int y1, int x2, int y2) {
 		// do nothing
 	}
 
 	@Override
 	public void removeValue(double value, int x, int y) {
+		/*
+		if(process().window().diameter() == 5 && process().window().pixel().x() == 0){
+			System.out.println("remove "+process().window().pixel()+" "+x+" "+y+" --> "+value);
+		}
+		*/
+		//System.out.println("remove "+value+" "+x+" "+y+" "+totalValues);
 		totalValues--;
 		if(value != Raster.getNoDataValue()){
 			validValues--;
@@ -75,13 +80,20 @@ public class BasicCounting extends Counting {
 	}
 	
 	@Override
-	public void removeCouple(double couple) {
+	public void removeCouple(double couple, int x1, int y1, int x2, int y2) {
 		// do nothing
 	}
 	
 	@Override
-	public void down() {
+	public void down(int d, int place) {
 		int outx, outy;
+		/*
+		if(process().window().pixel().x() == 0){
+			System.out.println("down "+process().window().diameter());
+		}
+		*/
+		//System.out.println(process().window().removeDownList().size()+" "+process().window().addDownList().size());
+		
 		// on enleve les valeurs qui ne sont plus actuelles
 		//System.out.println("enleve les valeurs "+window().removeDownList());
 		for(Pixel p : process().window().removeDownList()){
@@ -90,9 +102,17 @@ public class BasicCounting extends Counting {
 			if(outy >= 0 && outy < process().processType().matrix().height()
 					&& outx >= 0 && outx < process().processType().matrix().width()){
 				//System.out.println("remove "+p+" "+values[p.y()][p.x()]);
+				/*
+				if(process().window().diameter() == 5 && process().window().pixel().x() == 0 && process().window().pixel().y() < 4){
+					System.out.println("down remove "+process().window().pixel()+" "+outx+" "+outy+" "+p.x()+" "+p.y()+" "+process().values()[p.y()][p.x()]);
+				}*/
+				
 				process().counting().removeValue(process().values()[p.y()][p.x()], p.x(), p.y());
 			}
 		}
+		
+		//if(place >= (1+d)){
+		
 		// on ajoute les valeurs qui sont devenues actuelles
 		//System.out.println("ajoute les valeurs "+window().addDownList());
 		for(Pixel p : process().window().addDownList()){
@@ -100,29 +120,36 @@ public class BasicCounting extends Counting {
 			outy = process().window().outYWindow(p.y());
 			if(outy >= 0 && outy < process().processType().matrix().height()
 					&& outx >= 0 && outx < process().processType().matrix().width()){
-				//System.out.println("add "+p+" "+values[p.y()][p.x()]);
-				process().counting().addValue(process().values()[p.y()][p.x()], p.x(), p.y());
+				//if(d+p.y() < process().window().height()){
+				/*
+				if(process().window().diameter() == 5 && process().window().pixel().x() == 0 && process().window().pixel().y() < 4){
+					System.out.println("down add "+process().window().pixel()+" "+outx+" "+outy+" "+p.x()+" "+p.y()+" "+process().values()[p.y()][p.x()]);
+				}*/
+				if(p.y() < process().window().diameter() - d + place){
+					process().counting().addValue(process().values()[p.y()][p.x()], p.x(), p.y());
+				}
 			}
 		}
+		
 	}
 	
 	@Override
-	public int totalValues(){
+	public double totalValues(){
 		return totalValues;
 	}
 	
 	@Override
-	public int validValues(){
+	public double validValues(){
 		return validValues;
 	}
 	
 	@Override
-	public int theoricalSize(){
-		return process().window().theoricalSize();
+	public int theoreticalSize(){
+		return process().window().theoreticalSize();
 	}
 	
 	@Override
-	public int countValues(){
+	public double countValues(){
 		return countValues;
 	}
 

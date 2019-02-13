@@ -1,9 +1,11 @@
-package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting;
+package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.threshold;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import fr.inra.sad.bagap.apiland.analysis.Stats;
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.CountingDecorator;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 public class ClassCounting extends CountingDecorator {
@@ -59,10 +61,10 @@ public class ClassCounting extends CountingDecorator {
 	}
 	
 	@Override
-	protected void doDown() {
+	protected void doDown(int d, int place) {
 		stats = null;
 	}
-	
+	/*
 	@Override
 	public int countClass(){
 		if(counts.containsKey(0.0)){
@@ -88,7 +90,7 @@ public class ClassCounting extends CountingDecorator {
 		calculate();
 		return stats.getStandardDeviation();
 	}
-	
+	*/
 	private void calculate() {
 		if(stats == null){
 			stats = new Stats();

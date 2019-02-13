@@ -1,9 +1,12 @@
-package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting;
+package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.threshold;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.CountingDecorator;
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting.Count;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.util.Couple;
@@ -27,7 +30,7 @@ public class CoupleCounting extends CountingDecorator {
 	private int homogeneousCouples;
 	
 	/** the total count of unhomogeneous couples */
-	private int unhomogeneousCouples;
+	private int heterogeneousCouples;
 	
 	/** the count of couples */
 	private Map<Double, Count> countC;
@@ -42,32 +45,32 @@ public class CoupleCounting extends CountingDecorator {
 	}
 	
 	@Override
-	public int totalCouples(){
+	public double totalCouples(){
 		return totalCouples;
 	}
 	
 	@Override
-	public int validCouples(){
+	public double validCouples(){
 		return validCouples;
 	}
 	
 	@Override
-	public int countCouples(){
+	public double countCouples(){
 		return countCouples;
 	}
 	
 	@Override
-	public int homogeneousCouples(){
+	public double homogeneousCouples(){
 		return homogeneousCouples;
 	}
 	
 	@Override
-	public int unhomogeneousCouples(){
-		return unhomogeneousCouples;
+	public double heterogeneousCouples(){
+		return heterogeneousCouples;
 	}
 	
 	@Override
-	public int countCouple(double c){
+	public double countCouple(double c){
 		if(countC.containsKey(c)){
 			return countC.get(c).get();
 		}
@@ -84,6 +87,7 @@ public class CoupleCounting extends CountingDecorator {
 	
 	@Override
 	protected void doAdd(double value, int x, int y, int filter, double ch,	double cv) {
+		//System.out.println(value+" "+x+" "+y+" "+filter+" "+ch+" "+cv);
 		// corner ?
 		if(filter != 4){
 			// horizontal west couple ?
@@ -91,7 +95,7 @@ public class CoupleCounting extends CountingDecorator {
 				totalCouples++;
 				if(ch != Raster.getNoDataValue()){
 					validCouples++;
-					if(ch != 0){
+					if(ch != 0.0){
 						countCouples++;
 						if(!countC.containsKey(ch)){
 							countC.put(ch, new Count());
@@ -100,7 +104,7 @@ public class CoupleCounting extends CountingDecorator {
 						if(Couple.isHomogeneous(ch)){
 							homogeneousCouples++;
 						}else{
-							unhomogeneousCouples++;
+							heterogeneousCouples++;
 						}
 					}
 				}
@@ -111,7 +115,7 @@ public class CoupleCounting extends CountingDecorator {
 				totalCouples++;
 				if(cv != Raster.getNoDataValue()){
 					validCouples++;
-					if(cv != 0){
+					if(cv != 0.0){
 						countCouples++;
 						if(!countC.containsKey(cv)){
 							countC.put(cv, new Count());
@@ -120,7 +124,7 @@ public class CoupleCounting extends CountingDecorator {
 						if(Couple.isHomogeneous(cv)){
 							homogeneousCouples++;
 						}else{
-							unhomogeneousCouples++;
+							heterogeneousCouples++;
 						}
 					}
 				}
@@ -129,11 +133,12 @@ public class CoupleCounting extends CountingDecorator {
 	}
 	
 	@Override
-	protected void doAddCouple(double couple) {
+	protected void doAddCouple(double couple, int x1, int y1, int x2, int y2) {
+		//System.out.println("add "+couple);
 		totalCouples++;
 		if(couple != Raster.getNoDataValue()){
 			validCouples++;
-			if(couple != 0){
+			if(couple != 0.0){
 				countCouples++;
 				if(!countC.containsKey(couple)){
 					countC.put(couple, new Count());
@@ -142,31 +147,31 @@ public class CoupleCounting extends CountingDecorator {
 				if(Couple.isHomogeneous(couple)){
 					homogeneousCouples++;
 				}else{
-					unhomogeneousCouples++;
+					heterogeneousCouples++;
 				}
 			}
 		}
 	}
 	
 	@Override
-	protected void doRemoveCouple(double couple){
-		
-			totalCouples--;
-			if(couple != Raster.getNoDataValue()){
-				validCouples--;
-				if(couple != 0){
-					countCouples--;
-					countC.get(couple).minus();
-					if(countC.get(couple).get() == 0){
-						countC.remove(couple);
-					}
-					if(Couple.isHomogeneous(couple)){
-						homogeneousCouples--;
-					}else{
-						unhomogeneousCouples--;
-					}
+	protected void doRemoveCouple(double couple, int x1, int y1, int x2, int y2){
+		//System.out.println("remove "+couple);
+		totalCouples--;
+		if(couple != Raster.getNoDataValue()){
+			validCouples--;
+			if(couple != 0.0){
+				countCouples--;
+				countC.get(couple).minus();
+				if(countC.get(couple).get() == 0){
+					countC.remove(couple);
+				}
+				if(Couple.isHomogeneous(couple)){
+					homogeneousCouples--;
+				}else{
+					heterogeneousCouples--;
 				}
 			}
+		}
 		
 	}
 	
@@ -180,7 +185,7 @@ public class CoupleCounting extends CountingDecorator {
 	// mais en plus il y aura doublon de remove et de add des couples si présence de 2 métriques de couple (une threshold et une distance)
 	// remonter le code de cette fonction dans BasicCounting peut être une solution à partir du moment ou ca ne rajoute pas de temps de calcul.
 	@Override
-	protected void doDown() {
+	protected void doDown(int d, int place) {
 		int outx, outy;
 		// on enleve les couples de valeurs horizontaux qui ne sont plus actuels
 		//System.out.println("enleve les couples horizontaux "+process().window().removeHorizontalDownList());
@@ -190,7 +195,7 @@ public class CoupleCounting extends CountingDecorator {
 			if(outy >= 0 && outy < process().processType().matrix().height()
 					&& outx >= 0 && outx < process().processType().matrix().width()){
 				
-				process().counting().removeCouple(Couple.get(process().values()[p.y()][p.x()-1], process().values()[p.y()][p.x()]));
+				process().counting().removeCouple(Couple.get(process().values()[p.y()][p.x()-1], process().values()[p.y()][p.x()]), 0, 0, 0, 0);
 			}
 		}
 				
@@ -202,7 +207,9 @@ public class CoupleCounting extends CountingDecorator {
 			if(outy >= 0 && outy < process().processType().matrix().height()
 					&& outx >= 0 && outx < process().processType().matrix().width()){
 				//System.out.println("add "+p);
-				process().counting().addCouple(Couple.get(process().values()[p.y()][p.x()-1], process().values()[p.y()][p.x()]));
+				if(p.y() < process().window().diameter() - d + place){
+				process().counting().addCouple(Couple.get(process().values()[p.y()][p.x()-1], process().values()[p.y()][p.x()]), 0, 0, 0, 0);
+				}
 			}
 		}
 				
@@ -214,7 +221,7 @@ public class CoupleCounting extends CountingDecorator {
 			if(outy >= 0 && outy < process().processType().matrix().height()
 					&& outx >= 0 && outx < process().processType().matrix().width()){
 				
-				process().counting().removeCouple(Couple.get(process().values()[p.y()-1][p.x()], process().values()[p.y()][p.x()]));
+				process().counting().removeCouple(Couple.get(process().values()[p.y()-1][p.x()], process().values()[p.y()][p.x()]), 0, 0, 0, 0);
 			}
 		}
 		
@@ -226,7 +233,9 @@ public class CoupleCounting extends CountingDecorator {
 			if(outy >= 0 && outy < process().processType().matrix().height()
 					&& outx >= 0 && outx < process().processType().matrix().width()){
 				//System.out.println("add couple " + p);
-				process().counting().addCouple(Couple.get(process().values()[p.y()-1][p.x()], process().values()[p.y()][p.x()]));
+				if(p.y() < process().window().diameter() - d + place){
+				process().counting().addCouple(Couple.get(process().values()[p.y()-1][p.x()], process().values()[p.y()][p.x()]), 0, 0, 0, 0);
+				}
 			}
 		}
 		
