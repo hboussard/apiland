@@ -17,6 +17,7 @@ public class PatchComposite {
 	}
 	
 	public void addPixel(Pixel p, int value){
+		//System.out.println(p+" value : "+value);
 		if(!patches.containsKey(value)){
 			patches.put(value, new HashSet<Patch>());
 		}

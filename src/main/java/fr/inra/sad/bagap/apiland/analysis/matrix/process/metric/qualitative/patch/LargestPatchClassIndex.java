@@ -18,12 +18,17 @@ public class LargestPatchClassIndex extends MatrixMetric implements PatchMetric 
 	
 	@Override
 	public void doCalculate(Counting co) {
+		if(co.countValues() > 0){
+			value = co.getLargestPatchSize(classMetric);
+		}
+		/*
 		value = 0;
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
 			if(p.getValue() == classMetric){
 				value = Math.max(value, p.getArea());
 			}
 		}
+		*/
 	}
 
 }

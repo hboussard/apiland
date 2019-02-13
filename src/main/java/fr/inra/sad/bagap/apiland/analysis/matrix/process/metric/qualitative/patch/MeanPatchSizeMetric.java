@@ -15,6 +15,10 @@ public class MeanPatchSizeMetric extends MatrixMetric implements PatchMetric {
 	
 	@Override
 	public void doCalculate(Counting co) {
+		if(co.countValues() > 0){
+			value = co.getMeanPatchSize();
+		}
+		/*
 		value = 0;
 		int count = 0;
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
@@ -28,7 +32,7 @@ public class MeanPatchSizeMetric extends MatrixMetric implements PatchMetric {
 		}else{
 			value /= (double) count;
 		}
-		
+		*/
 	}
 
 }

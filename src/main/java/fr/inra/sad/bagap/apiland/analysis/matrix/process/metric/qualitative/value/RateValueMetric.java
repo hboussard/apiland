@@ -17,8 +17,8 @@ public class RateValueMetric extends MatrixMetric implements ValueMetric {
 	@Override
 	public void doCalculate(Counting co) {
 		value = 0;
-		if(co.countValues() > 0){
-			value = new Double(co.countValue(v))/co.totalValues();
+		if(co.countValues() >= 0){
+			value = new Double(co.countValue(v))/co.validValues();
 		}
 	}
 

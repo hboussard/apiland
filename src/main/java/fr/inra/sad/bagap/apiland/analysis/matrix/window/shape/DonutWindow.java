@@ -36,7 +36,7 @@ public class DonutWindow extends WindowShape{
 		display();
 	}
 	
-	private void init() {
+	protected void init() {
 		double rayon = new Double(max)/2;
 		double internal = new Double(min)/2;
 		WKTReader wkt = new WKTReader();

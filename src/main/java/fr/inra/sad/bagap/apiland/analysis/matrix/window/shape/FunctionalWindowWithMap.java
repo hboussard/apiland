@@ -1,5 +1,6 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.window.shape;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Friction;
@@ -9,14 +10,28 @@ public class FunctionalWindowWithMap extends FunctionalWindow {
 
 	private Friction friction;
 	
+	public FunctionalWindowWithMap(Matrix m, double d, Friction f, DistanceFunction function){
+		super(m, d, f.min(), function);
+		this.friction = f;
+		initTheoriticalSize();
+	}
+	
 	public FunctionalWindowWithMap(Matrix m, double d, Friction f){
 		super(m, d, f.min());
 		this.friction = f;
+		initTheoriticalSize();
+	}
+	
+	public FunctionalWindowWithMap(Matrix m, double d, int displacement, Friction f, DistanceFunction function){
+		super(m, d, displacement, f.min(), function);
+		this.friction = f;
+		initTheoriticalSize();
 	}
 	
 	public FunctionalWindowWithMap(Matrix m, double d, int displacement, Friction f){
-		super(m, d, displacement);
+		super(m, d, displacement, f.min());
 		this.friction = f;
+		initTheoriticalSize();
 	}
 	
 	@Override

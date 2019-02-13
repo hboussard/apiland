@@ -12,9 +12,9 @@ import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetricManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysisBuilder;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.CornerWindow;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.RectangularWindow;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.CornerWindow;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.window.WindowAnalysisType;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.treatment.GlobalTreatmentManager;
@@ -45,7 +45,7 @@ public class MapWindowMatrixTreatment extends Treatment implements AnalysisObser
 	@Override
 	protected void doRun() {
 		
-		WindowMatrixProcessType pt = new WindowMatrixProcessType(matrix);	
+		WindowMatrixProcessType pt = new WindowMatrixProcessType(false, matrix);	
 		
 		for(String metric : metrics){	
 			pt.addMetric(MatrixMetricManager.get(metric));

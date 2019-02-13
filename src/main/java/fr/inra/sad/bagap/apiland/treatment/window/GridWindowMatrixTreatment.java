@@ -11,9 +11,9 @@ import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetricManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysisBuilder;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.CornerWindow;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.SquareWindow;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.CornerWindow;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.window.WindowAnalysisType;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.treatment.GlobalTreatmentManager;
@@ -56,13 +56,13 @@ public class GridWindowMatrixTreatment extends Treatment implements AnalysisObse
 	@Override
 	protected void doRun() {
 		
-		WindowMatrixProcessType pt = new WindowMatrixProcessType(matrix);
+		WindowMatrixProcessType pt = new WindowMatrixProcessType(false, matrix);
 		
 		for(String metric : metrics){
 			pt.addMetric(MatrixMetricManager.get(metric));
 		}
 		
-		Window w = new CornerWindow(new SquareWindow(gridSize));
+		Window w = new CornerWindow(new SquareWindow(gridSize, null));
 		
 		WindowMatrixAnalysisBuilder builder = new WindowMatrixAnalysisBuilder(WindowAnalysisType.GRID);
 		builder.addMatrix(matrix);

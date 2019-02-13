@@ -41,7 +41,7 @@ public abstract class ClusteringAnalysis extends MatrixAnalysis {
 		Set<Pixel> ever = new TreeSet<Pixel>();
 		double v;
 		int oldy = -1;
-		int index = 100;
+		int index = 0;
 		int total = matrix().width() * matrix().height();
 		for(Pixel p : matrix()){
 			//System.out.println(p);

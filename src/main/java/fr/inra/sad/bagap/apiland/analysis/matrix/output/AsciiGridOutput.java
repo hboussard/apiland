@@ -27,11 +27,15 @@ public class AsciiGridOutput extends AbstractMetricOutput {
 	
 	private int yGlobal;
 	
-	public AsciiGridOutput(String metric, String f, int d){
+	public AsciiGridOutput(String metric, String output){
+		this(metric, output, 1);
+	}
+	
+	public AsciiGridOutput(String metric, String output, int delta){
 		super();
 		this.metric = metric;
-		this.ascii = f;
-		this.delta = d;
+		this.ascii = output;
+		this.delta = delta;
 		this.yGlobal = -1;
 	}
 	

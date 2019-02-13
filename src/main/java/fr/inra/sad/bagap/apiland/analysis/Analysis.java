@@ -109,4 +109,5 @@ public abstract class Analysis {
 			o.updateProgression(this, total);
 		}
 	}
+	
 }

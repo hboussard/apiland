@@ -9,6 +9,10 @@ public class CfmFarmManager extends CfmManager {
 
 	private Farm farm;
 	
+	public CfmFarmManager(Farm farm){
+		this(farm, 1);
+	}
+	
 	public CfmFarmManager(Farm farm, int s){
 		super(s);
 		setFarm(farm);

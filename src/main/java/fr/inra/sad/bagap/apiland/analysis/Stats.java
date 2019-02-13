@@ -178,12 +178,10 @@ public class Stats implements QuantitativeCountingInterface {
 		return format(stddeviation);
 	}
 	
-	@Override
 	public double getMaximum(){
 		return format(max);
 	}
 	
-	@Override
 	public double getMinimum(){
 		return format(min);
 	}
@@ -199,18 +197,19 @@ public class Stats implements QuantitativeCountingInterface {
 	}
 	
 	@Override
-	public int countPositives(){
+	public double countPositives(){
 		return nbPos;
 	}
 	
 	@Override
-	public int countNegatives(){
+	public double countNegatives(){
 		return nbNeg;
 	}
 	
 	@Override
-	public int size(){
+	public double size(){
 		return nb;
 	}
+
 	
 }

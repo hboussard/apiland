@@ -5,7 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcess;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessObserver;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
@@ -60,18 +65,29 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	
 	private double fmin;
 	
+	private int theoreticalSize;
+	
+	public FunctionalWindow(Matrix m, double d, double min, DistanceFunction function){
+		this(m, d, -1, min, function);
+	}
+	
 	public FunctionalWindow(Matrix m, double d, double min){
 		this(m, d, -1, min);
 	}
 	
 	public FunctionalWindow(Matrix m, double d, int displacement, double min){
+		this(m, d, displacement, min, null);
+	}
+	
+	public FunctionalWindow(Matrix m, double d, int displacement, double min, DistanceFunction function){
+		super(function);
 		matrix = m;
 		dMax = d;
 		fmin = min;
 		this.displacement = displacement;
 		locations = new TreeMap<Pixel, LocateFunctionalWindow>();
 		
-		System.out.println(diameter());
+		//System.out.println(diameter());
 		rcm = ArrayMatrixFactory.get().create(diameter(), diameter(), m.cellsize(), 0, 0, 0, 0, Raster.getNoDataValue());
 		
 		waits = new TreeSet<Pixel>(new Comparator<Pixel>(){
@@ -112,6 +128,8 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		
 		//filters = new TreeMap<String, Integer>();
 		
+		//System.out.println(dMax+" "+diameter()+" "+(diameter()+2));
+		/*
 		pixels = new Pixel[diameter()+2][diameter()+2];
 		//pixels = new Pixel[diameter()][diameter()];
 		for(int y=-1; y<diameter()+1; y++){
@@ -119,12 +137,58 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 				pixels[y+1][x+1] = new Pixel(x, y);
 			}
 		}
+		*/
+		pixels = new Pixel[diameter()][diameter()];
+		for(int y=0; y<diameter(); y++){
+			for(int x=0; x<diameter(); x++){
+				pixels[y][x] = new Pixel(x, y);
+			}
+		}
+	}
+	
+	protected void initTheoriticalSize() {
+		int width = width();
+		double rayon = new Double(width)/2 - (1.0/2);
+				
+		WKTReader wkt = new WKTReader();
+		try {
+			Point center = (Point) wkt.read("POINT (" + (rayon+(1.0/2)) + " " + (rayon+(1.0/2)) + ")");
+			Point p;
+			theoreticalSize = 0;
+			for (double y=0.5; y<width; y++) {
+				for (double x=0.5; x<width; x++) {
+					p = (Point) wkt.read("POINT (" + x + " " + y + ")");
+					if(center.distance(p) <= rayon){
+						theoreticalSize++;
+					}
+				}
+			}					
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}	
+	}
+
+	@Override
+	public double[][] weighted(){
+		return locations.get(locate).weighted();
+	}
+	
+	@Override
+	public double[][] weightedH(){
+		return locations.get(locate).weightedH();
+	}
+	
+	@Override
+	public double[][] weightedV(){
+		return locations.get(locate).weightedV();
 	}
 	
 	private Pixel pixel(int x, int y){
 		//System.out.println(diameter());
 		//System.out.println("size "+pixels.length+" "+pixels[0].length);
-		return pixels[y+1][x+1];
+		//return pixels[y+1][x+1];
+		//System.out.println(x+" "+y+" "+pixels[0].length);
+		return pixels[y][x];
 	}
 	
 	public Matrix matrix(){
@@ -132,8 +196,9 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 	}
 	
 	@Override
-	public int theoricalSize(){
-		return location.theoricalSize();
+	public int theoreticalSize(){
+		//return location.theoricalSize();
+		return theoreticalSize;
 	}
 	
 	@Override
@@ -303,7 +368,7 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		int[] filter = new int[size()];
 		Pixel px;
 		int index = 0;
-		int theoricalSize = 0;
+		//int theoricalSize = 0;
 		//System.out.println("largeur "+width()+" "+height());
 		for(int y=0; y<height(); y++){
 			for(int x=0; x<width(); x++){
@@ -312,7 +377,7 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 				//if(rcm.containsKey(px)){
 				if(rcm.get(px) != Integer.MAX_VALUE){
 					filter[index] = 1;
-					theoricalSize++;
+					//theoricalSize++;
 				}else{
 					filter[index] = 0;
 				}
@@ -368,7 +433,7 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 			}
 		}
 		
-		return new LocateFunctionalWindow(filter, theoricalSize);
+		return new LocateFunctionalWindow(filter, /*theoricalSize,*/ getDistanceFunction());
 	}
 	
 	protected abstract double friction(Matrix m, Pixel p);
@@ -412,15 +477,31 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 			
 			double v = rcm.get(p);
 			
-			diffuseRook(p, pixel(p.x(), p.y()-1), v, f); // nord
-			diffuseRook(p, pixel(p.x()+1, p.y()), v, f); // est
-			diffuseRook(p, pixel(p.x(), p.y()+1), v, f); // sud
-			diffuseRook(p, pixel(p.x()-1, p.y()), v, f); // ouest
+			if(p.x() >= 0 && p.x() < pixels[0].length && (p.y()-1) >= 0 && (p.y()-1) < pixels[0].length){
+				diffuseRook(p, pixel(p.x(), p.y()-1), v, f); // nord
+			}
+			if((p.x()+1) >= 0 && (p.x()+1) < pixels[0].length && p.y() >= 0 && p.y() < pixels[0].length){
+				diffuseRook(p, pixel(p.x()+1, p.y()), v, f); // est
+			}
+			if(p.x() >= 0 && p.x() < pixels[0].length && (p.y()+1) >= 0 && (p.y()+1) < pixels[0].length){
+				diffuseRook(p, pixel(p.x(), p.y()+1), v, f); // sud
+			}
+			if((p.x()-1) >= 0 && (p.x()-1) < pixels[0].length && p.y() >= 0 && p.y() < pixels[0].length){
+				diffuseRook(p, pixel(p.x()-1, p.y()), v, f); // ouest
+			}
 			
-			diffuseQueen(p, pixel(p.x()+1, p.y()-1), v, f); // nord est
-			diffuseQueen(p, pixel(p.x()+1, p.y()+1), v, f); // sud est
-			diffuseQueen(p, pixel(p.x()-1, p.y()+1), v, f); // sud ouest
-			diffuseQueen(p, pixel(p.x()-1, p.y()-1), v, f); // nord ouest
+			if((p.x()+1) >= 0 && (p.x()+1) < pixels[0].length && (p.y()-1) >= 0 && (p.y()-1) < pixels[0].length){
+				diffuseQueen(p, pixel(p.x()+1, p.y()-1), v, f); // nord est
+			}
+			if((p.x()+1) >= 0 && (p.x()+1) < pixels[0].length && (p.y()+1) >= 0 && (p.y()+1) < pixels[0].length){
+				diffuseQueen(p, pixel(p.x()+1, p.y()+1), v, f); // sud est
+			}
+			if((p.x()-1) >= 0 && (p.x()-1) < pixels[0].length && (p.y()+1) >= 0 && (p.y()+1) < pixels[0].length){
+				diffuseQueen(p, pixel(p.x()-1, p.y()+1), v, f); // sud ouest
+			}
+			if((p.x()-1) >= 0 && (p.x()-1) < pixels[0].length && (p.y()-1) >= 0 && (p.y()-1) < pixels[0].length){
+				diffuseQueen(p, pixel(p.x()-1, p.y()-1), v, f); // nord ouest
+			}
 			
 			//ever.put(p, 1);
 		}

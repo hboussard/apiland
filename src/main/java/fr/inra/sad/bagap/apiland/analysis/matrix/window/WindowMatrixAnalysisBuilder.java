@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
 import fr.inra.sad.bagap.apiland.analysis.window.WindowAnalysisObserver;
 import fr.inra.sad.bagap.apiland.analysis.window.WindowAnalysisType;
+import fr.inra.sad.bagap.apiland.cluster.Cluster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class WindowMatrixAnalysisBuilder {
@@ -23,6 +25,10 @@ public class WindowMatrixAnalysisBuilder {
 	
 	private int displacement;
 	
+	private int xOrigin;
+	
+	private int yOrigin;
+	
 	private Set<WindowAnalysisObserver> observers;
 	
 	private Matrix matrixFilter;
@@ -36,6 +42,8 @@ public class WindowMatrixAnalysisBuilder {
 	private Set<Pixel> pixels;
 	
 	private double minRate;
+	
+	private Set<Cluster> clusters;
 	
 	private String path;
 	
@@ -52,6 +60,8 @@ public class WindowMatrixAnalysisBuilder {
 		window = null;
 		processType = null;
 		displacement = 1;
+		xOrigin = 0;
+		yOrigin = 0;
 		minRate = 0;
 		observers.clear();
 		filters.clear();
@@ -59,6 +69,7 @@ public class WindowMatrixAnalysisBuilder {
 		matrix.clear();
 		matrixFilter = null;
 		matrixUnFilter = null;
+		clusters = null;
 		path = null;
 	}
 	
@@ -81,6 +92,14 @@ public class WindowMatrixAnalysisBuilder {
 	
 	public void setDisplacement(int d) {
 		this.displacement = d;
+	}
+	
+	public void setXOrigin(int xOrigin) {
+		this.xOrigin = xOrigin;
+	}
+	
+	public void setYOrigin(int yOrigin) {
+		this.yOrigin = yOrigin;
 	}
 	
 	public void setMinRate(double mr){
@@ -118,6 +137,10 @@ public class WindowMatrixAnalysisBuilder {
 	public void setUnfilters(Set<Integer> f){
 		unfilters.addAll(f);
 	}
+	
+	public void setClusters(Set<Cluster> clusters){
+		this.clusters = clusters;
+	}
 
 	public void setPath(String path){
 		if(path.endsWith("/")){
@@ -125,7 +148,6 @@ public class WindowMatrixAnalysisBuilder {
 		}else{
 			this.path = path+"/";
 		}
-		
 	}
 
 	public <W extends WindowMatrixAnalysis> W build(){
@@ -139,53 +161,29 @@ public class WindowMatrixAnalysisBuilder {
 		
 		switch (type) {
 		case SLIDING : 
-			wa = (W)new SlidingWindowMatrixAnalysis(mat[0], window, processType, displacement, minRate, filters, unfilters, matrixFilter, matrixUnFilter);
-			for(WindowAnalysisObserver o : observers){
-				
-				wa.addObserver(o); // the analysis is observed 
-				
-				processType.addObserver(o); // the process type is observed
-				
-				// simple metrics are observed
-				for(Metric wm : processType.metrics()){
-					wm.addObserver(o);
-				}
-			}
+			wa = (W) new SlidingWindowMatrixAnalysis(mat[0], window, processType, displacement, xOrigin, yOrigin, minRate, filters, unfilters, matrixFilter, matrixUnFilter);
 			break;
 		case SELECTED : 
-			wa = (W)new SelectedWindowMatrixAnalysis(mat[0], window, processType, minRate, pixels, path);
-			for(WindowAnalysisObserver o : observers){
-				
-				wa.addObserver(o); // the analysis is observed 
-				
-				processType.addObserver(o); // the process type is observed
-				
-				// simple metrics are observed
-				for(Metric wm : processType.metrics()){
-					wm.addObserver(o);
-				}
-			} 
+			wa = (W) new SelectedWindowMatrixAnalysis(mat[0], window, processType, minRate, pixels, path);
 			break;
 		case MAP : 
-			wa = (W)new MapWindowMatrixAnalysis(mat[0], window, processType, matrixFilter, matrixUnFilter);
-			for(WindowAnalysisObserver o : observers){
-				wa.addObserver(o);
-				processType.addObserver(o);
-				for(Metric wm : processType.metrics()){
-					wm.addObserver(o);
-				}
-			} 
+			wa = (W) new MapWindowMatrixAnalysis(mat[0], window, processType, matrixFilter, matrixUnFilter);
 			break;
 		case GRID : 
-			wa = (W)new GridWindowMatrixAnalysis(mat[0], window, processType, displacement, minRate);
-			for(WindowAnalysisObserver o : observers){
-				wa.addObserver(o);
-				processType.addObserver(o);
-				for(Metric wm : processType.metrics()){
-					wm.addObserver(o);
-				}
-			} 
+			wa = (W) new GridWindowMatrixAnalysis(mat[0], window, processType, displacement, minRate);
 			break;
+		case CLUSTERED : 
+			wa = (W) new ClusteredWindowMatrixAnalysis(mat[0], window, processType, clusters);
+			break;
+		}
+		
+		for(WindowAnalysisObserver o : observers){
+			wa.addObserver(o); // the analysis is observed 
+			processType.addObserver(o); // the process type is observed
+			// simple metrics are observed
+			for(Metric wm : processType.metrics()){
+				wm.addObserver(o);
+			}
 		}
 		
 		reset();

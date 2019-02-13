@@ -39,9 +39,8 @@ import java.util.StringTokenizer;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
-import ij.io.FileSaver;
-import ij.io.TiffDecoder;
 import ij.plugin.AscReader;
+import ij.plugin.LUT_Editor;
 import ij.plugin.LutLoader;
 import ij.process.ImageProcessor;
 
@@ -61,18 +60,23 @@ public class VisuImageJ {
 		if (ij == null || (ij != null && !ij.isShowing())) {
 			ij = new ImageJ();
  		}
+	
+        //IJ.run("Close");
 		
         String ext = getExtension(file);
         if(ext.equalsIgnoreCase("asc")){
         	visualizeAsciiGrid(file);
+        	IJ.run("Fire");
         }else if(ext.equalsIgnoreCase("tif") || ext.equalsIgnoreCase("tiff")){
         	visualizeTiff(file);
+        	IJ.run("Fire");
         }else{
         	//throw new IllegalArgumentException(ext+" not implemented yet");
+        	//System.out.println(ext+" not implemented yet");
         }
         
-        LutLoader ll = new LutLoader();
-		ll.run("fire");
+        //LutLoader ll = new LutLoader();
+        //ll.run("fire");
         
         //LUT_Editor e = new LUT_Editor();
         //e.run("fire");
@@ -88,7 +92,7 @@ public class VisuImageJ {
 	private static void visualizeAsciiGrid(String file){
 		AscReader tr = new AscReader();
 		ImageProcessor ip = tr.open(file);
-        if (ip!=null){
+        if(ip != null){
         	String nom = deleteExtension(getNomCourt(file));
         	ImagePlus imp = new ImagePlus(nom, ip);
         	imp.show();

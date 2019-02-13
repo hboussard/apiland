@@ -6,16 +6,16 @@ public interface CoupleCountingInterface {
 
 	Set<Double> couples();
 	
-	int totalCouples();
+	double totalCouples();
 	
-	int validCouples();
+	double validCouples();
 	
-	int countCouples();
+	double countCouples();
 	
-	int homogeneousCouples();
+	double homogeneousCouples();
 	
-	int unhomogeneousCouples();
+	double heterogeneousCouples();
 	
-	int countCouple(double c);
+	double countCouple(double c);
 	
 }

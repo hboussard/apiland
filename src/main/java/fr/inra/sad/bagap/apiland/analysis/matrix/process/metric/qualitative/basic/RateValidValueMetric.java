@@ -13,7 +13,7 @@ public class RateValidValueMetric extends MatrixMetric implements BasicMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
-		value = (double) (co.validValues())/co.theoricalSize();
+		value = (double) (co.validValues())/co.theoreticalSize();
 	}
 
 }

@@ -7,7 +7,7 @@ import java.util.TreeSet;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcess;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
@@ -79,6 +79,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 					xp ++;
 				}
 				yp = ypt;
+				//System.out.println(xt+" "+yt);
 				createProcesses(xt, yt);
 				distributeValues(xt, yt);
 			}
@@ -118,6 +119,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 		if(xi){
 			xp --;
 		}
+		//System.out.println("fin creation des processus");
 	}
 	
 	private void distributeValues(int xt, int yt) {
@@ -133,7 +135,9 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 				v = matrix().get(x, y);
 				processType().setValue(x, y, v, null);
 				
+				//System.out.println(processes.size());
 				for(WindowMatrixProcess wp : processes){
+					//System.out.println(wp);
 					wp.add(x, y, v);
 				}
 					
@@ -141,6 +145,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 				updateProgression(total);
 			}
 		}
+		//System.out.println("fin distribution des valeurs");
 	}
 
 	private void update(){
@@ -195,6 +200,10 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 	private void notifyProcessDone(WindowMatrixProcess wp) {
 		dones.add(wp);
 		wp.delete();
+		//System.out.println(wp.getClass());
+		//System.out.println("destruction du processus "+wp.pixel());
+		//processes.remove(wp);
+		wp = null;
 		update = true;
 	}
 

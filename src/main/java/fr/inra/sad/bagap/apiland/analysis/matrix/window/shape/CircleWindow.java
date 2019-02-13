@@ -11,6 +11,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
@@ -21,9 +22,11 @@ public class CircleWindow extends WindowShape{
 
 	private final int diameter;
 	
+	//private final double rayon;
+	
 	private final int[] filter;
 	
-	private int theoricalSize;
+	private int theoriticalSize;
 	
 	private List<Pixel> addDownList;
 	
@@ -37,6 +40,29 @@ public class CircleWindow extends WindowShape{
 	
 	private List<Pixel> removeHorizontalDownList;
 	
+	// structure de données pour la fonction de distance
+	// ou structure de données pour les distances par pixel
+	// ou délégation à la forme de fenêtre
+	private double[][] distance;
+	
+	private double[][] weighted;
+	
+	private double[][] weightedH;
+	
+	private double[][] weightedV;
+	
+	/*
+	public CircleWindow(double rayon){
+		this.rayon = rayon;
+		this.diameter = rayon + (1.0/2);
+		
+		double rayon = new Double(diameter)/2 - (1.0/2);
+		
+		filter = new int[diameter*diameter];
+		init();
+		//display();
+	}*/
+	
 	public CircleWindow(int d){
 		this.diameter = d;
 		filter = new int[diameter*diameter];
@@ -44,14 +70,115 @@ public class CircleWindow extends WindowShape{
 		//display();
 	}
 	
-	@Override
-	public int theoricalSize(){
-		return theoricalSize;
+	public CircleWindow(int d, DistanceFunction function){
+		super(function);
+		this.diameter = d;
+		filter = new int[diameter*diameter];
+		init();
+		//display();
 	}
 	
-	private void init() {
+	@Override
+	public double[][] weighted(){
+		if(weighted == null){
+			double rayon = new Double(diameter)/2 - (1.0/2);
+			initWeighted(rayon);
+		}
+		return weighted;
+	}
+	
+	@Override
+	public double[][] weightedH(){
+		if(weightedH == null){
+			if(weighted == null){
+				double rayon = new Double(diameter)/2 - (1.0/2);
+				initWeighted(rayon);
+			}
+			initWeightedCouple();
+		}
+		return weightedH;
+	}
+	
+	@Override
+	public double[][] weightedV(){
+		if(weightedV == null){
+			if(weighted == null){
+				double rayon = new Double(diameter)/2 - (1.0/2);
+				initWeighted(rayon);
+			}
+			initWeightedCouple();
+		}
+		return weightedV;
+	}
+	
+	protected void initWeighted(double rayon1) {
+		
+		double rayon2 = new Double(diameter)/2;
+		
+		distance = new double[diameter][diameter];
+		
+		WKTReader wkt = new WKTReader();
+		Point center;
+		try {
+			center = (Point) wkt.read("POINT (" + (rayon1+(1.0/2)) + " " + (rayon1+(1.0/2)) + ")");
+			Point p;
+			//theoricalSize = 0;
+			int j=0, i=0;
+			double d;
+			for (double y=0.5; y<diameter; y++) {
+				for (double x=0.5; x<diameter; x++) {
+					p = (Point) wkt.read("POINT (" + x + " " + y + ")");
+					d = center.distance(p);
+					if(d > rayon1){
+						distance[j][i] = Raster.getNoDataValue();
+					}else{
+						distance[j][i] = d * Raster.getCellSize();
+					}
+					i++;
+				}
+				j++;
+				i = 0;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		//System.out.println(rayon1+" "+Raster.getCellSize()+" "+(rayon1*Raster.getCellSize()));
+		//DistanceFunction function = new DistanceFunction("", rayon1*Raster.getCellSize());
+		weighted = new double[diameter][diameter];
+		for(int j=0; j<diameter; j++){
+			for(int i=0; i<diameter; i++){
+				weighted[j][i] = getDistanceFunction().interprete(distance[j][i]);
+			}
+		}
+	}
+	
+	protected void initWeightedCouple() {
+		weightedH = new double[diameter][diameter-1];
+		for(int j=0; j<diameter; j++){
+			for(int i=0; i<diameter-1; i++){
+				weightedH[j][i] = getDistanceFunction().interprete((distance[j][i] + distance[j][i+1]) / 2);
+			}
+		}
+		
+		weightedV = new double[diameter-1][diameter];
+		for(int j=0; j<diameter-1; j++){
+			for(int i=0; i<diameter; i++){
+				weightedV[j][i] = getDistanceFunction().interprete((distance[j][i] + distance[j+1][i]) / 2);
+			}
+		}
+	}
+	
+	@Override
+	public int theoreticalSize(){
+		return theoriticalSize;
+	}
+	
+	protected void init() {
+		
 		//double rayon = new Double(diameter)/2;
 		double rayon = new Double(diameter)/2 - (1.0/2);
+		
 		//System.out.println(rayon);
 		WKTReader wkt = new WKTReader();
 		int index;
@@ -61,7 +188,7 @@ public class CircleWindow extends WindowShape{
 			//Point center = (Point) wkt.read("POINT (" + rayon + " " + rayon + ")");
 			Point p;
 			index = 0;
-			theoricalSize = 0;
+			theoriticalSize = 0;
 			for (double y=0.5; y<diameter; y++) {
 				for (double x=0.5; x<diameter; x++) {
 					p = (Point) wkt.read("POINT (" + x + " " + y + ")");
@@ -69,7 +196,7 @@ public class CircleWindow extends WindowShape{
 						filter[index++] = 0;
 					}else{
 						filter[index++] = 1;
-						theoricalSize++;
+						theoriticalSize++;
 					}
 				}
 			}
@@ -227,10 +354,27 @@ public class CircleWindow extends WindowShape{
 	@Override
 	public void display(){
 		int index=0;
+		System.out.println();
 		for(int f : filter){
 			System.out.print(f+" ");
 			index++;
 			if(index%diameter == 0){
+				System.out.println();
+			}
+		}
+		if(weighted != null){
+			System.out.println();
+			for(int j=0; j<diameter; j++){
+				for(int i=0; i<diameter; i++){
+					System.out.print(distance[j][i]+" ");
+				}
+				System.out.println();
+			}
+			System.out.println();
+			for(int j=0; j<diameter; j++){
+				for(int i=0; i<diameter; i++){
+					System.out.print(weighted[j][i]+" ");
+				}
 				System.out.println();
 			}
 		}

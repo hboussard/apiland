@@ -4,8 +4,6 @@ import fr.inra.sad.bagap.apiland.analysis.VariableManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.PatchMetric;
-import fr.inra.sad.bagap.apiland.patch.Patch;
-import fr.inra.sad.bagap.apiland.patch.PatchComposite;
 
 public class LargestPatchIndex extends MatrixMetric implements PatchMetric {
 
@@ -15,6 +13,10 @@ public class LargestPatchIndex extends MatrixMetric implements PatchMetric {
 	
 	@Override
 	public void doCalculate(Counting co) {
+		if(co.countValues() > 0){
+			value = co.getLargestPatchSize();
+		}
+		/*
 		value = 0;
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
 			if(p.getValue() != 0){
@@ -23,6 +25,7 @@ public class LargestPatchIndex extends MatrixMetric implements PatchMetric {
 			}
 		}
 		value /= 10000.0; // en hectares
+		*/
 	}
 
 }

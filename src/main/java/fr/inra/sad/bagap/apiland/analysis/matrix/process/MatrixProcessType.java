@@ -13,14 +13,22 @@ public abstract class MatrixProcessType extends ProcessType<MatrixMetric> {
 	
 	private Matrix[] matrix;
 	
+	/** distance process type or not */
+	private boolean distanceType;
+	
 	/** constructor */
-	public MatrixProcessType(Matrix... m){
+	public MatrixProcessType(boolean distanceType, Matrix... m){
 		super();
 		this.matrix = m;
+		this.distanceType = distanceType;
+	}
+	
+	public boolean isDistanceType(){
+		return distanceType;
 	}
 	
 	/** @return a specific metric */
-	public Metric getMetric(String variable){
+ 	public Metric getMetric(String variable){
 		for(MatrixMetric m : metrics()){
 			if(m.getName().equalsIgnoreCase(variable)){
 				return m;

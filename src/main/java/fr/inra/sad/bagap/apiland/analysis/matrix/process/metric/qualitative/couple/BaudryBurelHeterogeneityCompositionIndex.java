@@ -14,12 +14,13 @@ public class BaudryBurelHeterogeneityCompositionIndex extends MatrixMetric imple
 	
 	@Override
 	public void doCalculate(Counting co) {
-		value = 0;
 		if(co.countCouples() > 0){
+			value = 0;
 			double p;
 			for(double c : co.couples()){
 				if(Couple.isHomogeneous(c)){
 					p = co.countCouple(c) / (double) co.validCouples();
+					//p = co.countCouple(c) / (double) co.homogeneousCouples();
 					if(p != 0){
 						value += p*Math.log(p);
 					}

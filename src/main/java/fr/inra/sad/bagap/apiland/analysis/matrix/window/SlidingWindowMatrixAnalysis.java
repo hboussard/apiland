@@ -6,7 +6,7 @@ import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcess;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
@@ -17,6 +17,9 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 public class SlidingWindowMatrixAnalysis extends WindowMatrixAnalysis implements VolatileWindowAnalysis {
 	
 	private final int delta;
+	
+	private int xInit = 0;
+	private int yInit = 0;
 	
 	private WindowMatrixProcess[] processes;
 	
@@ -30,11 +33,13 @@ public class SlidingWindowMatrixAnalysis extends WindowMatrixAnalysis implements
 	
 	private Matrix matrixUnFilter;
 	
-	public SlidingWindowMatrixAnalysis(Matrix m, Window w, WindowMatrixProcessType pType, int d, double minRate, 
+	public SlidingWindowMatrixAnalysis(Matrix m, Window w, WindowMatrixProcessType pType, int delta, int xOrigin, int yOrigin, double minRate, 
 			Set<Integer> filters, Set<Integer> unfilters, Matrix matrixFilter, Matrix matrixUnFilter) {
 		super(m, w, pType);
 		
-		this.delta = d;
+		this.delta = delta;
+		this.xInit = xOrigin;
+		this.yInit = yOrigin;
 		Metric.setMinRate(minRate);
 		
 		this.filters = new HashSet<Integer>();
@@ -103,10 +108,8 @@ public class SlidingWindowMatrixAnalysis extends WindowMatrixAnalysis implements
 	}
 
 	private void createProcesses(){
-		for(int x=0; x<processes.length; x++){
-			if(x%delta == 0){
-				processes[x] = processType().create(window(), new Pixel(x, 0));
-			}
+		for(int x=xInit; x<processes.length; x+=delta){
+			processes[x] = processType().create(window(), new Pixel(x, yInit));
 		}
 	}
 	

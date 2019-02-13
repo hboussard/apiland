@@ -21,12 +21,6 @@ public interface QuantitativeCountingInterface {
 	/** @return the standard deviation of internal values */
 	double getStandardDeviation();
 	
-	/** @return the maximum of internal values */
-	double getMaximum();
-	
-	/** @return the minimum of internal values */
-	double getMinimum();
-	
 	/** @return the standard error of internal values */
 	double getStandardError();
 	
@@ -34,12 +28,12 @@ public interface QuantitativeCountingInterface {
 	double getVariationCoefficient();
 	
 	/** @return the number of positives internal values */
-	int countPositives();
+	double countPositives();
 	
 	/** @return the number of negatives internal values */
-	int countNegatives();
+	double countNegatives();
 	
 	/** @return the number of internal values */
-	int size();
+	double size();
 	
 }

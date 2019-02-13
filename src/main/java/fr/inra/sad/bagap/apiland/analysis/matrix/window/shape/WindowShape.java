@@ -2,12 +2,43 @@ package fr.inra.sad.bagap.apiland.analysis.matrix.window.shape;
 
 import java.util.List;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public abstract class WindowShape {
 	
+	
+	//public abstract double getRate();
+	
 	protected Window window;
+	
+	private DistanceFunction function;
+	
+	public WindowShape(){
+		// do nothing
+	}
+	
+	public WindowShape(DistanceFunction function){
+		this.function = function;
+	}
+	
+	public double[][] weighted(){
+		throw new UnsupportedOperationException();
+	}
+	
+	public double[][] weightedH(){
+		throw new UnsupportedOperationException();
+	}
+	
+	public double[][] weightedV(){
+		throw new UnsupportedOperationException();
+	}
+	
+	protected DistanceFunction getDistanceFunction(){
+		return function;
+	}
 	
 	public abstract int width();
 
@@ -57,7 +88,7 @@ public abstract class WindowShape {
 		return width() * height();
 	}
 	
-	public int theoricalSize(){
+	public int theoreticalSize(){
 		return width() * height();
 	}
 

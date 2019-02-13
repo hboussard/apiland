@@ -67,7 +67,7 @@ public class MatrixMetricManager {
 		try{
 			//String buf = "c://Hugues/workspace/apiland-0.9.3.v4-analysis/src/fr/inra/sad_paysage/apiland/analysis/metric/metrics.csv";
 			//BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics.csv")));
-			BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics_2017.csv")));
+			BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics.csv")));
 			cr = new CsvReader(buf);
 			cr.setDelimiter(';');
 			cr.readHeaders();

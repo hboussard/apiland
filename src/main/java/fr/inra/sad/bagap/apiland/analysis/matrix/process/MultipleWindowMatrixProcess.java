@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.MultipleWindow;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.MultipleWindow;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
@@ -22,6 +22,7 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 
 	public MultipleWindowMatrixProcess(Window w, Pixel p, MultipleWindowMatrixProcessType wpt) {
 		super(w, p, wpt);
+		//System.out.println("création du process en "+p);
 		values = new double[w.height()][w.width()];
 		for(int y=0; y<values.length; y++){
 			Arrays.fill(values[y], -1);
@@ -102,11 +103,19 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 			int inY = window().toYWindow(y);
 			values[inY][inX] = v; // stockage de la valeur au niveau du process
 			
+			//int place = 0;
+			int old = -1;
 			for(Window w : windows()){
+				/*
+				if(old != -1){
+					place += (old - w.width()) / 2;
+				}*/
 				
 				if(!processes.get(w).addQuiet(x, y, v)){
 					break;
 				}
+				
+				old = w.width();
 				
 				//System.out.println(w.width());
 				/*
@@ -135,7 +144,9 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 	public void delete() {
 		for(WindowMatrixProcess p : processes().values()){
 			p.delete();
+			p = null;
 		}
+		values = null;
 		processes().clear();
 		setProcesses(null);
 	}
@@ -146,7 +157,10 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 			for(int d=0; d<delta; d++){
 				down();
 			}
-			
+			/*
+			if(pixel().x() == 0){
+				System.out.println("--> beguin down multiple");
+			}*/
 			int place = 0;
 			int old = -1;
 			for(Entry<Window, SimpleWindowMatrixProcess> p : processes().entrySet()){
@@ -156,6 +170,10 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 				p.getValue().downQuiet(delta, values, place);
 				old = p.getKey().width();
 			}
+			/*
+			if(pixel().x() == 0){
+				System.out.println("--> end down multiple");
+			}*/
 			
 			window().locate(pixel()); // localisation de la fenêtre
 			setMaxSize(windows()[0].size(processType().matrix().width(), processType().matrix().height()));

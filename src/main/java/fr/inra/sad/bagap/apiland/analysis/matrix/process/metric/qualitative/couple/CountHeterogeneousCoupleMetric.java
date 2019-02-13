@@ -4,7 +4,6 @@ import fr.inra.sad.bagap.apiland.analysis.VariableManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.CoupleMetric;
-import fr.inra.sad.bagap.apiland.core.util.Couple;
 
 public class CountHeterogeneousCoupleMetric extends MatrixMetric implements CoupleMetric {
 
@@ -14,6 +13,10 @@ public class CountHeterogeneousCoupleMetric extends MatrixMetric implements Coup
 
 	@Override
 	public void doCalculate(Counting co) {
+		if(co.countCouples() >= 0){
+			value = co.heterogeneousCouples();
+		}
+		/*
 		if(co.countCouples() > 0){
 			value = 0;
 			for(double c : co.couples()){
@@ -22,6 +25,7 @@ public class CountHeterogeneousCoupleMetric extends MatrixMetric implements Coup
 				}
 			}
 		}
+		*/
 	}
 
 }

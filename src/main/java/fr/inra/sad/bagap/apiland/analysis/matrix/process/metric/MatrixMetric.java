@@ -18,7 +18,7 @@ public abstract class MatrixMetric extends Metric {
 	 */
 	public final void calculate(MatrixProcess p, String pref){
 		value = Raster.getNoDataValue();
-		if((double) (p.counting().validValues())/p.counting().theoricalSize() >= minRate){
+		if((double) (p.counting().validValues())/p.counting().theoreticalSize() >= minRate){
 			doCalculate(p.counting());
 		}
 		notifyObservers(p, pref);

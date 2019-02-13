@@ -1,5 +1,6 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.window.shape;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
@@ -9,10 +10,27 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 	
 	private double min;
 	
+	public FunctionalWindowWithMatrix(Matrix m, double d, Matrix f, DistanceFunction function){
+		super(m, d, f.minV(), function);
+		this.friction = f;
+		this.min = f.minV();
+		initTheoriticalSize();
+		//this.min = 1;
+	}
+	
 	public FunctionalWindowWithMatrix(Matrix m, double d, Matrix f){
 		super(m, d, f.minV());
 		this.friction = f;
 		this.min = f.minV();
+		initTheoriticalSize();
+		//this.min = 1;
+	}
+	
+	public FunctionalWindowWithMatrix(Matrix m, double d, int displacement, Matrix f, DistanceFunction function){
+		super(m, d, displacement, function);
+		this.friction = f;
+		this.min = f.minV();
+		initTheoriticalSize();
 		//this.min = 1;
 	}
 	
@@ -20,6 +38,7 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 		super(m, d, displacement);
 		this.friction = f;
 		this.min = f.minV();
+		initTheoriticalSize();
 		//this.min = 1;
 	}
 	

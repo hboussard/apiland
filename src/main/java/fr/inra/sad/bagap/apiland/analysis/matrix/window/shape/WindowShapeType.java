@@ -1,41 +1,51 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.window.shape;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessType;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Friction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public enum WindowShapeType {
 
-	SQUARE,
-	
 	CIRCLE,
+	
+	SQUARE,
 	
 	FUNCTIONAL;
 	
 	//RING;
 	
-	public WindowShape create(int width){
+	public WindowShape create(int width, DistanceFunction function){
 		switch(this){
-		case SQUARE : return new SquareWindow(width);
-		case CIRCLE : return new CircleWindow(width);
+		case SQUARE : return new SquareWindow(width, function);
+		case CIRCLE : return new CircleWindow(width, function);
 		default : throw new IllegalArgumentException("not implemented yet");
 		}
 	}
 	
-	public WindowShape create(Matrix m, double d, Friction f, ProcessType<?> pt){
+	public WindowShape create(double radius, DistanceFunction function){
+		switch(this){
+		//case SQUARE : return new SquareWindow(width, function);
+		//case CIRCLE : return new CircleWindow(width, function);
+		case CIRCLE : return new CircleWindow2(radius);
+		default : throw new IllegalArgumentException("not implemented yet");
+		}
+	}
+	
+	public WindowShape create(Matrix m, double dmax, Friction f, ProcessType<?> pt, DistanceFunction function){
 		switch(this){
 		case FUNCTIONAL : 
-			FunctionalWindow fw = new FunctionalWindowWithMap(m, d, f);
+			FunctionalWindowWithMap fw = new FunctionalWindowWithMap(m, dmax, f, function);
 			pt.addObserver(fw);
 			return fw;
 		default : throw new IllegalArgumentException("not implemented yet");
 		}
 	}
 	
-	public WindowShape create(Matrix m, double d, Matrix f, ProcessType<?> pt){
+	public WindowShape create(Matrix m, double dmax, Matrix f, ProcessType<?> pt, DistanceFunction function){
 		switch(this){
 		case FUNCTIONAL : 
-			FunctionalWindowWithMatrix fwwm = new FunctionalWindowWithMatrix(m, d, f);
+			FunctionalWindowWithMatrix fwwm = new FunctionalWindowWithMatrix(m, dmax, f, function);
 			pt.addObserver(fwwm);
 			return fwwm;
 		default : throw new IllegalArgumentException("not implemented yet");

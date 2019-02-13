@@ -6,6 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
@@ -18,15 +23,112 @@ public class LocateFunctionalWindow extends WindowShape {
 	
 	private int width;
 	
-	private int theoricalSize;
+	//private int theoricalSize;
 	
-	public LocateFunctionalWindow(int[] f, int theoricalSize){
+	private double[][] distance;
+	
+	private double[][] weighted;
+	
+	private double[][] weightedH;
+	
+	private double[][] weightedV;
+	
+	public LocateFunctionalWindow(int[] f, /*int theoricalSize,*/ DistanceFunction function){
+		super(function);
 		//System.out.println("création de la forme fonctionnelle en "+pixel);
 		this.filter = f;
-		this.theoricalSize = theoricalSize;
+		//this.theoricalSize = theoricalSize;
 		width = new Double(Math.sqrt(filter.length)).intValue();
 		//display();
-		//export("C:/Hugues/agents/jacques/filtres/test.txt");
+		/*if(function != null){
+			initWeighted();
+		}*/
+	}
+	
+	@Override
+	public double[][] weighted(){
+		if(weighted == null){
+			initWeighted();
+		}
+		return weighted;
+	}
+	
+	@Override
+	public double[][] weightedH(){
+		if(weightedH == null){
+			if(weighted == null){
+				initWeighted();
+			}
+			initWeightedCouple();
+		}
+		return weightedH;
+	}
+	
+	@Override
+	public double[][] weightedV(){
+		if(weightedV == null){
+			if(weighted == null){
+				initWeighted();
+			}
+			initWeightedCouple();
+		}
+		return weightedV;
+	}
+	
+	protected void initWeighted() {
+		
+		distance = new double[width][width];
+		double rayon = width / 2;
+		
+		WKTReader wkt = new WKTReader();
+		Point center;
+		try {
+			center = (Point) wkt.read("POINT (" + (rayon+(1.0/2)) + " " + (rayon+(1.0/2)) + ")");
+			Point p;
+			//theoricalSize = 0;
+			int j=0, i=0;
+			double d;
+			for (double y=0.5; y<width; y++) {
+				for (double x=0.5; x<width; x++) {
+					p = (Point) wkt.read("POINT (" + x + " " + y + ")");
+					d = center.distance(p);
+					if(d > rayon){
+						distance[j][i] = Raster.getNoDataValue();
+					}else{
+						distance[j][i] = d * Raster.getCellSize();
+					}
+					i++;
+				}
+				j++;
+				i = 0;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		//DistanceFunction function = new DistanceFunction("", rayon*Raster.getCellSize());
+		weighted = new double[width][width];
+		for(int j=0; j<width; j++){
+			for(int i=0; i<width; i++){
+				weighted[j][i] = getDistanceFunction().interprete(distance[j][i]);
+			}
+		}
+	}
+	
+	protected void initWeightedCouple() {
+		weightedH = new double[width][width-1];
+		for(int j=0; j<width; j++){
+			for(int i=0; i<width-1; i++){
+				weightedH[j][i] = getDistanceFunction().interprete((distance[j][i] + distance[j][i+1]) / 2);
+			}
+		}
+		
+		weightedV = new double[width-1][width];
+		for(int j=0; j<width-1; j++){
+			for(int i=0; i<width; i++){
+				weightedV[j][i] = getDistanceFunction().interprete((distance[j][i] + distance[j+1][i]) / 2);
+			}
+		}
 	}
 	
 	public String getStringFilter(){
@@ -47,8 +149,9 @@ public class LocateFunctionalWindow extends WindowShape {
 	}
 	
 	@Override
-	public int theoricalSize(){
-		return theoricalSize;
+	public int theoreticalSize(){
+		//return theoricalSize;
+		throw new UnsupportedOperationException();
 	}
 	
 	public void display(){

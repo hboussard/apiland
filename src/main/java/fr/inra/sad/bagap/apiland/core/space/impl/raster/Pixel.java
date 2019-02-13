@@ -113,7 +113,7 @@ public class Pixel extends Raster implements Comparable<Pixel>{
 	
 	@Override
 	public int hashCode(){
-		return x * 152 + y *7 + 1;
+		return x * 152 /*+ y *7*/ + 1;
 	}
 	
 	public boolean equals(int x, int y){

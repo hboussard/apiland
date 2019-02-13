@@ -37,7 +37,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeSet;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.GeometryImpl;
 
@@ -62,6 +61,10 @@ public final class RasterComposite extends Raster {
 		rasters.add(pc);
 	}
 	
+	public void removeSimplePixelComposite(PixelComposite pc){
+		rasters.remove(pc);
+	}
+
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
 		sb.append('{');

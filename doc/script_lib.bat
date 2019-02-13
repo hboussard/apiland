@@ -29,3 +29,4 @@ call mvn install:install-file -Dfile=./poi-ooxml-schemas-3.15.jar -DgroupId=org.
 call mvn install:install-file -Dfile=./xmlbeans-2.6.0.jar -DgroupId=org.apache.xmlbeans -DartifactId=xmlbeans -Dversion=2.6.0 -Dpackaging=jar
 call mvn install:install-file -Dfile=./commons-collections4-4.1.jar -DgroupId=org.apache.commons -DartifactId=commons-collections4 -Dversion=4.1 -Dpackaging=jar
 call mvn install:install-file -Dfile=./exp4j-0.4.8.jar -DgroupId=net.objecthunter.exp4j -DartifactId=exp4j -Dversion=0.4.8 -Dpackaging=jar
+call mvn install:install-file -Dfile=./commons-lang3-3.7.jar -DgroupId=org.apache.commons -DartifactId=lang3 -Dversion=3.7 -Dpackaging=jar

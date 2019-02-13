@@ -1,6 +1,5 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting;
 
-import java.util.Collection;
 import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.SimpleWindowMatrixProcess;
@@ -13,6 +12,11 @@ public abstract class CountingDecorator extends Counting {
 	
 	public CountingDecorator(Counting decorate){
 		this.decorate = decorate;
+	}
+	
+	@Override
+	public String toString(){
+		return this.getClass()+" "+decorate.toString();
 	}
 	
 	@Override
@@ -38,11 +42,13 @@ public abstract class CountingDecorator extends Counting {
 
 	@Override
 	public void add(double value, int x, int y, int filter, double ch, double cv) {
+		//System.out.println("add (CountingDecorator)");
 		decorate.add(value, x, y, filter, ch, cv);
 		doAdd(value, x, y, filter, ch, cv);
 	}
 	
 	protected final void doAdd(double value, Pixel pixel, int filter, double ch, double cv){
+		//System.out.println("doAdd (CountingDecorator)");
 		doAdd(value, pixel.x(), pixel.y(), filter, ch, cv);
 	}
 	
@@ -50,11 +56,13 @@ public abstract class CountingDecorator extends Counting {
 	
 	@Override
 	public final void addValue(double value, int x, int y){
+		//System.out.println("addValue (CountingDecorator)");
 		decorate.addValue(value, x, y);
 		doAddValue(value, x, y);
 	}
 
 	protected void doAddValue(double value, int x, int y) {
+		//System.out.println("doAddValue (CountingDecorator)");
 		// do nothing
 	}
 
@@ -69,22 +77,22 @@ public abstract class CountingDecorator extends Counting {
 	}
 	
 	@Override
-	public final void addCouple(double couple){
-		decorate.addCouple(couple);
-		doAddCouple(couple);
+	public final void addCouple(double couple, int x1, int y1, int x2, int y2){
+		decorate.addCouple(couple, x1, y1, x2, y2);
+		doAddCouple(couple, x1, y1, x2, y2);
 	}
 	
-	protected void doAddCouple(double couple) {
+	protected void doAddCouple(double couple, int x1, int y1, int x2, int y2) {
 		// do nothing
 	}
 	
 	@Override
-	public final void removeCouple(double couple){
-		decorate.removeCouple(couple);
-		doRemoveCouple(couple);
+	public final void removeCouple(double couple, int x1, int y1, int x2, int y2){
+		decorate.removeCouple(couple, x1, y1, x2, y2);
+		doRemoveCouple(couple, x1, y1, x2, y2);
 	}
 	
-	protected void doRemoveCouple(double value){
+	protected void doRemoveCouple(double value, int x1, int y1, int x2, int y2){
 		// do nothing
 	}
 	
@@ -97,28 +105,28 @@ public abstract class CountingDecorator extends Counting {
 	protected abstract void doDelete();
 
 	@Override
-	public void down() {
-		decorate.down();
-		doDown();
+	public void down(int d, int place) {
+		decorate.down(d, place);
+		doDown(d ,place);
 	}
 	
-	protected void doDown(){
+	protected void doDown(int d, int place){
 		// do nothing
 	}
 	
 	@Override
-	public int totalValues() {
+	public double totalValues() {
 		return decorate.totalValues();
 	}
 
 	@Override
-	public int validValues() {
+	public double validValues() {
 		return decorate.validValues();
 	}
 	
 	@Override
-	public int theoricalSize() {
-		return decorate.theoricalSize();
+	public int theoreticalSize() {
+		return decorate.theoreticalSize();
 	}
 	
 	@Override
@@ -126,26 +134,22 @@ public abstract class CountingDecorator extends Counting {
 		return decorate.values();
 	}
 	
-	//@Override
-	/*public Collection<Count> counts(){
-		return decorate.counts();
-	}*/
-
 	@Override
-	public int countValues() {
+	public double countValues() {
 		return decorate.countValues();
 	}
 
 	@Override
-	public int countValue(int v) {
+	public double countValue(int v) {
 		return decorate.countValue(v);
 	}
 	
 	@Override
-	public int countClass() {
+	public double countClass() {
 		return decorate.countClass();
 	}
 
+	/*
 	@Override
 	public double averageClass() {
 		return decorate.averageClass();
@@ -160,6 +164,7 @@ public abstract class CountingDecorator extends Counting {
 	public double standardDeviationClass() {
 		return decorate.standardDeviationClass();
 	}
+	*/
 
 	@Override
 	public double getVariance() {
@@ -187,38 +192,28 @@ public abstract class CountingDecorator extends Counting {
 	}
 
 	@Override
-	public double getMaximum() {
-		return decorate.getMaximum();
-	}
-
-	@Override
-	public double getMinimum() {
-		return decorate.getMinimum();
-	}
-
-	@Override
 	public double getStandardError() {
 		return decorate.getStandardError();
 	}
 
 	@Override
-	public int countPositives() {
+	public double countPositives() {
 		return decorate.countPositives();
 	}
 
 	@Override
-	public int countNegatives() {
+	public double countNegatives() {
 		return decorate.countNegatives();
 	}
 
 	@Override
-	public int size() {
-		return decorate.validValues();
+	public double size() {
+		return decorate.size();
 	}
 
 	@Override
 	public double getVariationCoefficient() {
-		return decorate.validValues();
+		return decorate.getVariationCoefficient();
 	}
 	
 	@Override
@@ -227,32 +222,32 @@ public abstract class CountingDecorator extends Counting {
 	}
 
 	@Override
-	public int totalCouples() {
+	public double totalCouples() {
 		return decorate.totalCouples();
 	}
 
 	@Override
-	public int validCouples() {
+	public double validCouples() {
 		return decorate.validCouples();
 	}
 
 	@Override
-	public int countCouples() {
+	public double countCouples() {
 		return decorate.countCouples();
 	}
 
 	@Override
-	public int homogeneousCouples() {
+	public double homogeneousCouples() {
 		return decorate.homogeneousCouples();
 	}
 
 	@Override
-	public int unhomogeneousCouples() {
-		return decorate.unhomogeneousCouples();
+	public double heterogeneousCouples() {
+		return decorate.heterogeneousCouples();
 	}
 
 	@Override
-	public int countCouple(double c) {
+	public double countCouple(double c) {
 		return decorate.countCouple(c);
 	}
 	
@@ -261,4 +256,88 @@ public abstract class CountingDecorator extends Counting {
 		return decorate.patches();
 	}
 	
+	@Override
+	public double getPatchNumber(){
+		return decorate.getPatchNumber();
+	}
+	
+	@Override
+	public double getPatchNumber(int classe){
+		return decorate.getPatchNumber(classe);
+	}
+	
+	@Override
+	public double getLargestPatchSize(){
+		return decorate.getLargestPatchSize();
+	}
+	
+	@Override
+	public double getLargestPatchSize(int classe){
+		return decorate.getLargestPatchSize(classe);
+	}
+	
+	@Override
+	public double getMeanPatchSize(){
+		return decorate.getMeanPatchSize();
+	}
+	
+	@Override
+	public double getMeanPatchSize(int classe){
+		return decorate.getMeanPatchSize(classe);
+	}
+	
+	@Override
+	public double getShannonDiversityPatchSize(){
+		return decorate.getShannonDiversityPatchSize();
+	}
+	
+	@Override
+	public double getShannonDiversityPatchSize(int classe){
+		return decorate.getShannonDiversityPatchSize(classe);
+	}
+	
+	/*
+	@Override
+	public double getStandardDeviationPatchSize(){
+		return decorate.getStandardDeviationPatchSize();
+	}
+	
+	@Override
+	public double getStandardDeviationPatchSize(int classe){
+		return decorate.getStandardDeviationPatchSize(classe);
+	}
+	
+	@Override
+	public double getVariationCoefficientPatchSize(){
+		return decorate.getVariationCoefficientPatchSize();
+	}
+	
+	@Override
+	public double getVariationCoefficientPatchSize(int classe){
+		return decorate.getVariationCoefficientPatchSize(classe);
+	}
+	*/
+	
+	@Override
+	public double getMaximum() {
+		return decorate.getMaximum();
+	}
+
+	@Override
+	public double getMinimum() {
+		return decorate.getMinimum();
+	}
+	
+	/*
+	@Override
+	public double[][] datas(){
+		return decorate.datas();
+	}
+	*/
+	
+	@Override
+	public double getTruncatedAverage(double threshold){
+		return decorate.getTruncatedAverage(threshold);
+	}
+
 }

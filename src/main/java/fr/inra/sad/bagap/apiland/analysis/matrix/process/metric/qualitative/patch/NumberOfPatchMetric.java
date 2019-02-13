@@ -15,12 +15,17 @@ public class NumberOfPatchMetric extends MatrixMetric implements PatchMetric {
 	
 	@Override
 	public void doCalculate(Counting co) {
-		value = 0;
+		if(co.countValues() > 0){
+			value = co.getPatchNumber();
+		}
+		/*
+		 * value = 0;
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
 			if(p.getValue() != 0){
 				value++;
 			}
 		}
+		*/
 	}
 
 }

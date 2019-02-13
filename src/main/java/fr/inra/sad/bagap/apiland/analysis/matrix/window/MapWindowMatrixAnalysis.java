@@ -2,14 +2,14 @@ package fr.inra.sad.bagap.apiland.analysis.matrix.window;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcess;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
-public class MapWindowMatrixAnalysis extends WindowMatrixAnalysis implements VolatileWindowAnalysis{
+public class MapWindowMatrixAnalysis extends WindowMatrixAnalysis /*implements VolatileWindowAnalysis*/{
 	
 	private WindowMatrixProcess process;
 	
@@ -93,9 +93,10 @@ public class MapWindowMatrixAnalysis extends WindowMatrixAnalysis implements Vol
 		p.delete();
 	}
 
+	/*
 	@Override
 	public Pixel next(Pixel pixel) {
 		return pixel;
 	}
-	
+	*/
 }

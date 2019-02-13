@@ -15,7 +15,8 @@ public class CountClassValueMetric extends MatrixMetric implements ValueMetric {
 	public void doCalculate(Counting co) {
 		value = 0;
 		if(co.countValues() > 0){
-			value = co.values().size();
+			value = co.countClass();
+			//value = co.values().size();
 		}
 	}
 

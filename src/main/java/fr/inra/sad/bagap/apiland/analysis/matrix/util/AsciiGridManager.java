@@ -83,22 +83,35 @@ public class AsciiGridManager {
 			cleaners.add(new SpaceAsciiGridCleaner());
 			cleaners.add(new DecimalCharAsciiGridCleaner());
 			cleaners.add(new IntegerAsciiGridCleaner());
+			//cleaners.add(new SearchAndReplaceCleaner("10.0096119938914", "10.0"));
+			//cleaners.add(new SearchAndReplaceCleaner("-3.4e+38", "-1"));
+			//cleaners.add(new SearchAndReplaceCleaner("128", "-1"));
 
 			String line;
+			int i=0;
 			while ((line = br.readLine()) != null) {
+				if(i<6){
+					System.out.println(line);
+					i++;
+				}
+				
 				for (AsciiGridCleaner agc : cleaners) {
 					line = agc.clean(line);
 				}
+			
+				
 				bw.write(line);
 				bw.newLine();
+				
 			}
 
 			br.close();
 			bw.close();
-
+			
 			new File(outAscii).delete();
 			new File(tempAscii).renameTo(new File(outAscii));
 			System.out.println("netoyage du fichier ascii effectué !");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -17,7 +17,9 @@ public class CountCoupleMetric extends MatrixMetric implements CoupleMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
-		value = co.countCouple(couple);
+		if(co.countCouples() >= 0){
+			value = co.countCouple(couple);
+		}
 	}
 
 }

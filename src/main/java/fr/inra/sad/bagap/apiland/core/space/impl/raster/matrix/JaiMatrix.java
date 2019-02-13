@@ -65,6 +65,9 @@ public class JaiMatrix implements Matrix {
 		ite = RandomIterFactory.create(this.pi, null);
 		//ite = RectIterFactory.create(pi, null);
 		pixel = new double[1];
+		values = new HashSet<Integer>();
+		minV = Integer.MAX_VALUE;
+		maxV = Integer.MIN_VALUE;
 		if(read){
 			System.out.println("read");
 			initValues();
@@ -159,7 +162,7 @@ public class JaiMatrix implements Matrix {
 	}
 	
 	private void initValues(){
-		values = new HashSet<Integer>();
+		//values = new HashSet<Integer>();
 		/*
 		RectIter iterator = RectIterFactory.create(pi, null);
 		//RectIter iterator = RectIterFactory.create(pi, new Rectangle(0, 0, pi.getWidth(), pi.getHeight()));
@@ -211,8 +214,8 @@ public class JaiMatrix implements Matrix {
 		
 		RectIter ite = RectIterFactory.create(pi, new Rectangle(0, 0, pi.getWidth(), pi.getHeight()));
 		double v;
-		minV = Integer.MAX_VALUE;
-		maxV = Integer.MIN_VALUE;
+		//minV = Integer.MAX_VALUE;
+		//maxV = Integer.MIN_VALUE;
 		int line = 0;
 		do {
 			do {
@@ -278,6 +281,9 @@ public class JaiMatrix implements Matrix {
 	public void put(int x, int y, double value) {
 		pixel[0] = value;
 		wr.setPixel(x, y, pixel);
+		values.add((int) value);
+		minV = Math.min(minV, value);
+		maxV = Math.max(maxV, value);
 	}
 
 	@Override

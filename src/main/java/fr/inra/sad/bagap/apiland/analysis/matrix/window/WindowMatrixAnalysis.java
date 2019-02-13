@@ -5,7 +5,7 @@ import java.util.Set;
 import fr.inra.sad.bagap.apiland.analysis.matrix.MatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessObserver;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;

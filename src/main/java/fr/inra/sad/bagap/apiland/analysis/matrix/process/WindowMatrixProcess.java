@@ -1,6 +1,6 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process;
 
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 

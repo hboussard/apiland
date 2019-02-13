@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcess;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;

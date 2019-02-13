@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
@@ -25,8 +26,28 @@ public class SquareWindow extends WindowShape {
 	
 	private List<Pixel> removeVerticalDownList;
 	
+	// structure de données pour la fonction de distance
+	// ou structure de données pour les distances par pixel
+	// ou délégation à la forme de fenêtre
+	private double[][] distance;
+		
+	private double[][] weigted;
+		
+	private double[][] weigtedH;
+		
+	private double[][] weigtedV;
+	
+	/*
 	public SquareWindow(int s){
 		this.size = s;
+	}*/
+	
+	public SquareWindow(int s, DistanceFunction function){
+		super(function);
+		this.size = s;
+		if(function != null){
+			
+		}
 	}
 
 	@Override

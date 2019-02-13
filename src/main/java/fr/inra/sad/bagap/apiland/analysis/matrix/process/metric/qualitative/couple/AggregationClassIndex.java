@@ -20,7 +20,7 @@ public class AggregationClassIndex extends MatrixMetric implements ValueMetric, 
 	public void doCalculate(Counting co) {
 		value = -1;
 		if(co.countCouples() > 0){
-			int ai = co.countValue(classMetric);
+			int ai = (int) co.countValue(classMetric);
 			int n=1, n2;
 			for(; ; n++){
 				n2 = (int) Math.pow(n, 2);
@@ -41,9 +41,9 @@ public class AggregationClassIndex extends MatrixMetric implements ValueMetric, 
 			}else{
 				G = 2*n*(n-1) + 2*m -2;
 			}
-			int g = co.countCouple(Couple.get(classMetric, classMetric));
+			double g = co.countCouple(Couple.get(classMetric, classMetric));
 			if(G != 0){
-				value =  new Double(g) / G * 100.0;
+				value = new Double(g) / G * 100.0;
 			}else{
 				value = 0;
 			}

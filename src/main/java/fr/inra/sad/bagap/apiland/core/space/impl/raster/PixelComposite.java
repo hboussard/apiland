@@ -81,6 +81,10 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 		setUserData(userObject.doubleValue());
 	}
 	
+	public void setValue(int value){
+		this.value = value;
+	}
+	
 	public int getValue(){
 		return value;
 	}
@@ -121,6 +125,11 @@ public final class PixelComposite extends Raster implements Iterable<Pixel> {
 	public void addSimplePixel(Pixel p){
 		//rasters.add(p);
 		pixels.add(p);
+	}
+	
+	public void addAllSimplePixels(Set<Pixel> p){
+		//rasters.add(p);
+		pixels.addAll(p);
 	}
 	
 	protected void add(Raster r){

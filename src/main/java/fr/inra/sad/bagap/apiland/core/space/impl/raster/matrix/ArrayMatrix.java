@@ -76,6 +76,7 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		this.height = height;
 		this.width = width;
 		this.cellsize = cellsize;
+		Raster.setCellSize(cellsize);
 		this.minX = minX;
 		this.maxX = maxX;
 		this.minY = minY;
@@ -187,7 +188,6 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		return height * width;
 	}
 			
-	
 	@Override
 	public Iterator<Pixel> iterator() {
 		return new IteratorMatrix(this);

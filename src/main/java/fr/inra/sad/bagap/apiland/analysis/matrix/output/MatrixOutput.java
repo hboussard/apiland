@@ -7,6 +7,7 @@ import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.AbstractMetricOutput;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixFactory;
 
@@ -21,7 +22,9 @@ public class MatrixOutput extends AbstractMetricOutput {
 	public MatrixOutput(String metric, Matrix m){
 		super();
 		this.metric = metric;
-		this.matrix = MatrixFactory.get(m.getType()).create(m);
+		//this.matrix = MatrixFactory.get(m.getType()).create(m);
+		this.matrix = MatrixFactory.get(m.getType()).create(m.width(), m.height(), m.cellsize(), m.minX(), m.maxX(), 
+				m.minY(), m.maxY(), Raster.getNoDataValue());
 	}
 	
 	@Override

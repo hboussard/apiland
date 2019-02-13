@@ -23,18 +23,24 @@ public class DeltaAsciiGridOutput extends AbstractMetricOutput {
 	
 	private int delta;
 	
+	private int xOrigin;
+	
+	private int yOrigin;
+	
 	private BufferedWriter writer;
 	
 	private String metric;
 	
 	private int yGlobal;
 	
-	public DeltaAsciiGridOutput(String metric, String f, int d){
+	public DeltaAsciiGridOutput(String metric, String output, int delta, int xOrigin, int yOrigin){
 		super();
 		this.metric = metric;
-		this.ascii = f;
-		this.delta = d;
-		this.yGlobal = -1;
+		this.ascii = output;
+		this.delta = delta;
+		this.xOrigin = xOrigin;
+		this.yOrigin = yOrigin;
+		this.yGlobal = yOrigin - 1;
 	}
 	
 	@Override
@@ -53,18 +59,21 @@ public class DeltaAsciiGridOutput extends AbstractMetricOutput {
 	private void notifyAnalysisInit(WindowMatrixAnalysis wa) {
 		try {
 			
+			int width = wa.matrix().width() - xOrigin;
+			int height = wa.matrix().height() - yOrigin;
 			
-			int nc = new Double(wa.matrix().width()/delta).intValue();
-			if(wa.matrix().width()%delta != 0){
+			int nc = width / delta;
+			if(width%delta != 0){
 				nc++;
 			}
-			int nr = new Double(wa.matrix().height()/delta).intValue();
-			if(wa.matrix().height()%delta != 0){
+			int nr = new Double(height/delta).intValue();
+			if(height%delta != 0){
 				nr++;
 			}
 			
-			double decalage = ((delta-1)*Raster.getCellSize())/2;
-			double mod = (wa.matrix().height() * Raster.getCellSize() + decalage) % (delta * Raster.getCellSize());
+			double xdecalage = ((delta-1)*Raster.getCellSize())/2 - xOrigin*Raster.getCellSize();
+			double ydecalage = ((delta-1)*Raster.getCellSize())/2 - yOrigin*Raster.getCellSize();
+			double mod = (wa.matrix().height() * Raster.getCellSize() + ydecalage) % (delta * Raster.getCellSize());
 			
 			writer = new BufferedWriter(new FileWriter(ascii));
 			
@@ -74,7 +83,7 @@ public class DeltaAsciiGridOutput extends AbstractMetricOutput {
 			writer.write("nrows "+nr);
 			writer.newLine();
 			
-			writer.write("xllcorner "+(wa.matrix().minX() - decalage));
+			writer.write("xllcorner "+(wa.matrix().minX() - xdecalage));
 			writer.newLine();
 			/*
 			System.out.println("nb colonnes : "+nc);

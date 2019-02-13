@@ -1,12 +1,9 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch;
 
-import fr.inra.sad.bagap.apiland.analysis.Stats;
 import fr.inra.sad.bagap.apiland.analysis.VariableManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.PatchMetric;
-import fr.inra.sad.bagap.apiland.patch.Patch;
-import fr.inra.sad.bagap.apiland.patch.PatchComposite;
 
 public class VariationCoefficientPatchSizeMetric extends MatrixMetric implements PatchMetric {
 
@@ -16,6 +13,8 @@ public class VariationCoefficientPatchSizeMetric extends MatrixMetric implements
 	
 	@Override
 	public void doCalculate(Counting co) {
+		//value = co.getVariationCoefficientPatchSize();
+		/*
 		value = 0;
 		Stats s = new Stats();
 		for(Patch p : ((PatchComposite) co.patches()).patches()){
@@ -29,7 +28,7 @@ public class VariationCoefficientPatchSizeMetric extends MatrixMetric implements
 		}else{
 			value = s.getVariationCoefficient();
 		}
-		
+		*/
 	}
 
 }

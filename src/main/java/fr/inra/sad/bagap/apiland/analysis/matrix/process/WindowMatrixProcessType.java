@@ -1,6 +1,6 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process;
 
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
@@ -25,8 +25,8 @@ public class WindowMatrixProcessType extends MatrixProcessType {
 	private double vc;
 	
 	/** constructor */
-	public WindowMatrixProcessType(Matrix m){
-		super(m);
+	public WindowMatrixProcessType(boolean distanceType, Matrix m){
+		super(distanceType, m);
 		
 		horizontals = new double[m.width()];
 		for(int x=0; x<m.width(); x++){
@@ -37,6 +37,11 @@ public class WindowMatrixProcessType extends MatrixProcessType {
 		for(int y=0; y<m.height(); y++){
 			verticals[y] = Raster.getNoDataValue();
 		}
+	}
+	
+	/** constructor */
+	public WindowMatrixProcessType(Matrix m){
+		this(false, m);
 	}
 	
 	/**

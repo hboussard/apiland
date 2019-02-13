@@ -10,17 +10,20 @@ import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.DeltaAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.SelectedAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.SelectedCsvOutput;
+import fr.inra.sad.bagap.apiland.analysis.matrix.pixel.combination.CombinationExpressionFactory;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.MultipleWindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetricManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysisBuilder;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.CenteredWindow;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.MultipleWindow;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.Window;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.WindowShapeType;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.CenteredWindow;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.MultipleWindow;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.window.WindowAnalysisType;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Friction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.treatment.GlobalTreatmentManager;
@@ -50,6 +53,10 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 	
 	private String path;
 	
+	private boolean distanceType;
+	
+	private String distanceFunction;
+	
 	public SelectedWindowMatrixTreatment() {
 		super("selected", GlobalTreatmentManager.get());
 		defineInput("matrix", Matrix.class);
@@ -63,6 +70,8 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 		defineInput("csv", String.class);
 		defineInput("ascii", String.class);
 		defineInput("path", String.class);
+		defineInput("distance_type", Boolean.class);
+		defineInput("distance_function", String.class);
 	}
 
 	@Override
@@ -78,15 +87,17 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 		ascii = (String) getInput("ascii");
 		pixels = (Set<Pixel>) getInput("pixels");
 		path = (String) getInput("path");
+		distanceType = (Boolean) getInput("distance_type");
+		distanceFunction = (String) getInput("distance_function");
 	}
 
 	@Override
 	protected void doRun() {
 		WindowMatrixProcessType pt;
 		if(windowSizes.size() == 1){
-			pt = new WindowMatrixProcessType(matrix);
+			pt = new WindowMatrixProcessType(distanceType, matrix);
 		}else{
-			pt = new MultipleWindowMatrixProcessType(matrix);
+			pt = new MultipleWindowMatrixProcessType(distanceType, matrix);
 		}
 		//WindowMatrixProcessType pt = new WindowMatrixProcessType(matrix);
 		
@@ -96,24 +107,40 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 			
 		Window w;
 		if(windowSizes.size() == 1){
+			
+			DistanceFunction function = null;
+			if(distanceType){
+				double dMax = ((windowSizes.get(0)-1)/2)*Raster.getCellSize();
+				//function = new DistanceFunction(distanceFunction, dMax);	
+				function = CombinationExpressionFactory.createDistanceFunction(distanceFunction, dMax);
+			}
+			
 			if(frictionMap != null){
-				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMap, pt));
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMap, pt, function));
 			}else if(frictionMatrix != null){
-				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMatrix, pt));
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMatrix, pt, function));
 			}else{
-				w = new CenteredWindow(shape.create(windowSizes.get(0)));
+				w = new CenteredWindow(shape.create(windowSizes.get(0), function));
 			}
 		}else{
 			Collections.sort(windowSizes);
 			Collections.reverse(windowSizes);
 			Window[] ws = new Window[windowSizes.size()];
 			for(int i=0; i<windowSizes.size(); i++){
+				
+				DistanceFunction function = null;
+				if(distanceType){
+					double dMax = ((windowSizes.get(i)-1)/2)*Raster.getCellSize();
+					 //function = new DistanceFunction(distanceFunction, dMax);
+					 function = CombinationExpressionFactory.createDistanceFunction(distanceFunction, dMax);
+				}
+				
 				if(frictionMap != null){
-					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMap, pt));
+					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMap, pt, function));
 				}else if(frictionMatrix != null){
-					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMatrix, pt));
+					ws[i] = new CenteredWindow(shape.create(matrix, (windowSizes.get(i))*matrix.cellsize()/2, frictionMatrix, pt, function));
 				}else{
-					ws[i] = new CenteredWindow(shape.create(windowSizes.get(i)));
+					ws[i] = new CenteredWindow(shape.create(windowSizes.get(i), function));
 				}
 			}
 			w = new MultipleWindow(ws);

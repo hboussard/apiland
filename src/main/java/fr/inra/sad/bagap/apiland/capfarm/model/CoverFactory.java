@@ -43,6 +43,10 @@ public class CoverFactory {
 		}
 	}
 	
+	public static void init(Covering system, String coverFile){
+		init(system, coverFile, null);
+	}
+	
 	public static void init(Covering system, String coverFile, String groupFile) {
 		//System.out.println("initialisation des couverts");
 		

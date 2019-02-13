@@ -240,6 +240,9 @@ public class CoordinateManager {
 		double v;
 		boolean ok;
 		int index = 0;
+		
+		//System.out.println(with);
+		
 		while(pixels.size() < n){
 			if((index++) > controlIndex){
 				throw new IllegalArgumentException("incompatible parameters for matrix "+m+" : distance = "+d+",  number = "+n+", maximum observed = "+pixels.size());
@@ -282,6 +285,10 @@ public class CoordinateManager {
 				}
 			}
 		}
+		
+		/*for(Pixel p : pixels){
+			System.out.println(p+" "+m.get(p));
+		}*/
 	}
 	
 	public static void dispatch(Set<Pixel> pixels, Set<Matrix> matrix, int n, int d, Set<Integer> with, Set<Integer> without) throws IllegalArgumentException{

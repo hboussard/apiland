@@ -13,10 +13,9 @@ public class BaudryBurelHeterogeneityIndex extends MatrixMetric implements Coupl
 	
 	@Override
 	public void doCalculate(Counting co) {
-		value = 0;
 		if(co.countCouples() > 0){
+			value = 0;
 			double p;
-			
 			for(double c : co.couples()){
 				p = co.countCouple(c) / (double)co.validCouples(); 
 				if(p != 0){

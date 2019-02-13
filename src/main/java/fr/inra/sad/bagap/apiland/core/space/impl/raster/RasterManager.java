@@ -202,6 +202,7 @@ public class RasterManager {
 		
 		for(Raster rr : ((RasterComposite) r).getRasters()){
 			int value = ((PixelComposite) rr).getValue();
+			//System.out.println("-> "+((PixelComposite) rr).size()+" "+value);
 			for(Pixel p : rr){
 				m.put(p, value);
 			}

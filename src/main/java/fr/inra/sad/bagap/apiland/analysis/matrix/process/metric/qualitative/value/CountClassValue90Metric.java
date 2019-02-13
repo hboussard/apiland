@@ -3,10 +3,8 @@ package fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.val
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fr.inra.sad.bagap.apiland.analysis.VariableManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
-import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting.Count;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.ValueMetric;
 
@@ -25,7 +23,7 @@ public class CountClassValue90Metric extends MatrixMetric implements ValueMetric
 			List<Integer> areas = new ArrayList<Integer>();
 			
 			for(int value : co.values()){
-				v = co.countValue(value);
+				v = (int) co.countValue(value);
 				areas.add(v);
 				total += v;
 			}

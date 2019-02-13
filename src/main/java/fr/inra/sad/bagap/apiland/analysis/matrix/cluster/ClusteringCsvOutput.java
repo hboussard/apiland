@@ -1,7 +1,9 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.cluster;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -26,28 +28,35 @@ public class ClusteringCsvOutput implements AnalysisObserver{
 	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void notify(Analysis ma, AnalysisState state) {
-		ClusteringAnalysis ca = (ClusteringAnalysis) ma;
 		switch(state){
 			case DONE : 
-				Map<Integer, PixelComposite> map = new TreeMap<Integer, PixelComposite>();
-				for(Raster rr : ((RasterComposite) ca.getResult()).getRasters()){
-					map.put(((PixelComposite) rr).getValue(), ((PixelComposite) rr));
+				Map<Integer, Set<PixelComposite>> map = new TreeMap<Integer, Set<PixelComposite>>();
+				for(Raster rr : ((RasterComposite) ma.getResult()).getRasters()){
+					int v = ((PixelComposite) rr).getValue();
+					if(!map.containsKey(v)){
+						map.put(v, new HashSet<PixelComposite>());
+					}
+					map.get(v).add((PixelComposite) rr);
 				}
-
+				
 				CsvWriter cw = new CsvWriter(csv);
 				cw.setDelimiter(';');
 
 				try {
 					cw.write("id");
-					cw.write("type");
+					//cw.write("type");
 					cw.write("count");
 					cw.write("area");
 					cw.endRecord();
-					for(PixelComposite pc : map.values()){
-						cw.write(pc.getValue()+"");
-						cw.write((int) pc.getUserData()+"");
-						cw.write(pc.size()+"");
-						cw.write(pc.getArea()+"");
+					for(Entry<Integer, Set<PixelComposite>> e : map.entrySet()){
+						cw.write(e.getKey()+"");
+						//cw.write((int) pc.getUserData()+"");
+						int size = 0;
+						for(PixelComposite pc : e.getValue()){
+							size += pc.size();
+						}
+						cw.write(size+"");
+						cw.write((size*Math.pow(Raster.getCellSize(), 2))+"");
 						cw.endRecord();
 					}
 					cw.close();
