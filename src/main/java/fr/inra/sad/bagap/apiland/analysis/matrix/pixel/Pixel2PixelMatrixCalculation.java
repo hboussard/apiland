@@ -25,7 +25,6 @@ public abstract class Pixel2PixelMatrixCalculation extends MatrixCalculation {
 	
 	protected abstract double treatPixel(Pixel p);
 	
-
 	@Override
 	protected void doInit() {}
 

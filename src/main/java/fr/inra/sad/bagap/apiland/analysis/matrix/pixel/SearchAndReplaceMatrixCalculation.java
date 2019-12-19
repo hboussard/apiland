@@ -5,25 +5,22 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class SearchAndReplaceMatrixCalculation extends Pixel2PixelMatrixCalculation {
 
-	private double newValue;
+	private Double[] oldValues;
 	
-	private int[] old;
+	private Double[] newValues;
 	
-	public SearchAndReplaceMatrixCalculation(Matrix m, double newValue, int... old){
+	public SearchAndReplaceMatrixCalculation(Matrix m, Double[] oldValues, Double[] newValues){
 		super(m);
-		this.newValue = newValue;
-		this.old = old;
+		this.oldValues = oldValues;
+		this.newValues = newValues;
 	}
-	
-	@Override
-	public void doInit() {}
 	
 	@Override
 	protected double treatPixel(Pixel p) {
 		double v = matrix().get(p);
-		for(double o : old){
-			if(v == o){
-				return newValue;
+		for(int io=0; io<oldValues.length; io++){
+			if(oldValues[io] == v){
+				return newValues[io];
 			}
 		}
 		return v;
@@ -31,7 +28,8 @@ public class SearchAndReplaceMatrixCalculation extends Pixel2PixelMatrixCalculat
 
 	@Override
 	public void doClose() {
-		old = null;
+		oldValues = null;
+		newValues = null;
 	}
 
 }

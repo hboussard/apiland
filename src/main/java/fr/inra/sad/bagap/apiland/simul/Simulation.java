@@ -135,6 +135,7 @@ public class Simulation implements Serializable {
 		
 		// calcul des sorties
 		outputs().calculate(this);
+		
 		return true;
 	}
 	
@@ -196,10 +197,16 @@ public class Simulation implements Serializable {
 		scenario = null;
 		model = null;
 	}
+
 	
 	/*
 	public void addOutput(OutputAnalysis out){
 		simulator().addOutput(out);
 	}
 	*/
+	
+	public void deleteSuccess(){
+		this.cancel = true;
+		this.scenario.deleteSuccess();
+	}
 }

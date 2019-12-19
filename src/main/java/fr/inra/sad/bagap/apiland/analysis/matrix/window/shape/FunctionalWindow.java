@@ -84,10 +84,10 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		matrix = m;
 		dMax = d;
 		fmin = min;
+		//System.out.println("min "+min);
 		this.displacement = displacement;
 		locations = new TreeMap<Pixel, LocateFunctionalWindow>();
 		
-		//System.out.println(diameter());
 		rcm = ArrayMatrixFactory.get().create(diameter(), diameter(), m.cellsize(), 0, 0, 0, 0, Raster.getNoDataValue());
 		
 		waits = new TreeSet<Pixel>(new Comparator<Pixel>(){
@@ -206,13 +206,24 @@ public abstract class FunctionalWindow extends WindowShape implements ProcessObs
 		//System.out.println("diameter "+new Double((2*dMax/matrix.cellsize())+1).intValue());
 		//return new Double((2*dMax/matrix.cellsize())+1).intValue();
 		//return new Double((2*dMax/matrix.cellsize())).intValue();
-		int v = new Double((2*dMax/matrix.cellsize())/fmin).intValue();
-		if(v % 2 == 0){
-			return new Double((2*dMax/matrix.cellsize())/fmin).intValue()+1;
-		}else{
-			return new Double((2*dMax/matrix.cellsize())/fmin).intValue();
-		}
+		//if(fmin != Raster.getNoDataValue()){
+		fmin = 1;
+		//System.out.println(dMax+" "+matrix.cellsize()+" "+fmin);
 		
+			int v = new Double((2*dMax/matrix.cellsize())/fmin).intValue();
+			if(v % 2 == 0){
+				return new Double((2*dMax/matrix.cellsize())/fmin).intValue()+1;
+			}else{
+				return new Double((2*dMax/matrix.cellsize())/fmin).intValue();
+			}
+		/*}else{
+			int v = new Double((2*dMax/matrix.cellsize())).intValue();
+			if(v % 2 == 0){
+				return new Double((2*dMax/matrix.cellsize())).intValue()+1;
+			}else{
+				return new Double((2*dMax/matrix.cellsize())).intValue();
+			}
+		}*/
 	}
 	
 	@Override

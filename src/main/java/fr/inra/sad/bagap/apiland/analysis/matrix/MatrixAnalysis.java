@@ -50,5 +50,5 @@ public abstract class MatrixAnalysis extends Analysis {
 	protected void doClose() {
 		// do nothing
 	}
-
+	
 }

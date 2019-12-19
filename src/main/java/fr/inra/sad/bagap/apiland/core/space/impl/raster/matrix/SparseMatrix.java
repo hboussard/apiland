@@ -311,5 +311,11 @@ public class SparseMatrix implements Matrix{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void resetValues() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

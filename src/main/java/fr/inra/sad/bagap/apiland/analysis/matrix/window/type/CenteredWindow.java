@@ -1,9 +1,7 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.window.type;
 
 import java.util.List;
-
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.WindowShape;
-import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 

@@ -29,14 +29,19 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 	
 	private String path;
 	
-	public SelectedWindowMatrixAnalysis(Matrix m, Window w, WindowMatrixProcessType pType, double minRate, Set<Pixel> pixels, String path) {
+	private boolean exportFilters;
+	
+	public SelectedWindowMatrixAnalysis(Matrix m, Window w, WindowMatrixProcessType pType, double minRate, Set<Pixel> pixels, String path, boolean exportFilters) {
 		super(m, w, pType);
 		Metric.setMinRate(minRate);
 		this.pixels = pixels;
 		this.path = path;
+		this.exportFilters = exportFilters;
+		/*
 		for(Pixel p : pixels){
 			System.out.println("##"+p);
 		}
+		*/
 	}
 	
 	@Override
@@ -107,7 +112,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 				p = PixelManager.get(xp, yp);
 				
 				if(pixels.contains(p)){
-					wp = processType().create(window(), p);
+					wp = processType().create(window(), p, true);
 					processes.add(wp);
 				}
 			}
@@ -124,6 +129,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 	
 	private void distributeValues(int xt, int yt) {
 		//System.out.println("distribution des valeurs de la tuile "+xt+" "+yt);
+		//System.out.println("nombre de processus : "+processes.size());
 		double v;
 		int total = matrix().width()*matrix().height();
 		for(int y=yt*matrix().tileHeight(); y<(yt+1)*matrix().tileHeight() && y<matrix().height(); y++) {
@@ -137,7 +143,7 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 				
 				//System.out.println(processes.size());
 				for(WindowMatrixProcess wp : processes){
-					//System.out.println(wp);
+					//System.out.println(wp.getClass());
 					wp.add(x, y, v);
 				}
 					
@@ -187,22 +193,28 @@ public class SelectedWindowMatrixAnalysis extends WindowMatrixAnalysis implement
 					pixel = pix;
 					break;
 				}
+			}if(exportFilters){
+				if(pixel != null){
+					p.window().export(pixel, matrix(), path+"filters/");
+				}else{
+					p.window().export(p.pixel(), matrix(), path+"filters/");
+				}
 			}
-			if(pixel != null){
-				p.window().export(pixel, matrix(), path+"filters/");
-			}else{
-				p.window().export(p.pixel(), matrix(), path+"filters/");
-			}
-			
 		}
 	}
 
 	private void notifyProcessDone(WindowMatrixProcess wp) {
+		//System.out.println(wp.getClass());
 		dones.add(wp);
 		wp.delete();
 		//System.out.println(wp.getClass());
 		//System.out.println("destruction du processus "+wp.pixel());
+		//for(WindowMatrixProcess wmp : processes){
+		//	System.out.println(wmp.pixel());
+		//}
+		//System.out.println("nombre de processus avant : "+processes.size());
 		//processes.remove(wp);
+		//System.out.println("nombre de processus après : "+processes.size());
 		wp = null;
 		update = true;
 	}

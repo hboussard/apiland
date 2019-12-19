@@ -41,7 +41,7 @@ public class RepetitionConstraint extends CoverAllocationConstraint<Integer, Int
 				switch(mode()){
 				case ONLY :
 					if(count < min){
-						//if(!((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).hasOnlyForValue(cap.starts(ip), cap.getTime(), covers())){
+						if(!((DynamicAttribute<CoverUnit>) p.getAttribute("cover")).hasOnlyForValue(cap.starts(ip), cap.getTime(), covers())){
 							if(hasSingleCover()){
 								
 								int ic = cap.covers().get(getSingleCover());
@@ -55,7 +55,7 @@ public class RepetitionConstraint extends CoverAllocationConstraint<Integer, Int
 								}
 								cap.solver().post(LCF.or(cons));
 							}
-						//}
+						}
 					}else if(hasMax){
 						if(count >= max){
 							if(hasSingleCover()){

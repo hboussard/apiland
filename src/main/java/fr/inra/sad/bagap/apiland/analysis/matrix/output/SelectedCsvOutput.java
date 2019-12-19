@@ -118,11 +118,11 @@ public class SelectedCsvOutput extends AbstractMetricOutput implements MetricOut
 				out.write(CoordinateManager.getProjectedY(matrix, p.y())+"");
 			}
 			
+			
 			if(values.containsKey(p)){
 				Map<String, Double> val = values.get(p);
 				for(String v : val.keySet()){
 					out.write(format(val.get(v)));
-					//System.out.println(p+" "+v+" "+val.get(v));
 				}
 			}else{
 				//System.out.println("pas initialisee pour "+p);

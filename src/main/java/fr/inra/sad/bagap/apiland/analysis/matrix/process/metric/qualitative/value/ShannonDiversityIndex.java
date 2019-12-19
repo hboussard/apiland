@@ -13,7 +13,6 @@ public class ShannonDiversityIndex extends MatrixMetric implements ValueMetric {
 	
 	@Override
 	public void doCalculate(Counting co) {
-		
 		if(co.countValues() > 0){
 			value = 0;
 			double p; 

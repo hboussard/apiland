@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.JaiMatrixFactory;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixFactory;
 
@@ -122,13 +123,14 @@ public class ChamferDistance extends MatrixCalculation {
 	}
 	
 	private Matrix compute(Matrix input, int... code) {
-		Matrix output = MatrixFactory.get(input.getType()).create(input.width(), input.height(), input.cellsize(), input.minX(), input.maxX(), input.minY(), input.maxY(), input.noDataValue());
+		//Matrix output = MatrixFactory.get(input.getType()).create(input.width(), input.height(), input.cellsize(), input.minX(), input.maxX(), input.minY(), input.maxY(), input.noDataValue());
+		Matrix output = JaiMatrixFactory.get().create(input.width(), input.height(), input.cellsize(), input.minX(), input.maxX(), input.minY(), input.maxY(), input.noDataValue());
 		//Matrix output = MatrixFactory.get(input.getType()).create(input);
 		this.width = input.width();
 		this.height = input.height();
 		
 		int total = (this.width * this.height) * 5;
-		
+		//System.out.println("1");
 		// initialize distance
 		boolean hasCode = false;
 		for(int y=0; y<height; y++){
@@ -136,11 +138,13 @@ public class ChamferDistance extends MatrixCalculation {
 			for(int x=0; x<width; x++){
 				double v = input.get(x, y);
 				boolean ok = false;
-				for(int c : code){
-					if(c == v){
-						ok = true;
-						hasCode = true;
-						break;
+				if(v != Raster.getNoDataValue()){
+					for(int c : code){
+						if(c == v){
+							ok = true;
+							hasCode = true;
+							break;
+						}
 					}
 				}
 				if(ok){
@@ -154,12 +158,13 @@ public class ChamferDistance extends MatrixCalculation {
 		if(!hasCode){
 			return output;
 		}
+		//System.out.println("2");
 		// forward
 		for(int y=0; y<=height-1; y++) {
 			//System.out.println("2 : "+y);
 			for(int x=0; x<=width-1; x++) {
 				double v = output.get(x, y);
-				if(v<0) {
+				if(v == Raster.getNoDataValue()) {
 					continue;
 				}
 				for(int k=0; k<chamfer.length; k++) {
@@ -181,13 +186,13 @@ public class ChamferDistance extends MatrixCalculation {
 				updateProgression(total);
 			}
 		}
-		
+		//System.out.println("3");
 		// backward
 		for(int y=height-1; y>=0; y--) {
 			//System.out.println("3 : "+y);
 			for(int x=width-1; x>=0; x--) {
 				double v = output.get(x, y);
-				if(v<0) {
+				if(v == Raster.getNoDataValue()) {
 					continue;
 				}
 				for(int k=0;k<chamfer.length;k++) {
@@ -207,16 +212,21 @@ public class ChamferDistance extends MatrixCalculation {
 				updateProgression(total);
 			}
 		}
-		
+		//System.out.println("4");
 		// normalize
 		for(int y=0; y<height; y++){
 			//System.out.println("4 : "+y);
 			for(int x=0; x<width; x++){
-				output.put(x, y, (output.get(x, y)/normalizer) * input.cellsize());
+				double v = output.get(x, y);
+				if(v == Raster.getNoDataValue()) {
+					continue;
+				}
+				//System.out.println(output.get(x, y)+" "+normalizer+" "+input.cellsize());
+				output.put(x, y, (v/normalizer) * input.cellsize());
 				updateProgression(total);
 			}
 		}
-		
+		//System.out.println("5");
 		//nettoyage
 		for(int y=0; y<height; y++){
 			//System.out.println("1 : "+y);

@@ -4,6 +4,7 @@ N-total;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qua
 N-valid;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.basic.ValidValueMetric
 N-type;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.basic.CountValueTypeMetric
 pN-valid;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.basic.RateValidValueMetric
+pN-type;true;value;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.basic.RateCountValueTypeMetric
 average;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.AverageMetric
 variance;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.VarianceMetric
 sum;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.SumMetric
@@ -16,9 +17,9 @@ count_negatives;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.pro
 size;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.SizeMetric
 maximum;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.MaximumMetric
 minimum;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.quantitative.MinimumMetric
+NAT;true;quantitative;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.NaturaliteMetric
 NV;true;value;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.CountValueMetric
 pNV;true;value;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.RateValueMetric
-GRAIN;true;grain;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.GrainMetric
 SHDI;false;diversity;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.ShannonDiversityIndex
 NSHDI;false;diversity;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.NormalizedShannonDiversityIndex
 CSHDI;false;diversity;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.SHDIComplexityIndex
@@ -77,3 +78,7 @@ MPS-class;false;patch;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.me
 HC-class;false;connectivity;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.HanskiConnectivityClassMetric
 NP-class;false;patch;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.patch.NumberOfPatchClassMetric
 HETC;true;diversity;couple;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.HAGGClassIndex
+clean;true;value;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.CleanMetric
+RaoQ;false;diversity;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.value.RaoQIndex
+CONTAG;false;connectivity;;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.ContagionMetric
+ECON;false;connectivity;value;fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.qualitative.couple.EdgeContrastMetric

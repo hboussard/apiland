@@ -97,6 +97,7 @@ public class FarmMemoryOutput extends OutputAnalysis {
 					for(Parcel p : model.getCoverAllocator().parcels()){
 						cw.write(p.getId());
 						cw.write((String) p.getAttribute("strict_seq").getValue(simulation.manager().end()));
+						//cw.write((String) p.getAttribute("seq_year").getValue(simulation.manager().end()));
 						cw.endRecord();
 					}
 					

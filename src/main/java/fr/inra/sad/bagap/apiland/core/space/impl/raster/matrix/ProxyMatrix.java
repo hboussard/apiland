@@ -238,4 +238,10 @@ public class ProxyMatrix implements Matrix {
 		return false;
 	}
 
+	@Override
+	public void resetValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

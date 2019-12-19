@@ -6,7 +6,6 @@ import java.util.TreeMap;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.CountingDecorator;
-import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting.Count;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 public class ValueCounting extends CountingDecorator {

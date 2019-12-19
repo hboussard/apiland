@@ -8,12 +8,12 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 	
 	private Matrix friction;
 	
-	private double min;
+	//private double min;
 	
 	public FunctionalWindowWithMatrix(Matrix m, double d, Matrix f, DistanceFunction function){
 		super(m, d, f.minV(), function);
 		this.friction = f;
-		this.min = f.minV();
+		//this.min = f.minV();
 		initTheoriticalSize();
 		//this.min = 1;
 	}
@@ -21,7 +21,7 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 	public FunctionalWindowWithMatrix(Matrix m, double d, Matrix f){
 		super(m, d, f.minV());
 		this.friction = f;
-		this.min = f.minV();
+		//this.min = f.minV();
 		initTheoriticalSize();
 		//this.min = 1;
 	}
@@ -29,7 +29,7 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 	public FunctionalWindowWithMatrix(Matrix m, double d, int displacement, Matrix f, DistanceFunction function){
 		super(m, d, displacement, function);
 		this.friction = f;
-		this.min = f.minV();
+		//this.min = f.minV();
 		initTheoriticalSize();
 		//this.min = 1;
 	}
@@ -37,14 +37,14 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 	public FunctionalWindowWithMatrix(Matrix m, double d, int displacement, Matrix f){
 		super(m, d, displacement);
 		this.friction = f;
-		this.min = f.minV();
+		//this.min = f.minV();
 		initTheoriticalSize();
 		//this.min = 1;
 	}
 	
 	@Override
 	public int width() {
-		int v = new Double(((2*dMax/matrix.cellsize())/min)+1).intValue();
+		int v = new Double(((2*dMax/matrix.cellsize())/*/min*/)+1).intValue();
 		if(v % 2 == 0){
 			return v - 1;
 		}else{
@@ -54,7 +54,7 @@ public class FunctionalWindowWithMatrix extends FunctionalWindow {
 
 	@Override
 	public int height() {
-		int v = new Double(((2*dMax/matrix.cellsize())/min)+1).intValue();
+		int v = new Double(((2*dMax/matrix.cellsize())/*/min*/)+1).intValue();
 		if(v % 2 == 0){
 			return v - 1;
 		}else{

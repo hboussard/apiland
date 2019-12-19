@@ -51,7 +51,7 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 	
 	private double minX, maxY ,minY, maxX;
 	
-	private int noDataValue;
+	//private int noDataValue;
 	
 	private double cellsize; 
 	
@@ -81,7 +81,7 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		this.maxX = maxX;
 		this.minY = minY;
 		this.maxY = maxY;
-		this.noDataValue = noDataValue;
+		Raster.setNoDataValue(noDataValue);
 		this.tab = new double[height][width];
 		values = new HashSet<Integer>();
 	}
@@ -103,7 +103,7 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		this.maxX = matrix.maxX();
 		this.minY = matrix.minY();
 		this.maxY = matrix.maxY();
-		this.noDataValue = matrix.noDataValue();
+		Raster.setNoDataValue(matrix.noDataValue());
 		this.tab = new double[height][width];
 		values = new HashSet<Integer>();
 	}
@@ -145,7 +145,7 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		try{
 			return tab[y][x];
 		}catch(Exception ex){
-			return noDataValue;
+			return noDataValue();
 		}
 	}
 	
@@ -157,7 +157,7 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 	@Override
 	public void put(final int x, final int y, final double value){
 		tab[y][x] = value;
-		if(value != noDataValue){
+		if(value != noDataValue()){
 			values.add(new Double(value).intValue());
 		}
 	}
@@ -210,7 +210,7 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 		double area = 0.0;
 		double pow = Math.pow(cellsize,2);
 		for(Pixel p : this){
-			if(get(p) != noDataValue){
+			if(get(p) != noDataValue()){
 				area += pow;
 			}
 		}
@@ -244,9 +244,9 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 
 	@Override
 	public int noDataValue() {
-		return noDataValue;
+		return Raster.getNoDataValue();
 	}
-
+	
 	@Override
 	public Set<Integer> values() {
 		return values;
@@ -343,6 +343,12 @@ public class ArrayMatrix implements Matrix, Iterable<Pixel>{
 			}
 		}
 		return max;
+	}
+
+	
+	@Override
+	public void resetValues() {
+		values.clear();
 	}
 
 	/*

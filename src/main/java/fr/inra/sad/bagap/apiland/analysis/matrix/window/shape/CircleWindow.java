@@ -415,7 +415,7 @@ public class CircleWindow extends WindowShape{
 			out.write("cellsize ");
 			out.write(Raster.getCellSize()+"");
 			out.newLine();
-			out.write("NODATA_value  ");
+			out.write("NODATA_value ");
 			out.write(Raster.getNoDataValue()+"");
 			out.newLine();
 			

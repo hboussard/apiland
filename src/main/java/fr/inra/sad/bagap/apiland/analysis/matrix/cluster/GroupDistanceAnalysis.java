@@ -93,12 +93,10 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 	protected void doRun() {
 		try {
 			Matrix mD = distance(matrix());
-			
 			for(double distance : distances){
-				Matrix mClassif = classification(mD, distance);
-				
+				//accessibilite(mD, distance);
+				Matrix mClassif = classification(matrix(), mD, distance);
 				Matrix mCluster = cluster(mClassif);
-				
 				overlay(matrix(), mCluster, distance);
 			}
 		} catch (NumberFormatException e) {
@@ -112,27 +110,54 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 		MatrixCalculation cdistance = null;
 		
 		if(frictionMap != null){
-			cdistance = new RCMDistanceCalculation(matrix, frictionMap, interest, getMaxDistance()/2);
+			cdistance = new RCMDistanceCalculation(matrix, frictionMap, interest, getMaxDistance()+1/2);
+		}else if(frictionMat != null){
+			cdistance = new RCMDistanceCalculation(matrix, frictionMat, interest, getMaxDistance()+1/2);
 		}else{
 			cdistance = new ChamferDistance(matrix, interest);
 		}
 		
 		cdistance.addObserver(this);
 		Matrix d = cdistance.allRun();
-		//MatrixManager.exportAsciiGrid(d, path+"/distance.asc");
+		//MatrixManager.exportAsciiGridAndVisualize(d, path+"/distance.asc");
 		return d;
 	}
 	
-	private Matrix classification(Matrix mD, double distance) {
+	private Matrix accessibilite(Matrix mD, double dMax){
+		try{
+			Pixel2PixelMatrixCalculation accessibilite = new Pixel2PixelMatrixCalculation(mD){
+				@Override
+				protected double treatPixel(Pixel p) {
+					double v = matrix().get(p);
+					if(v < (dMax/2)){
+						return dMax - v;
+					}
+					return 0;
+				}
+			};
+			accessibilite.addObserver(this);
+			Matrix m = accessibilite.allRun();
+			MatrixManager.exportAsciiGrid(m, path+"test.asc");
+			return m;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private Matrix classification(Matrix matrix, Matrix mD, double distance) {
 		//System.out.println("classification "+name);
 		try{
 			Pixel2PixelMatrixCalculation classif = new Pixel2PixelMatrixCalculation(mD){
 				@Override
 				protected double treatPixel(Pixel p) {
 					double v = matrix().get(p);
-					if(v == Raster.getNoDataValue()){
+					if(interest.contains((int) matrix.get(p))){
+						return 1;
+					}else if(v == Raster.getNoDataValue()){
 						return Raster.getNoDataValue();
-					}else if(v <= ((distance-Raster.getCellSize())/2)){
+					//}else if(v <= ((distance-Raster.getCellSize())/2)){
+					}else if(v <= (distance/2)){
 						return 1;
 					}else{ 
 						return 0;
@@ -141,7 +166,9 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 			};
 			classif.addObserver(this);
 			Matrix m = classif.allRun();
-			//MatrixManager.exportAsciiGrid(m, path+"/classification.asc");
+			//String[] splitdistances = new Double(distance).toString().split("\\.");
+			//String d = splitdistances[0];
+			//MatrixManager.exportAsciiGrid(m, path+"cluster_classification_"+name+"_"+d+".asc");
 			return m;
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -154,10 +181,17 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 		try {
 			Set<Integer> vcluster = new HashSet<Integer>();
 			vcluster.add(1);
-			ClusteringQueenAnalysis cqa = new ClusteringQueenAnalysis(mClassif, vcluster);
-			cqa.addObserver(this);
-			Matrix mCluster = RasterManager.exportMatrix((Raster) cqa.allRun(), mClassif);
+			//ClusteringQueenAnalysis cqa = new ClusteringQueenAnalysis(mClassif, vcluster);
+			//ClusteringRookAnalysis cqa = new ClusteringRookAnalysis(mClassif, vcluster);
+			//cqa.addObserver(this);
+			//Matrix mCluster = RasterManager.exportMatrix((Raster) cqa.allRun(), mClassif);
 			//MatrixManager.exportAsciiGrid(mCluster, path+"/cluster_queen.asc");
+			
+			ClusteringQueen ca = new ClusteringQueen(mClassif, vcluster);
+			ca.addObserver(this);
+			Matrix mCluster = (Matrix) ca.allRun();
+			//MatrixManager.exportAsciiGridAndVisualize(m2, "C:/Hugues/temp/c5_queen.asc");
+			
 			return mCluster;
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -176,14 +210,19 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 			}else{
 				String[] splitdistances = new Double(distance).toString().split("\\.");
 				String d = splitdistances[0]/*+"-"+splitdistances[1]*/;
-				csv = path+"cluster_"+name+"_"+d+".csv";
-				ascii = path+"cluster_"+name+"_"+d+".asc";
+				csv = path+name+"_"+d+".csv";
+				ascii = path+name+"_"+d+".asc";
 			}
 
 			GroupOverlay co = new GroupOverlay(interest, minimumAreas, minimumTotal, csv, mCluster, mOccsol);
 			co.addObserver(this);
 			//MatrixManager.exportAsciiGridAndVisualize(cy.allRun(), path+"cluster/cluster_"+code+"_"+size+".asc");
-			MatrixManager.exportAsciiGrid(co.allRun(), ascii);
+			Matrix m = co.allRun();
+			MatrixManager.exportAsciiGrid(m, ascii);
+			
+			setResult(m);
+			
+			//System.out.println(co.getNbPatch()+" "+co.getTotalSurface()+" "+(co.getTotalSurface()/co.getNbPatch()));
 		} catch (NumberFormatException /*| IOException*/ e) {
 			e.printStackTrace();
 		}

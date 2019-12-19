@@ -84,7 +84,7 @@ public class AsciiGridManager {
 			cleaners.add(new DecimalCharAsciiGridCleaner());
 			cleaners.add(new IntegerAsciiGridCleaner());
 			//cleaners.add(new SearchAndReplaceCleaner("10.0096119938914", "10.0"));
-			//cleaners.add(new SearchAndReplaceCleaner("-3.4e+38", "-1"));
+			cleaners.add(new SearchAndReplaceCleaner("-3.4e+38", "-1"));
 			//cleaners.add(new SearchAndReplaceCleaner("128", "-1"));
 
 			String line;
@@ -146,7 +146,12 @@ public class AsciiGridManager {
 			br.close();
 			bw.close();
 
-			new File(tempAscii).renameTo(new File(outAscii));
+			File fo = new File(outAscii);
+			if(fo.exists()){
+				fo.delete();
+			}
+			new File(tempAscii).renameTo(fo);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{

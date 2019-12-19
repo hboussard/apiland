@@ -36,7 +36,7 @@ public abstract class WindowShape {
 		throw new UnsupportedOperationException();
 	}
 	
-	protected DistanceFunction getDistanceFunction(){
+	public DistanceFunction getDistanceFunction(){
 		return function;
 	}
 	

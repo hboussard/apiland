@@ -49,6 +49,13 @@ import fr.inra.sad.bagap.apiland.core.util.VisuImageJ;
 
 public class MatrixManager {
 
+	private static String epsg = "lambert93.prj";
+	//private static String epsg = "epsg_32719.prj";
+	
+	public static String epsg(){
+		return epsg;
+	}
+	 
 	public static void visualize(String f) {
 		File file = new File(f);
 		if(file.isDirectory()){
@@ -98,7 +105,7 @@ public class MatrixManager {
 			try {
 				//String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
 				//Tool.copy(prj_input, name.replace(".asc", "")+".prj");
-				Tool.copy(DynamicLayerFactory.class.getResourceAsStream("lambert93.prj"), name.replace(".asc", "")+".prj");
+				Tool.copy(DynamicLayerFactory.class.getResourceAsStream(epsg), name.replace(".asc", "")+".prj");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -239,6 +246,7 @@ public class MatrixManager {
 	}
 	
 	public static Matrix retile(Matrix m, int dX, int dY, int ncols, int nrows) {
+		//System.out.println(dX+" "+dY);
 		Matrix mn = MatrixFactory.get(m.getType()).create(
 				ncols, 
 				nrows, 

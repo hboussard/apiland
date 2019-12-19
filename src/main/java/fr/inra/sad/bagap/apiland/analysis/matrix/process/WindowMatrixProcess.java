@@ -30,7 +30,7 @@ public abstract class WindowMatrixProcess extends MatrixProcess {
 	
 	@Override
 	public int compareTo(Process other) { 
-		if(other instanceof SimpleWindowMatrixProcess){
+		if(other instanceof WindowMatrixProcess){
 			if(((WindowMatrixProcess) other).pixel.y() > this.pixel.y()){
 				return -1;
 			}else if(((WindowMatrixProcess) other).pixel.y() < this.pixel.y()){

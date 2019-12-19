@@ -18,6 +18,11 @@ public class Envelope {
 		this.ymax = ymax;
 	}
 
+	@Override
+	public String toString(){
+		return xmin+" "+xmax+" "+ymin+" "+ymax;
+	}
+	
 	public int getXmin() {
 		return xmin;
 	}

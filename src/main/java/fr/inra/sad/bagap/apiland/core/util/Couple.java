@@ -54,4 +54,22 @@ public class Couple {
 		//return new Double((c - getOne(c)) * 1000).intValue();
 	}
 	
+	public static int getOther(double c, int v){
+		int v1 = new Double(Math.floor(c)).intValue();
+		if(v1 == v){
+			return new Double(Math.round((c - Couple.getOne(c)) * 1000)).intValue();		
+		}
+		return v1;		
+	}
+	
+	public static boolean contains(double c, int i){
+		if(new Double(Math.floor(c)).intValue() == i){
+			return true;
+		}
+		if(new Double(Math.round((c - Couple.getOne(c)) * 1000)).intValue() == i){
+			return true;
+		}
+		return false;
+	}
+	
 }

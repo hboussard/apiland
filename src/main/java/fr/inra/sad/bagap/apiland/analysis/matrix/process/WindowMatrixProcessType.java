@@ -1,10 +1,20 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.process;
 
+import java.io.File;
+import java.io.IOException;
+
+import com.csvreader.CsvReader;
+import com.csvreader.CsvReader.CatastrophicException;
+import com.csvreader.CsvReader.FinalizedException;
+
+import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
+import fr.inra.sad.bagap.apiland.analysis.process.metric.DistanceValueMetric;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.util.Couple;
+import fr.inra.sad.bagap.apiland.core.util.DistanceValueMatrix;
 
 /**
  * modeling class of a window process type
@@ -54,6 +64,10 @@ public class WindowMatrixProcessType extends MatrixProcessType {
 	public WindowMatrixProcess create(Window w, Pixel p){
 		return new SimpleWindowMatrixProcess(w, p, this);
 	}
+	
+	public WindowMatrixProcess create(Window w, Pixel p, boolean selected){
+		return this.create(w, p);
+	}
 
 	/**
 	 * to set a value at a specific location
@@ -79,4 +93,34 @@ public class WindowMatrixProcessType extends MatrixProcessType {
 		return vc;
 	}
 	
+	@Override
+	public void addMetric(MatrixMetric wm){
+		super.addMetric(wm);
+		if(wm instanceof DistanceValueMetric){
+			File f = new File(matrix().getFile());
+			String distanceMatrixFile = f.getParent()+"/"+f.getName().replace(".asc", "")+".distance";
+			try {
+				CsvReader cr = new CsvReader(distanceMatrixFile);
+				cr.setDelimiter(';');
+				cr.readHeaders();
+				DistanceValueMatrix dvm = new DistanceValueMatrix();
+				
+				while(cr.readRecord()){
+					for(int v : matrix().values()){
+						if(v != 0 && v != Raster.getNoDataValue()){
+							dvm.setDistance(Integer.parseInt(cr.get("distance")), v, Double.parseDouble(cr.get(v+"")));
+						}
+					}
+					//dvm.setDistance(cr.get("distance"), v2, distance);
+				}
+				cr.close();
+				
+				((DistanceValueMetric) wm).setDistanceMatrix(dvm);
+			} catch (IOException | FinalizedException | CatastrophicException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
+	}
 }

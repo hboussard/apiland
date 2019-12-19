@@ -62,6 +62,8 @@ public class Scenario implements Serializable{
 	private Map<String,String> settings;
 	
 	private String folder;
+	
+	private int success;
 
 	/** output manager */
 	//private OutputManager outputM;
@@ -116,7 +118,7 @@ public class Scenario implements Serializable{
 			model = simulator.model();
 		//}
 		
-		folder = manager().expFolder()+"/outputs/scenario_"+number+"/";
+		folder = manager().expFolder()+"outputs/scenario_"+number+"/";
 		new File(folder).mkdir();
 		
 		//simulations = new Simulation[manager().simulations()];
@@ -140,6 +142,7 @@ public class Scenario implements Serializable{
 			//saveModel();
 		}
 		
+		success = 0;
 	}
 	
 	protected void init(String propertiesFile){
@@ -177,7 +180,7 @@ public class Scenario implements Serializable{
 		boolean scenarioOk = true;
 		if(!run){
 			Simulation s;
-			int success = 0;
+			//int success = 0;
 			int index = 0;
 			while(conditionContinuation(index, success)){
 				// reinitialisation du manager
@@ -275,6 +278,11 @@ public class Scenario implements Serializable{
 		//simulations = null;
 		settings.clear();
 		settings = null;
+	}
+
+	
+	public void deleteSuccess(){
+		this.success--;
 	}
 	
 	/*

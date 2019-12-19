@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.CenteredWindow;
+import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.MultipleWindow;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
 import fr.inra.sad.bagap.apiland.analysis.window.WindowAnalysisObserver;
@@ -39,6 +41,8 @@ public class WindowMatrixAnalysisBuilder {
 	
 	private Set<Integer> unfilters;
 	
+	private boolean exportFilters;
+	
 	private Set<Pixel> pixels;
 	
 	private double minRate;
@@ -66,11 +70,16 @@ public class WindowMatrixAnalysisBuilder {
 		observers.clear();
 		filters.clear();
 		unfilters.clear();
+		exportFilters = false;
 		matrix.clear();
 		matrixFilter = null;
 		matrixUnFilter = null;
 		clusters = null;
 		path = null;
+	}
+	
+	public void setExportFilters(boolean export){
+		exportFilters = export;
 	}
 	
 	public void addMatrix(Matrix m){
@@ -164,7 +173,11 @@ public class WindowMatrixAnalysisBuilder {
 			wa = (W) new SlidingWindowMatrixAnalysis(mat[0], window, processType, displacement, xOrigin, yOrigin, minRate, filters, unfilters, matrixFilter, matrixUnFilter);
 			break;
 		case SELECTED : 
-			wa = (W) new SelectedWindowMatrixAnalysis(mat[0], window, processType, minRate, pixels, path);
+			if(window instanceof MultipleWindow || ((CenteredWindow) window).shape().getDistanceFunction() == null){
+				wa = (W) new SelectedWindowMatrixAnalysis(mat[0], window, processType, minRate, pixels, path, exportFilters);
+			}else{
+				wa = (W) new NaiveSelectedWindowMatrixAnalysis(mat[0], window, processType, minRate, pixels, path, exportFilters);
+			}
 			break;
 		case MAP : 
 			wa = (W) new MapWindowMatrixAnalysis(mat[0], window, processType, matrixFilter, matrixUnFilter);

@@ -37,17 +37,13 @@ public class SquareWindow extends WindowShape {
 		
 	private double[][] weigtedV;
 	
-	/*
 	public SquareWindow(int s){
 		this.size = s;
-	}*/
+	}
 	
 	public SquareWindow(int s, DistanceFunction function){
 		super(function);
 		this.size = s;
-		if(function != null){
-			
-		}
 	}
 
 	@Override

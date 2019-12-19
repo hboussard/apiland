@@ -56,7 +56,8 @@ public class CsvOutput extends AbstractMetricOutput {
 	@Override
 	public void notify(Metric m, String metric, double value, Process process) {
 		values.put(metric, value);
-		if(value != Raster.getNoDataValue()){
+		//System.out.println(metric+" "+value);
+		if(value != Raster.getNoDataValue() /*&& !new Double(value).isNaN()*/){
 			okValues = true;
 		}
 	}

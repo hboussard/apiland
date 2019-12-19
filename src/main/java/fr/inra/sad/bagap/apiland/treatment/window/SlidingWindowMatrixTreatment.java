@@ -6,7 +6,6 @@ import java.util.Set;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.CsvOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.DeltaAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.HeaderAsciiGridOutput;
-import fr.inra.sad.bagap.apiland.analysis.matrix.output.HeaderDeltaAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.HeaderDeltaAsciiGridOutputBis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.InterpolateLinearSplineAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.InterpolateLinearSplineCsvOutput;
@@ -84,6 +83,7 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 		defineInput("distance_function", String.class);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doInit() {
 		
@@ -131,9 +131,9 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 			}
 			
 			if(frictionMap != null){
-				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMap, pt, function));
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0)-1)*matrix.cellsize()/2, frictionMap, pt, function));
 			}else if(frictionMatrix != null){
-				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMatrix, pt, function));
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0)-1)*matrix.cellsize()/2, frictionMatrix, pt, function));
 			}else{
 				w = new CenteredWindow(shape.create(windowSizes.get(0), function));
 				/*
@@ -281,7 +281,7 @@ public class SlidingWindowMatrixTreatment extends Treatment /*implements Analysi
 							builder.addObserver(new DeltaAsciiGridOutput(metric, ascii+"w"+windowSizes.get(0)+"_"+metric+"_d_"+delta+".asc", delta, xOrigin, yOrigin));
 						}else{
 							for(int size : windowSizes){
-								builder.addObserver(new DeltaAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+".asc", delta, xOrigin, yOrigin));
+								builder.addObserver(new DeltaAsciiGridOutput("w"+size+"_"+metric, ascii+"w"+size+"_"+metric+"_d_"+delta+".asc", delta, xOrigin, yOrigin));
 							}
 						}
 					}

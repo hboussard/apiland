@@ -20,9 +20,12 @@ public class CoverSurfaceOutput extends OutputAnalysis {
 	
 	private DecimalFormat format;
 	
+	private String csv;
+	
 	private CsvWriter cw;
 	
-	public CoverSurfaceOutput(){
+	public CoverSurfaceOutput(String csv){
+		this.csv = csv;
 		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 		symbols.setDecimalSeparator('.');
 		format = new DecimalFormat("0.00", symbols);
@@ -33,7 +36,7 @@ public class CoverSurfaceOutput extends OutputAnalysis {
 		try {
 			
 			for(CoverLocationModel model : (GlobalCoverLocationModel) scenario.model().get("agriculture")){
-				cw = new CsvWriter(scenario.folder()+"cover_area_"+model.getCoverAllocator().getCode()+".csv");
+				cw = new CsvWriter(csv);
 				cw.setDelimiter(';');
 				cw.write("simulation");
 				cw.write("farm");

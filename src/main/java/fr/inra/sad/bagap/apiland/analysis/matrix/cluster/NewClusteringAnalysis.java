@@ -29,10 +29,18 @@ public abstract class NewClusteringAnalysis extends MatrixAnalysis {
 	
 	private String csv;
 	
-	public NewClusteringAnalysis(Matrix m, Collection<Integer> interest, String outputFolder, String name){
+	private List<Double> minimumAreas;
+	
+	private double minimumTotal;
+	
+	private Map<Integer, Map<Integer, Count>> patchs;
+	
+	public NewClusteringAnalysis(Matrix m, Collection<Integer> interest, List<Double> minimumAreas, double minimumTotal, String outputFolder, String name){
 		super(m);
 		this.interest = interest;
 		this.csv = outputFolder+"/cluster_"+name+".csv";
+		this.minimumAreas = minimumAreas;
+		this.minimumTotal = minimumTotal;
 	}
 	
 	@Override
@@ -43,6 +51,9 @@ public abstract class NewClusteringAnalysis extends MatrixAnalysis {
 		int oldy = -1;
 		int index = 0;
 		int total = matrix().width() * matrix().height();
+		
+		patchs = new TreeMap<Integer, Map<Integer, Count>>();
+		
 		for(Pixel p : matrix()){
 			if(p.y() > oldy){ // nettoyage du trop plein 
 				Iterator<Pixel> ite = ever.iterator();
@@ -63,14 +74,40 @@ public abstract class NewClusteringAnalysis extends MatrixAnalysis {
 				if(v != Raster.getNoDataValue()){
 					if(interest == null || interest.contains((int) v)){
 						PixelComposite pc = diffuseFromPixel(matrix(), p, ever, new PixelComposite(p, ++index));
-						r.addSimplePixelComposite(pc);
+						
+						int vu = pc.getValue();
+						patchs.put(vu, new HashMap<Integer, Count>());
+						double totalv = 0.0;
+						for(Pixel pi : pc){
+							int vv = (int) matrix(0).get(pi);
+							if(vv != 0 && vv != Raster.getNoDataValue()){
+								if(!patchs.get(vu).containsKey(vv)){
+									patchs.get(vu).put(vv, new Count());
+								}
+								patchs.get(vu).get(vv).add();
+								totalv++;
+							}
+						}
+						if(minimumTotal != -1){
+							if(minimumTotal <= totalv * Math.pow(Raster.getCellSize(), 2) / 10000.0){
+								r.addSimplePixelComposite(pc);
+							}else{
+								patchs.remove(vu);
+							}
+						}else{
+							r.addSimplePixelComposite(pc);
+						}
 					}
 				}
 			}
 			
 			updateProgression(total);
 		}
-		setResult(r.smooth());
+		
+		r = (RasterComposite) r.smooth();
+
+		//setResult(r.smooth());
+		setResult(r);
 	}
 	
 	private PixelComposite diffuseFromPixel(Matrix m, Pixel p, Set<Pixel> ever, PixelComposite pc) {
@@ -110,23 +147,23 @@ public abstract class NewClusteringAnalysis extends MatrixAnalysis {
 	
 	@Override
 	protected void doClose() {
-		
+		/*
 		Map<Integer, Map<Integer, Count>> patchs = new TreeMap<Integer, Map<Integer, Count>>();
 		
-		for(Raster pc : ((RasterComposite) this.getResult()).getRasters()){
+		for(Raster pc : (RasterComposite) getResult()){
 			
 			int vu = ((PixelComposite) pc).getValue();
 			patchs.put(vu, new HashMap<Integer, Count>());
 			for(Pixel p : pc){
-				int v = (int) matrix(0).get(p);
-				if(v != 0 && v != Raster.getNoDataValue()){
-					if(!patchs.get(vu).containsKey(v)){
-						patchs.get(vu).put(v, new Count());
+				int vv = (int) matrix(0).get(p);
+				if(vv != 0 && vv != Raster.getNoDataValue()){
+					if(!patchs.get(vu).containsKey(vv)){
+						patchs.get(vu).put(vv, new Count());
 					}
-					patchs.get(vu).get(v).add();
+					patchs.get(vu).get(vv).add();
 				}
 			}
-		}
+		}*/
 		
 		try {
 			CsvWriter cw = new CsvWriter(csv);

@@ -41,6 +41,7 @@ public class CfmSimulation extends Simulation {
 	
 	@Override
 	protected void close(){
+		
 		closeSequences();
 		
 		super.close();

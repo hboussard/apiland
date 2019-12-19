@@ -1,9 +1,7 @@
 package fr.inra.sad.bagap.apiland.capfarm.simul;
 
 import java.net.URL;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 import fr.inra.sad.bagap.apiland.capfarm.CAPFarm;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Territory;

@@ -112,21 +112,22 @@ public class OpRasterization extends OpTranslation {
 		}
 
 		sIndex.build();
-			
+		
 		for(int j=0; j<nrows; j++){
 			x = minX;
-			y = maxY - j*cellsize;
+			y = maxY + (cellsize - (maxY - minY)%cellsize) - (1.0/2 + j)*cellsize;
 			if(j%modulo == 0){
-				env = new Envelope(new Coordinate(x,y),new Coordinate(maxX,y - modulo*cellsize));
+				env = new Envelope(new Coordinate(x - modulo*cellsize, y), new Coordinate(maxX, y - modulo*cellsize));
+				//env = new Envelope(new Coordinate(0, y), new Coordinate(maxX, y - modulo*cellsize));
+				//env = new Envelope(new Coordinate(-100000, -1000000), new Coordinate(100000000, 1000000000));
 				l = sIndex.query(env);
 			}
 					
 			for(int i=0; i<ncols; i++){
-				x = minX + i*cellsize;
+				x = minX + (1.0/2 + i)*cellsize;
 				ok = false;
 				try {
-					p = new PreparedPoint((Puntal)wktr.read("POINT ("+x+" "+y+")"));
-					//System.out.println("p en "+x+" "+y);
+					p = new PreparedPoint((Puntal) wktr.read("POINT ("+x+" "+y+")"));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}

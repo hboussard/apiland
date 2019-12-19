@@ -13,6 +13,8 @@ import com.csvreader.CsvReader.FinalizedException;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.RefPoint;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.RefPointWithID;
 
 public class CoordinateManager {
 
@@ -117,6 +119,57 @@ public class CoordinateManager {
 		}
 		return pixels;	
 	}
+	
+	public static Set<RefPoint> initWithPoints(String f) {
+		Set<RefPoint> points = new TreeSet<RefPoint>();
+		try{
+			CsvReader cr = new CsvReader(f);
+			cr.setDelimiter(';');
+			cr.readHeaders();
+			
+			double X, Y;
+			String id;
+			while(cr.readRecord()){
+				
+				if(cr.get("X") != ""){
+					X = Double.parseDouble(cr.get("X"));
+				}else{
+					X = Double.parseDouble(cr.get("x"));
+				}
+				
+				if(cr.get("Y") != ""){
+					Y = Double.parseDouble(cr.get("Y"));
+				}else{
+					Y = Double.parseDouble(cr.get("y"));
+				}
+				
+				
+				if(!(id = cr.get("id")).equals("")){
+					points.add(new RefPointWithID(id, X, Y));
+				}else if(!(id = cr.get("ID")).equals("")){
+					points.add(new RefPointWithID(id, X, Y));
+				}else if(!(id = cr.get("Id")).equals("")){
+					points.add(new RefPointWithID(id, X, Y));
+				}else if(!(id = cr.get("iD")).equals("")){
+					points.add(new RefPointWithID(id, X, Y));
+				}else{
+					points.add(new RefPoint(X, Y));
+				}
+			}
+			
+			//System.out.println(points);
+			
+			cr.close();
+		}catch(IOException ex){
+			ex.printStackTrace();
+		}catch(FinalizedException ex){
+			ex.printStackTrace();
+		}catch(CatastrophicException ex){
+			ex.printStackTrace();
+		}
+		return points;	
+	}
+	
 	
 	public static Set<Pixel> initWithPixels(String f) {
 		Set<Pixel> pixels = new TreeSet<Pixel>();

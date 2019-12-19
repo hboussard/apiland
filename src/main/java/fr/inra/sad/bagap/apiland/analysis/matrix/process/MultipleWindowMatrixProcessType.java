@@ -14,5 +14,13 @@ public class MultipleWindowMatrixProcessType extends WindowMatrixProcessType {
 	public MultipleWindowMatrixProcess create(Window w, Pixel p){
 		return new MultipleWindowMatrixProcess(w, p, this);
 	}
+	
+	@Override
+	public WindowMatrixProcess create(Window w, Pixel p, boolean selected){
+		if(selected){
+			return new MultipleWindowMatrixProcess(w, p, this, true);
+		}
+		return this.create(w, p);
+	}
 
 }

@@ -61,7 +61,7 @@ public class Pixel extends Raster implements Comparable<Pixel>{
 	
 	@Override
 	public String toString(){
-		return "("+x+","+y+")";
+		return "("+x+", "+y+")";
 	}
 	
 	@Override

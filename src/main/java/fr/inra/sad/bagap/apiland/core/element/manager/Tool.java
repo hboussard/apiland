@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
@@ -19,8 +21,14 @@ import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.geotools.data.shapefile.shp.ShapefileWriter;
+
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 public class Tool {
 
@@ -297,4 +305,243 @@ public class Tool {
 		} 
 	}
 	
+	public static void addIntegerAttribute2PolygonShapefile(String shapefile, String attribute, Integer value){
+		
+		String name = shapefile.replace(".shp", "").replace("SHP", "");
+		String output = name+"_temp";
+		
+		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
+				FileOutputStream shp = new FileOutputStream(output+".shp");
+				FileOutputStream shx = new FileOutputStream(output+".shx");){
+			
+			ShpFiles sf = new ShpFiles(name+".shp");
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
+			DbaseFileHeader inHeader = dfr.getHeader(); 
+			
+			// gestion du header de sortie
+			DbaseFileHeader outHeader = new DbaseFileHeader();
+			outHeader.setNumRecords(inHeader.getNumRecords());
+			
+			for(int i=0; i<inHeader.getNumFields(); i++){
+				outHeader.addColumn(inHeader.getFieldName(i), inHeader.getFieldType(i), inHeader.getFieldLength(i), 0);
+			}
+			outHeader.addColumn(attribute, 'N', 6, 0);
+			
+			DbaseFileWriter dfw = new DbaseFileWriter(outHeader, fos.getChannel());
+			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
+			
+			sfw.writeHeaders(
+					new Envelope(sfr.getHeader().minX(), sfr.getHeader().maxX(), sfr.getHeader().minY(), sfr.getHeader().maxY()), 
+					ShapeType.POLYGON, dfr.getHeader().getNumRecords(), 1000000);
+			
+			Object[] data, entry = new Object[outHeader.getNumFields()];
+			
+			while(sfr.hasNext()){
+				
+				data = dfr.readEntry();
+				
+				for(int i=0; i<inHeader.getNumFields(); i++){
+					entry[i] = data[i];
+				}
+				entry[inHeader.getNumFields()] = value;
+				
+				
+				Geometry g = (Geometry) sfr.nextRecord().shape();
+				sfw.writeGeometry(g);
+				dfw.write(entry);
+			}
+			
+			sfr.close();
+			dfr.close();
+			dfw.close();
+			sfw.close();
+			
+			copyAndDelete(output+".shp", name+".shp");
+			copyAndDelete(output+".dbf", name+".dbf");
+			copyAndDelete(output+".shx", name+".shx");
+			
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			copy(name+".prj", output+".prj");
+		}
+	}
+	
+	public static void addIntegerAttribute2MultilineShapefile(String shapefile, String attribute, Integer value){
+		
+		String name = shapefile.replace(".shp", "").replace("SHP", "");
+		String output = name+"_temp";
+		
+		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
+				FileOutputStream shp = new FileOutputStream(output+".shp");
+				FileOutputStream shx = new FileOutputStream(output+".shx");){
+			
+			ShpFiles sf = new ShpFiles(name+".shp");
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
+			DbaseFileHeader inHeader = dfr.getHeader(); 
+			
+			// gestion du header de sortie
+			DbaseFileHeader outHeader = new DbaseFileHeader();
+			outHeader.setNumRecords(inHeader.getNumRecords());
+			
+			for(int i=0; i<inHeader.getNumFields(); i++){
+				outHeader.addColumn(inHeader.getFieldName(i), inHeader.getFieldType(i), inHeader.getFieldLength(i), 0);
+			}
+			outHeader.addColumn(attribute, 'N', 6, 0);
+			
+			DbaseFileWriter dfw = new DbaseFileWriter(outHeader, fos.getChannel());
+			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
+			
+			sfw.writeHeaders(
+					new Envelope(sfr.getHeader().minX(), sfr.getHeader().maxX(), sfr.getHeader().minY(), sfr.getHeader().maxY()), 
+					ShapeType.ARC, dfr.getHeader().getNumRecords(), 1000000);
+			
+			Object[] data, entry = new Object[outHeader.getNumFields()];
+			
+			while(sfr.hasNext()){
+				
+				data = dfr.readEntry();
+				
+				for(int i=0; i<inHeader.getNumFields(); i++){
+					entry[i] = data[i];
+				}
+				entry[inHeader.getNumFields()] = value;
+				
+				
+				Geometry g = (Geometry) sfr.nextRecord().shape();
+				sfw.writeGeometry(g);
+				dfw.write(entry);
+			}
+			
+			sfr.close();
+			dfr.close();
+			dfw.close();
+			sfw.close();
+			
+			copyAndDelete(output+".shp", name+".shp");
+			copyAndDelete(output+".dbf", name+".dbf");
+			copyAndDelete(output+".shx", name+".shx");
+			
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			copy(name+".prj", output+".prj");
+		}
+	}
+	
+	public static void symplifyMultiline(String shapefile, double tolerance, double maxSize){
+		
+		String name = shapefile.replace(".shp", "").replace("SHP", "");
+		String output = name+"_simplified";
+		
+		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
+				FileOutputStream shp = new FileOutputStream(output+".shp");
+				FileOutputStream shx = new FileOutputStream(output+".shx")){
+			
+			ShpFiles sf = new ShpFiles(name+".shp");
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
+			DbaseFileHeader inHeader = dfr.getHeader();
+			
+			Set<LineString> lines = new HashSet<LineString>();
+			while(sfr.hasNext()){
+				Object[] data = dfr.readEntry();
+				Geometry g = (Geometry) sfr.nextRecord().shape();
+				
+				if(g instanceof MultiLineString){
+					MultiLineString mls = (MultiLineString) g;
+					for(int i=0; i<mls.getNumGeometries(); i++){
+						LineString ls = (LineString) mls.getGeometryN(i);
+						LineString lss = (LineString) DouglasPeuckerSimplifier.simplify(ls, tolerance);
+						lss.setUserData(data);
+						lines.add(lss);
+					}
+				}else if(g instanceof LineString){
+					LineString ls = (LineString) g;
+					
+					LineString lss = (LineString) DouglasPeuckerSimplifier.simplify(ls, tolerance);
+					lss.setUserData(data);
+					lines.add(lss);
+				}				
+			}
+			
+			Set<LineString> lines2 = new HashSet<LineString>();
+			for(LineString ls : lines){
+				if(ls.getLength() > maxSize){
+					double total = 0;
+					Coordinate[] cs = ls.getCoordinates();
+					List<Coordinate> cl = new ArrayList<Coordinate>();
+					Coordinate c1 = cs[0];
+					cl.add(c1);
+					for(int ic=1; ic<cs.length-1; ic++){
+						Coordinate c2 = cs[ic];
+						cl.add(c2);
+						total += Math.sqrt(Math.pow(c1.x - c2.x, 2) + Math.pow(c1.y - c2.y, 2));
+						c1 = c2;
+						if(total > maxSize){
+							LineString ls2 = new LineString(new CoordinateArraySequence(cl.toArray(new Coordinate[cl.size()])), ls.getFactory());
+							ls2.setUserData(ls.getUserData());
+							lines2.add(ls2);
+							cl.clear();
+							cl.add(c1);
+							total = 0;
+						}
+					}
+					Coordinate c2 = cs[cs.length-1];
+					cl.add(c2);
+					LineString ls2 = new LineString(new CoordinateArraySequence(cl.toArray(new Coordinate[cl.size()])), ls.getFactory());
+					ls2.setUserData(ls.getUserData());
+					lines2.add(ls2);
+				}else{
+					lines2.add(ls);
+				}
+			}
+			
+			
+			// gestion du header de sortie
+			DbaseFileHeader outHeader = new DbaseFileHeader();
+			outHeader.setNumRecords(lines2.size());
+			
+			for(int i=0; i<inHeader.getNumFields(); i++){
+				outHeader.addColumn(inHeader.getFieldName(i), inHeader.getFieldType(i), inHeader.getFieldLength(i), 0);
+			}
+			
+			DbaseFileWriter dfw = new DbaseFileWriter(outHeader, fos.getChannel());
+			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
+			
+			sfw.writeHeaders(
+					new Envelope(sfr.getHeader().minX(), sfr.getHeader().maxX(), sfr.getHeader().minY(), sfr.getHeader().maxY()), 
+					ShapeType.ARC, lines2.size(), 1000000);
+						
+			MultiLineString mls;
+			for(LineString ls : lines2){
+				mls = new MultiLineString(new LineString[]{ls}, ls.getFactory());
+				sfw.writeGeometry(mls);
+				dfw.write((Object[]) ls.getUserData());
+			}
+			
+			sfr.close();
+			dfr.close();
+			dfw.close();
+			sfw.close();
+			
+			
+			copyAndDelete(output+".shp", name+".shp");
+			copyAndDelete(output+".dbf", name+".dbf");
+			copyAndDelete(output+".shx", name+".shx");
+			
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			copy(name+".prj", output+".prj");
+		}
+	}
 }

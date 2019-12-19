@@ -94,7 +94,6 @@ public abstract class Treatment implements AnalysisObserver{
 		}
 	}
 	
-
 	@Override
 	public void notify(Analysis ma, AnalysisState state) {
 		// do nothing
@@ -205,7 +204,7 @@ public abstract class Treatment implements AnalysisObserver{
 	private boolean checkInputs(){
 		for(Entry<String, Object> e : inputs.entrySet()){
 			if(e.getValue() == null){
-				System.err.println("warning : the input named '"+e.getKey()+"' is not initialized in the treatment '"+this+"'");
+				//System.err.println("warning : the input named '"+e.getKey()+"' is not initialized in the treatment '"+this+"'");
 				return false;
 			}
 		}
@@ -215,7 +214,7 @@ public abstract class Treatment implements AnalysisObserver{
 	private boolean checkOutputs(){
 		for(Entry<String, Object> e : outputs.entrySet()){
 			if(e.getValue() == null){
-				System.err.println("warning : the output named '"+e.getKey()+"' is not initialized in the treatment '"+this+"'");
+				//System.err.println("warning : the output named '"+e.getKey()+"' is not initialized in the treatment '"+this+"'");
 				return false;
 			}
 		}

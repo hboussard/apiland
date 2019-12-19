@@ -18,6 +18,8 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 	/** the values */
 	private double[][] values;
 	
+	public boolean selected;
+	
 	private Map<Window, SimpleWindowMatrixProcess> processes;
 
 	public MultipleWindowMatrixProcess(Window w, Pixel p, MultipleWindowMatrixProcessType wpt) {
@@ -27,6 +29,13 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 		for(int y=0; y<values.length; y++){
 			Arrays.fill(values[y], -1);
 		}
+		this.selected = false;
+	}
+	
+	public MultipleWindowMatrixProcess(Window w, Pixel p, MultipleWindowMatrixProcessType wpt, boolean selected) {
+		this(w, p, wpt);
+		//values = null;
+		this.selected = selected;
 	}
 	
 	@Override
@@ -81,6 +90,9 @@ public class MultipleWindowMatrixProcess extends WindowMatrixProcess {
 			for(Window w : windows()){
 				process = new SimpleWindowMatrixProcess(w, new Pixel(pixel().x(), pixel().y()), processType());
 				//process.clearObservers();
+				if(selected){
+					process.resetValues();
+				}
 				process.init();
 				process.setMaxSize(w.size(processType().matrix().width(), processType().matrix().height()));
 				processes().put(w, process);

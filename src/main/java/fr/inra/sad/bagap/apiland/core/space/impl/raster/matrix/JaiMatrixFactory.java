@@ -129,10 +129,11 @@ public class JaiMatrixFactory extends MatrixFactory {
 	}
 	
 	public Matrix createWithAsciiGridOld(String ascii, boolean read) throws NumberFormatException, IOException {
+		readEntete(ascii);
 		initWithEntete(ascii);
 		//PlanarImage pi = (PlanarImage) readTiled(ascii, width, height);
 		PlanarImage pi = (PlanarImage) readTiled(ascii, width, 1);
-		//System.out.println(pi.getHeight()+" "+pi.getWidth());
+		//System.out.println(width);
 		//Matrix m = new JaiMatrix(cellsize, minx, maxx, miny, maxy, pi, values);
 		Matrix m = new JaiMatrix(cellsize, minx, maxx, miny, maxy, pi, read);
 		m.setFile(ascii);
@@ -143,20 +144,37 @@ public class JaiMatrixFactory extends MatrixFactory {
 		initWithEntete(asciiref);
 		//PlanarImage pi = (PlanarImage) readTiled(ascii, width, height);
 		PlanarImage pi = (PlanarImage) readTiled(asciiref, width, 1);
-		System.out.println(pi.getHeight()+" "+pi.getWidth());
+		//System.out.println(pi.getHeight()+" "+pi.getWidth());
 		//Matrix m = new JaiMatrix(cellsize, minx, maxx, miny, maxy, pi, values);
 		Matrix m = new JaiMatrix(cellsize, minx, maxx, miny, maxy, pi, true);
 		return m;
 	}
 	
 
+	private void readEntete(String ascii) throws NumberFormatException {
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(ascii));
+			System.out.println(br.readLine());
+			System.out.println(br.readLine());
+			System.out.println(br.readLine());
+			System.out.println(br.readLine());
+			System.out.println(br.readLine());
+			System.out.println(br.readLine());
+		
+			br.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 	private void initWithEntete(String ascii) throws NumberFormatException {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(ascii));
 			String line = br.readLine();
 			String sep = String.valueOf(line.charAt(5));
-			
+			//System.out.println(line);
 			String[] s = line.split(sep);
 			width = Integer.parseInt(s[s.length-1]);
 			//System.out.println(width);

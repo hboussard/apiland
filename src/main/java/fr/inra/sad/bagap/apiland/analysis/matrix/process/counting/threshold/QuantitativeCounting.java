@@ -69,7 +69,7 @@ public class QuantitativeCounting extends CountingDecorator {
 	
 	@Override
 	public double getVariance(){
-		if(size() == 0){
+		if(size() < 2){
 			return Raster.getNoDataValue();
 		}
 		return (getSquareSum() / size()) - (getAverage() * getAverage());
@@ -85,7 +85,7 @@ public class QuantitativeCounting extends CountingDecorator {
 	
 	@Override
 	public double getStandardDeviation(){
-		if(size() == 0){
+		if(size() < 2){
 			return Raster.getNoDataValue();
 		}
 		return Math.sqrt(getVariance());
@@ -93,7 +93,7 @@ public class QuantitativeCounting extends CountingDecorator {
 	
 	@Override
 	public double getStandardError(){
-		if(size() == 0){
+		if(size() < 2){
 			return Raster.getNoDataValue();
 		}
 		return getStandardDeviation() / Math.sqrt(size());
@@ -101,7 +101,7 @@ public class QuantitativeCounting extends CountingDecorator {
 
 	@Override
 	public double getVariationCoefficient() {
-		if(size() == 0){
+		if(size() < 2){
 			return Raster.getNoDataValue();
 		}
 		double a = getAverage();

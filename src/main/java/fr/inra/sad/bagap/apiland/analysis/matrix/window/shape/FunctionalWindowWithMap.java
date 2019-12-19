@@ -36,7 +36,7 @@ public class FunctionalWindowWithMap extends FunctionalWindow {
 	
 	@Override
 	public int width() {
-		int v = new Double(((2*dMax/matrix.cellsize())/friction.min())+1).intValue();
+		int v = new Double(((2*dMax/matrix.cellsize())/*/friction.min()*/)+1).intValue();
 		if(v % 2 == 0){
 			return v - 1;
 		}else{
@@ -46,7 +46,7 @@ public class FunctionalWindowWithMap extends FunctionalWindow {
 
 	@Override
 	public int height() {
-		int v = new Double(((2*dMax/matrix.cellsize())/friction.min())+1).intValue();
+		int v = new Double(((2*dMax/matrix.cellsize())/*/friction.min()*/)+1).intValue();
 		if(v % 2 == 0){
 			return v - 1;
 		}else{

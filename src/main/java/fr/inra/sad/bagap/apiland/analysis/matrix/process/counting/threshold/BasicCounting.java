@@ -20,6 +20,8 @@ public class BasicCounting extends Counting {
 	/** the total count of valid values (including 0 but different to Raster.noDataValue() */
 	private int validValues;
 	
+	private int test = 0;
+	
 	@Override
 	public void init() {
 		countValues = 0;
@@ -40,7 +42,7 @@ public class BasicCounting extends Counting {
 	
 	@Override
 	public void addValue(double value, int x, int y) {
-		//System.out.println("addValue (BasicCounting) "+value);
+		
 		//System.out.println("add "+value+" "+x+" "+y+" "+totalValues);
 		/*
 		if(process().window().pixel().x() == 0){
@@ -49,7 +51,7 @@ public class BasicCounting extends Counting {
 		
 		totalValues++;
 		if(value != Raster.getNoDataValue()){
-			
+			//System.out.println("addValue (BasicCounting) "+value+" "+(++test));
 			validValues++;
 			if(value != 0){
 				countValues++;
@@ -106,8 +108,12 @@ public class BasicCounting extends Counting {
 				if(process().window().diameter() == 5 && process().window().pixel().x() == 0 && process().window().pixel().y() < 4){
 					System.out.println("down remove "+process().window().pixel()+" "+outx+" "+outy+" "+p.x()+" "+p.y()+" "+process().values()[p.y()][p.x()]);
 				}*/
-				
-				process().counting().removeValue(process().values()[p.y()][p.x()], p.x(), p.y());
+				if(p.y() < (process().window().diameter() - d + place)){
+					//System.out.println(p.y()+" "+process().window().diameter()+" "+d+" "+(process().window().diameter() - d)+" "+(p.y() - (process().window().diameter() - d + place)));
+					process().counting().removeValue(process().values()[p.y()][p.x()], p.x(), p.y());
+				}
+				//System.out.println(p.y()+" "+process().window().diameter()+" "+d+" "+(process().window().diameter() - d)+" "+(p.y() - (process().window().diameter() - d + place)));
+				//process().counting().removeValue(process().values()[p.y()][p.x()], p.x(), p.y());
 			}
 		}
 		
@@ -125,7 +131,10 @@ public class BasicCounting extends Counting {
 				if(process().window().diameter() == 5 && process().window().pixel().x() == 0 && process().window().pixel().y() < 4){
 					System.out.println("down add "+process().window().pixel()+" "+outx+" "+outy+" "+p.x()+" "+p.y()+" "+process().values()[p.y()][p.x()]);
 				}*/
+				//System.out.println(p.y()+" "+process().window().diameter()+" "+d+" "+(process().window().diameter() - d)+" "+(p.y() - (process().window().diameter() - d + place)));
 				if(p.y() < process().window().diameter() - d + place){
+				//if((p.y() < process().window().diameter() - d + place) && (d <= process().window().diameter()/2)){
+					//System.out.println(p.y()+" "+process().window().diameter()+" "+d+" "+(process().window().diameter() - d)+" "+(p.y() - (process().window().diameter() - d + place)));	
 					process().counting().addValue(process().values()[p.y()][p.x()], p.x(), p.y());
 				}
 			}

@@ -3,16 +3,13 @@ package fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Rectangle;
-import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
-import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 import javax.media.jai.iterator.RandomIter;
 import javax.media.jai.iterator.RandomIterFactory;
@@ -21,9 +18,7 @@ import javax.media.jai.iterator.RectIterFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-
 import com.sun.media.jai.widget.DisplayJAI;
-
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.util.Couple;
@@ -69,7 +64,6 @@ public class JaiMatrix implements Matrix {
 		minV = Integer.MAX_VALUE;
 		maxV = Integer.MIN_VALUE;
 		if(read){
-			System.out.println("read");
 			initValues();
 		}
 	}
@@ -221,11 +215,14 @@ public class JaiMatrix implements Matrix {
 			do {
 				v = ite.getSampleDouble();
 				values.add((int) v);
-				minV = Math.min(minV, v);
-				maxV = Math.max(maxV, v);
+				if(v != Raster.getNoDataValue()){
+					minV = Math.min(minV, v);
+					maxV = Math.max(maxV, v);
+				}
+				
 			} while (!ite.nextPixelDone());
 			ite.startPixels();
-			System.out.println((line++)+"/"+height());
+			//System.out.println((line++)+"/"+height());
 		} while (!ite.nextLineDone());
 		
 		/*
@@ -373,7 +370,7 @@ public class JaiMatrix implements Matrix {
 	public int noDataValue() {
 		return Raster.getNoDataValue();
 	}
-
+	
 	@Override
 	public void display() {
 		for(int yt=0; yt<pi.getNumYTiles(); yt++){
@@ -533,6 +530,11 @@ public class JaiMatrix implements Matrix {
 		return height * width;
 	}
 
+	@Override
+	public void resetValues() {
+		values.clear();
+	}
+	
 	/*
 	@Override
 	public void setHeight(int height) {

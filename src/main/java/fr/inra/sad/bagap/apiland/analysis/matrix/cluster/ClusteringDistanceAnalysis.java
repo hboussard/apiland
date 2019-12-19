@@ -133,6 +133,8 @@ public class ClusteringDistanceAnalysis extends MatrixAnalysis implements Analys
 		
 		if(frictionMap != null){
 			cdistance = new RCMDistanceCalculation(matrix, frictionMap, interest, getMaxDistance()/2);
+		}else if(frictionMat != null){
+			cdistance = new RCMDistanceCalculation(matrix, frictionMat, interest, getMaxDistance()/2);
 		}else{
 			cdistance = new ChamferDistance(matrix, interest);
 		}

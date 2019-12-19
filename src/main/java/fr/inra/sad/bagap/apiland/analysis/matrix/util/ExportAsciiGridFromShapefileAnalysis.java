@@ -20,12 +20,10 @@ import org.geotools.data.shapefile.shp.ShapefileHeader;
 import org.geotools.data.shapefile.shp.ShapefileReader;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Lineal;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygonal;
@@ -92,11 +90,13 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	protected void doRun() {
 		ShpFiles sf = getShape(shape);
 		int nb = getNumGeometries(sf);
-		//if(nb < 100){
-			//runFewGeometries();
-		//}else{
+		//System.out.println(nb);
+		if(nb < 100){
+			runFewGeometries();
+		}else{
 			runLotGeometries();
-		//}
+			//runMultiLineGeometries();
+		}
 	}
 	
 	protected void runFewGeometries() {
@@ -241,31 +241,42 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 							new Envelope(minX - delta, maxX + delta, 
 									minY - delta + (decoup - d - 1) * ((maxY - minY) / decoup), 
 									maxY + delta - d * (maxY - minY) / decoup));
-				}		
+				}	
+				//System.out.println(j+" "+spatialIndex.size());
 				//System.out.println(j+" 2");
 				x = minX + (cellsize / 2.0);
 				y = yorigin - (cellsize / 2.0) - j * cellsize;
 				pp.getGeometry().getCoordinate().y = y;	
 				//System.out.println(j+" 3");
-				//double distance = cellsize;
-				//double distance = cellsize/2.0;
 				double distance = Math.sqrt(2)*cellsize/2.0;
 				for(int i=0; i<ncols; i++) {
+					
 					//System.out.println(j+" "+i+" "+1);
 					x = minX + (cellsize / 2.0) + i * cellsize;
 					pp.getGeometry().getCoordinate().x = x;
 					pp.getGeometry().geometryChanged();
+					
 					//System.out.println(j+" "+i+" "+2);
-					if(current != null && type.isPolygonType() && pp.intersects(current)) {
+					if(current != null && ((type.isPolygonType() && pp.intersects(current))
+							/*|| (type.isLineType() && pp.getGeometry().distance(current) <= distance)*/)) {
 						//System.out.println("ici "+current.getUserData());
 						bw.write(current.getUserData()+" ");
+						//System.out.println(j+" "+i+"/"+ncols);
 					}else{
 						
 						//System.out.println("là "+1);
-						//List<Geometry> geometries = spatialIndex.query(new Envelope(new Coordinate(x-1, y+1), new Coordinate(x+1, y-1))); // faux
 						List<Geometry> geometries = spatialIndex.query(new Envelope(new Coordinate(x-distance, y+distance), new Coordinate(x+distance, y-distance)));
+						/*
+						System.out.println(x-distance+" "+x+distance);
+						System.out.println(y-distance+" "+y+distance);
+						System.out.println(geometries.size());
+						for (Geometry g : geometries) {
+							System.out.println(((Object[]) g.getUserData())[0]);
+						}
+						if(true){
+							throw new IllegalArgumentException();
+						}*/
 						
-						//System.out.println(geometries.size());
 						//System.out.println("là "+2);
 						boolean ok = false;
 						for (Geometry g : geometries) {
@@ -280,10 +291,12 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 								ok = true;
 								break;
 							}
+							
 						}
 						if (!ok) {
 							bw.write(Raster.getNoDataValue()+" ");
 						}
+						
 					}
 					//System.out.println(j+" "+i+" "+3);
 					updateProgression(nrows * ncols);
@@ -399,6 +412,47 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 			sfr.close();
 			
 			return envelope;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		throw new IllegalArgumentException();
+	}
+	
+	private Set<Geometry> getGeometries(ShpFiles sf, ShapeType type, int pos, Map<String, String> map) {
+		try {
+			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new com.vividsolutions.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true,	Charset.defaultCharset());
+			GeometryCollection gc;
+			Geometry g;
+			Object f;
+			Set<Geometry> set = new HashSet<Geometry>();
+			while (sfr.hasNext()) {
+				dfr.read();
+				gc = (GeometryCollection) sfr.nextRecord().shape();
+				if(gc != null){
+					for(int n=0; n<gc.getNumGeometries(); n++) {
+						g = gc.getGeometryN(n);
+						if(map == null){
+							g.setUserData(dfr.readField(pos));
+						}else{
+							f = dfr.readField(pos);
+							if(map.containsKey(f+"")){
+								g.setUserData(map.get(f+""));
+							}else{
+								g.setUserData(f);
+							}
+						}
+						set.add(g);					
+					}
+				}
+			}
+			sfr.close();
+			dfr.close();
+			return set;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (ShapefileException e) {

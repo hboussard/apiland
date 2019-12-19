@@ -35,6 +35,7 @@ public class ValuesOutput extends AbstractMetricOutput {
 	
 	@Override
 	public void notify(Analysis ma, AnalysisState state) {
+		//System.out.println("state : "+state);
 		switch (state){
 		case INIT : values.clear(); break;
 		}

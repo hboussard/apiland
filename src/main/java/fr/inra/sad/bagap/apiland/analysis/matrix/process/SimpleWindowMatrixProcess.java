@@ -24,11 +24,15 @@ public class SimpleWindowMatrixProcess extends WindowMatrixProcess {
 	 */
 	public SimpleWindowMatrixProcess(Window w, Pixel p, WindowMatrixProcessType wpt){
 		super(w, p, wpt);
-		//System.out.println("création du process en "+p);
+		//System.out.println("création du process en "+p+" "+w.getClass()+" "+w.height()+" "+w.width());
 		values = new double[w.height()][w.width()];
 		for(int y=0; y<values.length; y++){
 			Arrays.fill(values[y], Raster.getNoDataValue());
 		}
+	}
+	
+	public void resetValues(){
+		values = null;
 	}
 	
 	public double[][] values(){
@@ -95,7 +99,10 @@ public class SimpleWindowMatrixProcess extends WindowMatrixProcess {
 			
 			int inX = window().toXWindow(x/*+place*/);
 			int inY = window().toYWindow(y/*+place*/);
-			values[inY][inX] = v; // stockage de la valeur au niveau du process
+			
+			if(values != null){
+				values[inY][inX] = v; // stockage de la valeur au niveau du process
+			}
 			
 			int f = window().filter(inX, inY);
 			if(f != 0){

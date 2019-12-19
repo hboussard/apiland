@@ -27,6 +27,8 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 	
 	private double threshold;
 	
+	//private long count;
+	
 	/*
 	public RCMDistanceCalculation(Matrix m, Friction f, Set<Integer> values) {
 		this(m, f, values, Raster.getNoDataValue());
@@ -80,7 +82,9 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 	}
 
 	@Override
-	public void doInit() {}
+	public void doInit() {
+		//count = 0l;
+	}
 
 	@Override
 	public void doRun() {
@@ -227,12 +231,20 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 		if(map){
 			return frictionMap.get(v);
 		}
+		/*
+		long lcount = System.currentTimeMillis();
+		double fm = frictionMat.get(x, y);
+		long lcount2 = System.currentTimeMillis();
+		count += lcount2 - lcount;
+		return fm;
+		*/
 		return frictionMat.get(x, y);
 	}
 	
 	@Override
 	public void doClose() {
 		//sources = null;
+		//System.out.println("temps "+count);
 	}
 	
 	private class GComparator<G> implements Comparator<G> {

@@ -3,10 +3,8 @@ package fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.threshold;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.CountingDecorator;
-import fr.inra.sad.bagap.apiland.analysis.matrix.process.counting.Counting.Count;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.util.Couple;

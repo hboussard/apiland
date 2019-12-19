@@ -17,11 +17,16 @@ public class RateCoupleMetric extends MatrixMetric implements CoupleMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
+		/*
 		if(co.countCouples() >= 0){
 			value = new Double(co.countCouple(couple))/co.validCouples();
 			if(Double.isNaN(value)){
 				value = 0;
 			}
+		}*/
+		
+		if(co.validCouples() > 0){
+			value = new Double(co.countCouple(couple))/co.validCouples();
 		}
 	}
 

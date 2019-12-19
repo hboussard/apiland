@@ -2,7 +2,6 @@ package fr.inra.sad.bagap.apiland.analysis.matrix.cluster;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,12 +29,24 @@ public class GroupOverlay extends Pixel2PixelMatrixCalculation {
 	
 	private Map<Integer, Map<Integer, Count>> patchs;
 	
+	private double totalSurface = 0;
+	
+	private int nbPatch = 0;
+	
 	public GroupOverlay(List<Integer> values, List<Double> minimumAreas, double minimumTotal, String csv, Matrix... matrix){
 		super(matrix);
 		this.values = values;
 		this.minimumAreas = minimumAreas;
 		this.minimumTotal = minimumTotal;
 		this.csv = csv;
+	}
+	
+	public double getTotalSurface(){
+		return totalSurface;
+	}
+	
+	public int getNbPatch(){
+		return nbPatch;
 	}
 	
 	@Override
@@ -84,7 +95,7 @@ public class GroupOverlay extends Pixel2PixelMatrixCalculation {
 					toDelete.add(patchNumber);
 				}
 			}
-			if(totalSurface < minimumTotal*10000.0){
+			if(totalSurface == 0 || totalSurface < minimumTotal*10000.0){
 				toDelete.add(patchNumber);
 			}
 		}
@@ -178,6 +189,9 @@ public class GroupOverlay extends Pixel2PixelMatrixCalculation {
 					}
 					cw.write(nbpp+"");
 					cw.write((nbpp*Math.pow(Raster.getCellSize(), 2))/10000.0+"");
+					
+					nbPatch++;
+					totalSurface += (nbpp*Math.pow(Raster.getCellSize(), 2))/10000.0;
 					
 					int nbpsp = 0;		
 					

@@ -52,6 +52,7 @@ public class MapWindowMatrixAnalysis extends WindowMatrixAnalysis /*implements V
 		//boolean active, ok;
 		int total = matrix().width()*matrix().height();
 		for(int y=yt*matrix().tileHeight(); y<(yt+1)*matrix().tileHeight() && y<matrix().height(); y++) {
+			//System.out.println(y);
 			for(int x=xt*matrix().tileWidth(); x<(xt+1)*matrix().tileWidth() && x<matrix().width(); x++){
 				
 				//p = PixelManager.get(x, y);
@@ -59,7 +60,7 @@ public class MapWindowMatrixAnalysis extends WindowMatrixAnalysis /*implements V
 				
 				v = matrix().get(x, y);
 				processType().setValue(x, y, v, null);
-				
+				//System.out.println(v);
 				if((matrixFilter != null && matrixFilter.get(x, y) == 0) || 
 						matrixUnFilter != null && matrixUnFilter.get(x, y) != 0){
 					// pas de traitement

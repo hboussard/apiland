@@ -22,6 +22,7 @@ import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixManager;
 
 public class SelectedAsciiGridOutput extends AbstractMetricOutput implements MetricOutput {
 
@@ -118,7 +119,7 @@ public class SelectedAsciiGridOutput extends AbstractMetricOutput implements Met
 			try {
 				//String prj_input = DynamicLayerFactory.class.getResource("lambert93.prj").toString().replace("file:/", "");
 				//Tool.copy(prj_input, ascii.replace(".asc", "")+".prj");
-				Tool.copy(DynamicLayerFactory.class.getResourceAsStream("lambert93.prj"), ascii.replace(".asc", "")+".prj");
+				Tool.copy(DynamicLayerFactory.class.getResourceAsStream(MatrixManager.epsg()), ascii.replace(".asc", "")+".prj");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

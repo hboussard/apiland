@@ -116,9 +116,9 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 			}
 			
 			if(frictionMap != null){
-				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMap, pt, function));
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0)-1)*matrix.cellsize()/2, frictionMap, pt, function));
 			}else if(frictionMatrix != null){
-				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0))*matrix.cellsize()/2, frictionMatrix, pt, function));
+				w = new CenteredWindow(shape.create(matrix, (windowSizes.get(0)-1)*matrix.cellsize()/2, frictionMatrix, pt, function));
 			}else{
 				w = new CenteredWindow(shape.create(windowSizes.get(0), function));
 			}
@@ -157,6 +157,7 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 			builder.addObserver(new SelectedCsvOutput(matrix, csv, pixels));
 		}
 		if(ascii != null){
+			builder.setExportFilters(true);
 			if(ascii.endsWith(".asc") && metrics.size() == 1 && windowSizes.size() == 1){
 				String metric = metrics.iterator().next();
 				builder.addObserver(new SelectedAsciiGridOutput(metric, ascii, matrix.width(), matrix.height()));
@@ -173,11 +174,13 @@ public class SelectedWindowMatrixTreatment extends Treatment implements Analysis
 					}
 				}
 			}
+		}else{
+			builder.setExportFilters(false);
 		}
 		
 		WindowMatrixAnalysis wa = builder.build();
 		
-		wa.addObserver(this); // le treatment observe l'analyse pour gérer la barre de progression
+		wa.addObserver(this); // le treatment observe l'analyse pour gerer la barre de progression
 		
 		wa.allRun();
 	}
