@@ -18,6 +18,18 @@ public class CleanMetric extends MatrixMetric implements ValueMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
+		
+		int pos = ((SimpleWindowMatrixProcess) co.process()).values().length / 2;
+		double vc = ((SimpleWindowMatrixProcess) co.process()).values()[pos][pos];
+		value = Raster.getNoDataValue();
+		if(vc == Raster.getNoDataValue() || vc == 0){
+			if((co.countValue(v)/co.validValues()) >= 0.4){
+				value = v;
+			}
+		}
+		
+		
+		/*
 		int pos = ((SimpleWindowMatrixProcess) co.process()).values().length / 2;
 		double vc = ((SimpleWindowMatrixProcess) co.process()).values()[pos][pos];
 		value = Raster.getNoDataValue();
@@ -36,6 +48,7 @@ public class CleanMetric extends MatrixMetric implements ValueMetric {
 			value = imax;
 			//System.out.println(value);
 		}
+		*/
 	}
 	
 }

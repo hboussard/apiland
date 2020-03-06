@@ -106,14 +106,17 @@ public class Pixel extends Raster implements Comparable<Pixel>{
 	@Override
 	public boolean equals(Object p){
 		if(p instanceof Pixel){
+			//System.out.println(((x == ((Pixel)p).x) && (y == ((Pixel)p).y))+" "+y+" "+(((Pixel)p).y));
 			return (x == ((Pixel)p).x) && (y == ((Pixel)p).y);
 		}
+		//System.out.println("pas egal");
 		return false;
 	}
 	
 	@Override
 	public int hashCode(){
-		return x * 152 /*+ y *7*/ + 1;
+		//System.out.println("ici "+x+" "+y+" "+(x * 152 + y * 7 + 1));
+		return x * 152 + y * 7 + 1;
 	}
 	
 	public boolean equals(int x, int y){
