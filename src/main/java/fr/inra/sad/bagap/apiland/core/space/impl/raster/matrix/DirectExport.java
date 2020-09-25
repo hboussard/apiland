@@ -17,16 +17,15 @@ import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.Puntal;
-import com.vividsolutions.jts.geom.prep.PreparedPoint;
-import com.vividsolutions.jts.index.strtree.STRtree;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.Puntal;
+import org.locationtech.jts.geom.prep.PreparedPoint;
+import org.locationtech.jts.index.strtree.STRtree;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 public class DirectExport {
 	
@@ -66,7 +65,7 @@ public class DirectExport {
 				sf = new ShpFiles(shape + ".shp");
 			}
 		
-			ShapefileReader sfr = new ShapefileReader(sf, true, true, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, true, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			
 			DbaseFileHeader dfh = dfr.getHeader();

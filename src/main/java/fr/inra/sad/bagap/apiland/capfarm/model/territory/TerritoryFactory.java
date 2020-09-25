@@ -105,6 +105,7 @@ public class TerritoryFactory {
 						
 		// definition du type "FarmTerritory"
 		DynamicLayerType farmTerritoryType = new DynamicLayerType("farm", FarmTerritory.class);
+		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("system", null, String.class));
 		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("seed", Interval.class, Long.class));
 		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("profit", Interval.class, Integer.class));
 		farmTerritoryType.addAttributeType(DynamicElementTypeFactory.createAttributeType("zoneprofit", Interval.class, Integer.class));
@@ -172,11 +173,13 @@ public class TerritoryFactory {
 				case "Eau" : 
 					tu.getAttribute("cover").setValue(t, CoverManager.getCoverUnit("WA", "WA")); break;
 				case "Prairie" : 
-					tu.getAttribute("cover").setValue(t, CoverManager.getCoverUnit("P", "P")); break;
+					tu.getAttribute("cover").setValue(t, CoverManager.getCoverUnit("PP", "PP")); break;
 				case "Route" : 
 					tu.getAttribute("cover").setValue(t, CoverManager.getCoverUnit("RO", "RO")); break;
 				case "Haie" : 
 					tu.getAttribute("cover").setValue(t, CoverManager.getCoverUnit("HA", "Haie")); break;
+				case "Chemin" : 
+					tu.getAttribute("cover").setValue(t, CoverManager.getCoverUnit("CH", "Chemin")); break;
 				}
 			}
 		}

@@ -30,11 +30,11 @@ import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.geotools.data.shapefile.shp.ShapefileWriter;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
 
 import com.csvreader.CsvWriter;
 import com.csvreader.CsvWriter.FinalizedException;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 
 public class CfmUtil {
 
@@ -59,7 +59,7 @@ public class CfmUtil {
 		try{
 			
 			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			
 			sfr.close();
@@ -143,7 +143,7 @@ public class CfmUtil {
 				FileOutputStream shx = new FileOutputStream(output+".shx");){
 			
 			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			
 			// gestion du header de sortie
@@ -200,7 +200,7 @@ public class CfmUtil {
 		}
 	}
 	
-	private static void copy(String sourceFile, String destFile){ 
+	public static void copy(String sourceFile, String destFile){ 
 		try(InputStream input = new FileInputStream(sourceFile);
 				OutputStream output = new FileOutputStream(destFile)){ 
 			byte[] buf = new byte[8192]; 

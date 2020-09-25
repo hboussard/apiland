@@ -44,12 +44,6 @@ public class CfmManager extends SimulationManager {
 	}
 	
 	@Override
-	public void setPath(String path){
-		super.setPath(path);
-		expFolder = path;
-	}
-	
-	@Override
 	public void setStart(Instant t){
 		CAPFarm.t = t;
 		super.setStart(t);

@@ -42,6 +42,17 @@ import java.util.List;
 
 import javax.media.jai.PlanarImage;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.Puntal;
+import org.locationtech.jts.geom.prep.PreparedPoint;
+import org.locationtech.jts.geom.prep.PreparedPolygon;
+import org.locationtech.jts.index.strtree.STRtree;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
+
 /*
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.data.DataSourceException;
@@ -49,16 +60,6 @@ import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.referencing.operation.transform.AffineTransform2D;
 */
 import com.csvreader.CsvReader;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.Puntal;
-import com.vividsolutions.jts.geom.prep.PreparedPoint;
-import com.vividsolutions.jts.geom.prep.PreparedPolygon;
-import com.vividsolutions.jts.index.strtree.STRtree;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 
 import fr.inra.sad.bagap.apiland.core.element.DynamicElement;
 import fr.inra.sad.bagap.apiland.core.element.DynamicFeature;

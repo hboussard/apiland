@@ -247,7 +247,7 @@ public class MatrixManager {
 	
 	public static Matrix retile(Matrix m, int dX, int dY, int ncols, int nrows) {
 		//System.out.println(dX+" "+dY);
-		System.out.println("création de la carte");
+		//System.out.println("création de la carte");
 		Matrix mn = MatrixFactory.get(m.getType()).create(
 				ncols, 
 				nrows, 
@@ -259,7 +259,7 @@ public class MatrixManager {
 				m.noDataValue());
 		
 		for(int j=0; j<nrows; j++){
-			System.out.println(j+"/"+nrows);
+			//System.out.println(j+"/"+nrows);
 			for(int i=0; i<ncols; i++){
 				mn.put(i, j, m.get(i+dX, j+dY));
 			}

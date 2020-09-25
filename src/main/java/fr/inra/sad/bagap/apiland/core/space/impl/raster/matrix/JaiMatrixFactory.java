@@ -162,7 +162,7 @@ public class JaiMatrixFactory extends MatrixFactory {
 			System.out.println(br.readLine());
 			System.out.println(br.readLine());
 			System.out.println(br.readLine());
-		
+			
 			br.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();

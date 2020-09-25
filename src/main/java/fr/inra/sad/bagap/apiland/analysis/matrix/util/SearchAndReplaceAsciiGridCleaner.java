@@ -29,10 +29,11 @@ public class SearchAndReplaceAsciiGridCleaner implements AsciiGridCleaner {
 				//System.out.println(v);
 				if(changes.containsKey(v)){
 					//System.out.println("true "+changes.get(v));
-					outLine.append(changes.get(v)+' ');
+					outLine.append(changes.get(v).replace(".0", "")+' ');
+					//outLine.append(changes.get(v)+' ');
 				}else{
 					//System.out.println("false");
-					outLine.append(v+' ');
+					outLine.append(v.replace(".0", "")+' ');
 				}
 			}
 			return outLine.toString();

@@ -6,9 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;

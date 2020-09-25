@@ -42,7 +42,7 @@ public class Vectorial implements GeometryImpl  {
 	/**
 	 * the JTS geometry
 	 */
-	private com.vividsolutions.jts.geom.Geometry g;
+	private org.locationtech.jts.geom.Geometry g;
 	
 	/**
 	 * smooth entity ?
@@ -55,7 +55,7 @@ public class Vectorial implements GeometryImpl  {
 	 * constructor
 	 * @param g the JTS geometry
 	 */
-	public Vectorial(com.vividsolutions.jts.geom.Geometry g){
+	public Vectorial(org.locationtech.jts.geom.Geometry g){
 		this.g = g;
 		this.type = GeometryImplType.VECTOR;
 	}
@@ -77,7 +77,7 @@ public class Vectorial implements GeometryImpl  {
 		try {
 			clone = (Vectorial)super.clone();
 			clone.type = this.type;
-			clone.g = (com.vividsolutions.jts.geom.Geometry)this.g.clone();
+			clone.g = (org.locationtech.jts.geom.Geometry)this.g.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
@@ -90,7 +90,7 @@ public class Vectorial implements GeometryImpl  {
 	}
 	
 	@Override
-	public com.vividsolutions.jts.geom.Geometry getJTS() {
+	public org.locationtech.jts.geom.Geometry getJTS() {
 		return g;
 	}
 	

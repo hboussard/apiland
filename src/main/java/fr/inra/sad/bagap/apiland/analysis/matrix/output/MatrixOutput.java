@@ -27,6 +27,52 @@ public class MatrixOutput extends AbstractMetricOutput {
 				m.minY(), m.maxY(), Raster.getNoDataValue());
 	}
 	
+	public MatrixOutput(String metric, Matrix m, int delta){
+		super();
+		this.metric = metric;
+		
+		int width = m.width();
+		int height = m.height();
+		
+		int nc = width / delta;
+		if(width%delta != 0){
+			nc++;
+		}
+		int nr = new Double(height/delta).intValue();
+		if(height%delta != 0){
+			nr++;
+		}
+		
+		double cellsize = m.cellsize()*delta;
+		
+		double xdecalage = ((delta-1)*Raster.getCellSize())/2;
+		double ydecalage = ((delta-1)*Raster.getCellSize())/2;
+		double mod = (m.height() * Raster.getCellSize() + ydecalage) % (delta * Raster.getCellSize());
+		
+		double minx = m.minX() - xdecalage;
+		double maxx = minx + (nc*cellsize);
+		
+		double miny;
+		if(mod == 0){
+			miny = m.minY();
+		}else if(mod >= (delta*Raster.getCellSize())/2.0){
+			miny = m.minY() - (delta*Raster.getCellSize()-mod);
+		}else{
+			miny = m.minY() + (mod);
+		}
+		double maxy = miny + (nr*m.cellsize()*delta);
+		
+		
+		//this.matrix = MatrixFactory.get(m.getType()).create(m);
+		this.matrix = MatrixFactory.get(m.getType()).create(nc, nr, 
+				cellsize, 
+				minx, 
+				maxx, 
+				miny, 
+				maxy, 
+				Raster.getNoDataValue());
+	}
+	
 	@Override
 	public String toString(){
 		return metric;

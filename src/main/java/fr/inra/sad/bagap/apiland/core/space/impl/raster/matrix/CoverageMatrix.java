@@ -41,7 +41,6 @@ import org.geotools.coverage.grid.GridCoverage2D;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
-import fr.inra.sad.bagap.apiland.core.util.Couple;
 
 public class CoverageMatrix implements Matrix{
 	

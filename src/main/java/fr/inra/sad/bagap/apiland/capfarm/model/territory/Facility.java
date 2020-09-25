@@ -2,7 +2,8 @@ package fr.inra.sad.bagap.apiland.capfarm.model.territory;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.vividsolutions.jts.geom.Polygon;
+
+import org.locationtech.jts.geom.Polygon;
 
 import fr.inra.sad.bagap.apiland.capfarm.CAPFarm;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicFeatureType;

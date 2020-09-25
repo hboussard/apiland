@@ -282,7 +282,11 @@ public class ConstraintBuilder {
 	}
 	
 	private void initTotalAreaConstraints() {
-		Domain<Integer, Integer> domain = buildAreaDomain();
+		int locationArea = 0;
+		for(Parcel p : location){
+			locationArea += p.getArea();
+		}
+		Domain<Integer, Integer> domain = buildAreaDomain(locationArea);
 		//System.out.println(covers.iterator().next()+" "+domain);
 		CoverAllocationConstraint<?, ?> constraint = new TotalAreaConstraint(code, checkOnly, mode, covers, location, domain);
 		allocator.addConstraint(constraint);
@@ -557,11 +561,15 @@ public class ConstraintBuilder {
 	}
 
 	private Domain<Integer, Integer> buildAreaDomain(){
+		return buildAreaDomain(allocator.getArea());
+	}
+	
+	private Domain<Integer, Integer> buildAreaDomain(int locationArea){
 		if(domain.contains("min") || domain.contains("max")){
 			return buildMinMaxAreaDomain();
 		}
 		if(domain.contains("%")){
-			return buildPercentDomain();
+			return buildPercentDomain(locationArea);
 		}
 		return buildIntDomain(10000.0);
 	}
@@ -658,10 +666,11 @@ public class ConstraintBuilder {
 		return buildIntDomain(1.0);
 	}
 
-	private Domain<Integer, Integer> buildPercentDomain() {
+	private Domain<Integer, Integer> buildPercentDomain(int max) {
 		String[] d = domain.replace("[", "").replace("]", "").replace(" ", "").replace("%", "").split(",", 2);
 		
-		int area = allocator.getArea();
+		//int area = allocator.getArea();
+		int area = max;
 		double v1 = 0;
 		if(!d[0].equalsIgnoreCase("")){
 			v1 = new Double(d[0]);

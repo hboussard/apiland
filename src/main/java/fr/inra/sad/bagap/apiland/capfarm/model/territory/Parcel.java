@@ -1,6 +1,6 @@
 package fr.inra.sad.bagap.apiland.capfarm.model.territory;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import fr.inra.sad.bagap.apiland.capfarm.CAPFarm;
 import fr.inra.sad.bagap.apiland.core.element.type.DynamicFeatureType;

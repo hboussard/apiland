@@ -3,13 +3,13 @@ package fr.inra.sad.bagap.apiland.simul.operation;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Puntal;
-import com.vividsolutions.jts.geom.prep.PreparedPoint;
-import com.vividsolutions.jts.index.strtree.STRtree;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Puntal;
+import org.locationtech.jts.geom.prep.PreparedPoint;
+import org.locationtech.jts.index.strtree.STRtree;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.cluster.ClusteringAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.cluster.ClusteringQueenAnalysis;
@@ -88,8 +88,8 @@ public class OpRasterization extends OpTranslation {
 		 
 		//Raster representation = new RasterComposite();
 		
-		int ncols = new Double((Math.floor((maxX - minX) / Raster.getCellSize())) + 1).intValue();
-		int nrows = new Double((Math.floor((maxY - minY) / Raster.getCellSize())) + 1).intValue();
+		int ncols = new Double((Math.floor((maxX - minX) / Raster.getCellSize())) /*+ 1*/).intValue();
+		int nrows = new Double((Math.floor((maxY - minY) / Raster.getCellSize())) /*+ 1*/).intValue();
 		
 		Matrix mt = ArrayMatrixFactory.get().create(ncols, nrows, cellsize, minX, maxX, minY, maxY, Raster.getNoDataValue());
 		
@@ -115,7 +115,7 @@ public class OpRasterization extends OpTranslation {
 		
 		for(int j=0; j<nrows; j++){
 			x = minX;
-			y = maxY + (cellsize - (maxY - minY)%cellsize) - (1.0/2 + j)*cellsize;
+			y = maxY /*+ (cellsize - (maxY - minY)%cellsize)*/ - (1.0/2 + j)*cellsize;
 			if(j%modulo == 0){
 				env = new Envelope(new Coordinate(x - modulo*cellsize, y), new Coordinate(maxX, y - modulo*cellsize));
 				//env = new Envelope(new Coordinate(0, y), new Coordinate(maxX, y - modulo*cellsize));

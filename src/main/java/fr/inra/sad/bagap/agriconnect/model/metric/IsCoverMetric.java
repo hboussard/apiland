@@ -1,8 +1,9 @@
 package fr.inra.sad.bagap.agriconnect.model.metric;
 
 import java.util.Set;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 
 import fr.inra.sad.bagap.apiland.analysis.VariableManager;
 import fr.inra.sad.bagap.apiland.analysis.vector.metric.VectorMetric;

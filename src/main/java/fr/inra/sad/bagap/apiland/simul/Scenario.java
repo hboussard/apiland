@@ -118,7 +118,7 @@ public class Scenario implements Serializable{
 			model = simulator.model();
 		//}
 		
-		folder = manager().expFolder()+"outputs/scenario_"+number+"/";
+		folder = manager().outputFolder()+"scenario_"+number+"/";
 		new File(folder).mkdir();
 		
 		//simulations = new Simulation[manager().simulations()];
@@ -157,7 +157,7 @@ public class Scenario implements Serializable{
 	private void loadModel() {
 		//manager().display("load scenario "+simulator().number()+"_"+number+" model");
 		try {
-			model = (APILandModel)ModelManager.load(manager().expFolder()+"/outputs/simulator.model");
+			model = (APILandModel)ModelManager.load(manager().outputFolder()+"simulator.model");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

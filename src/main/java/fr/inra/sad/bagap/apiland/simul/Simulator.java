@@ -112,7 +112,7 @@ public class Simulator implements Serializable {
 	}
 	
 	public String folder(){
-		return manager().expFolder()+"/outputs/";
+		return manager().outputFolder();
 	}
 	
 	/**
@@ -158,7 +158,7 @@ public class Simulator implements Serializable {
 		this.number = number;
 			
 		// creation du dossier pour les resultats
-		new File(manager().expFolder()+"/outputs/").mkdirs();
+		new File(manager().outputFolder()).mkdirs();
 			
 		manager.display("scenarios creation");
 		// creation des scenarios ??? dans l'initialisation ???
@@ -217,7 +217,7 @@ public class Simulator implements Serializable {
 			for(int i=0; i<manager().scenarios(); i++){
 				s = scenarios[i];
 				if(batchMode){
-					s.init(manager().expFolder()+"/scenario_"+s.number()+".properties");
+					s.init(manager().path()+"/scenario_"+s.number()+".properties");
 				}else{
 					s.init();
 				}
@@ -244,7 +244,7 @@ public class Simulator implements Serializable {
 			for(int i=0; i<manager().scenarios(); i++){
 				s = scenarios[i];
 				if(batchMode){
-					s.init(manager().expFolder()+"/scenario_"+s.number()+".properties");
+					s.init(manager().path()+"/scenario_"+s.number()+".properties");
 				}else{
 					s.init();
 				}
@@ -274,7 +274,7 @@ public class Simulator implements Serializable {
 	private void saveModel(){
 		//manager.display("save simulator "+number+" model");
 		try {
-			ModelManager.save(model, manager().expFolder()+"/outputs/simulator.model");
+			ModelManager.save(model, manager().outputFolder()+"simulator.model");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

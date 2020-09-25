@@ -141,7 +141,7 @@ public abstract class Raster implements GeometryImpl, Iterable<Pixel>{
 	}
 	
 	@Override
-	public com.vividsolutions.jts.geom.Geometry getJTS() {
+	public org.locationtech.jts.geom.Geometry getJTS() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -31,6 +31,12 @@ public class CombinationExpressionFactory {
 		//return listener.getPixel2PixelMatrixCalculation(names, matrix);
 	}
 	
+	public static Pixel2PixelCombinationExpressionAsciiGridCalculation createPixel2PixelAsciiGridCalculation(String combination, String[] names, String outAscii, String... inAscii){
+		ConcreteCombinationExpressionListener listener = parse(combination);
+		
+		return new Pixel2PixelCombinationExpressionAsciiGridCalculation(listener.getCombinationExpression(), names, outAscii, inAscii);
+	}
+	
 	public static CombinationExpressionDistanceFunction createDistanceFunction(String combination, double distanceMax){
 		ConcreteCombinationExpressionListener listener = parse(combination);
 		

@@ -1,6 +1,6 @@
 package fr.inra.sad.bagap.apiland.analysis.vector.process;
 
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Point;
 
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessType;
 import fr.inra.sad.bagap.apiland.analysis.vector.metric.VectorMetric;

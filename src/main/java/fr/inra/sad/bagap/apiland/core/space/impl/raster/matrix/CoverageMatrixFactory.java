@@ -10,7 +10,7 @@ import org.geotools.data.DataSourceException;
 import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.referencing.operation.transform.AffineTransform2D;
 
-public class CoverageMatrixcFactory extends MatrixFactory{
+public class CoverageMatrixFactory extends MatrixFactory{
 
 	public static CoverageMatrix readAsciiFile(String file){
 		try{

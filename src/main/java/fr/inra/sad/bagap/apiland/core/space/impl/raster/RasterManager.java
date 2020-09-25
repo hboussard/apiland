@@ -7,11 +7,9 @@ import java.util.Map;
 import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.MultiPolygon;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-
-import fr.inra.sad.bagap.apiland.core.composition.Attribute;
 import fr.inra.sad.bagap.apiland.core.element.DynamicFeature;
 import fr.inra.sad.bagap.apiland.core.element.DynamicLayer;
 import fr.inra.sad.bagap.apiland.core.space.Geometry;
@@ -25,7 +23,7 @@ public class RasterManager {
 	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, String> map, String cercle, double buffer){
 		try{
 			ShpFiles sf = new ShpFiles(cercle);
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			Polygon polygon = (Polygon) ((MultiPolygon) sfr.nextRecord().shape()).getGeometryN(0);
 			sfr.close();
 
@@ -46,20 +44,20 @@ public class RasterManager {
 		double minY = cercle.getEnvelopeInternal().getMinY() - buffer;
 		double maxY = cercle.getEnvelopeInternal().getMaxY() + buffer;
 		
-		return exportMatrix(layer, name, t, map, minX, maxX, minY, maxY);
+		return exportMatrix(layer, name, Raster.getCellSize(), t, map, minX, maxX, minY, maxY);
 	}
 	
-	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, String> map, double minX, double maxX, double minY, double maxY){
+	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, double cellsize, Instant t, Map<String, String> map, double minX, double maxX, double minY, double maxY){
 		
 		/*
 		int tx, ty;
 		tx = new Double((Math.floor((minX - layer.minX()) / Raster.getCellSize())) + 1).intValue();
 		ty = new Double((Math.floor((layer.maxY() - maxY) / Raster.getCellSize())) + 1).intValue();
 		*/
-		int ncols = new Double((Math.floor((maxX - minX) / Raster.getCellSize())) + 1).intValue();
-		int nrows = new Double((Math.floor((maxY - minY) / Raster.getCellSize())) + 1).intValue();
+		int ncols = new Double((Math.floor((maxX - minX) / cellsize)) /*+ 1*/).intValue();
+		int nrows = new Double((Math.floor((maxY - minY) / cellsize)) /*+ 1*/).intValue();
 		
-		Matrix m = ArrayMatrixFactory.get().create(ncols, nrows, Raster.getCellSize(), minX, maxX, minY, maxY, Raster.getNoDataValue());
+		Matrix m = ArrayMatrixFactory.get().create(ncols, nrows, cellsize, minX, maxX, minY, maxY, Raster.getNoDataValue());
 		m.init(m.noDataValue());
 		int value;
 		
@@ -118,7 +116,7 @@ public class RasterManager {
 	}
 	
 	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t){
-		return exportMatrix(layer, name, t, null, -1, -1, -1, -1);
+		return exportMatrix(layer, name, Raster.getCellSize(), t, null, -1, -1, -1, -1);
 	}
 	
 	public static Matrix exportMatrix(DynamicLayer<?> layer, String name, Instant t, Map<String, Integer> map){

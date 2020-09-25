@@ -59,12 +59,11 @@ import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.geotools.data.shapefile.shp.ShapefileWriter;
-
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
 
 import fr.inra.sad.bagap.apiland.core.composition.AttributeType;
 import fr.inra.sad.bagap.apiland.core.element.DefaultDynamicLayer;
@@ -154,7 +153,7 @@ public class DynamicLayerFactory {
 				sf = new ShpFiles(shape + ".shp");
 			}
 			
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			DbaseFileHeader dfh = dfr.getHeader();
 			
@@ -205,7 +204,7 @@ public class DynamicLayerFactory {
 	private static <E extends DynamicElement> void initWithGeometries(DynamicLayer<E> layer, Time time, 
 			ShapefileReader sfr, DbaseFileReader dfr, Map<String, Integer> posIds, Map<String, Integer> positions, 
 			Class <? extends fr.inra.sad.bagap.apiland.core.space.GeometryType> geometryClass, String condition, DynamicElementType... types){
-		com.vividsolutions.jts.geom.Geometry geo;
+		org.locationtech.jts.geom.Geometry geo;
 		try {
 			RepresentationType rType = DynamicElementTypeFactory.createRepresentationType("the_geom", time.getClass(),geometryClass, GeometryImplType.VECTOR);
 			for(DynamicElementType t : types){
@@ -220,7 +219,7 @@ public class DynamicLayerFactory {
 					if(((MultiPolygon)shape).getNumGeometries() > 1){
 						geo = (MultiPolygon) shape;
 					}else if(((MultiPolygon) shape).getNumGeometries() == 1){
-						geo = (com.vividsolutions.jts.geom.Polygon)((MultiPolygon) shape).getGeometryN(0);
+						geo = (org.locationtech.jts.geom.Polygon)((MultiPolygon) shape).getGeometryN(0);
 					}else{
 						throw new IllegalArgumentException();
 					}
@@ -228,13 +227,13 @@ public class DynamicLayerFactory {
 					if(((MultiLineString) shape).getNumGeometries() > 1){
 						geo = (MultiLineString) shape;
 					}else{
-						geo = (com.vividsolutions.jts.geom.LineString)((MultiLineString) shape).getGeometryN(0);
+						geo = (org.locationtech.jts.geom.LineString)((MultiLineString) shape).getGeometryN(0);
 					}
 				}else if(geometryClass.equals(Local.class)){
 					if(((MultiPoint) shape).getNumGeometries() > 1){
 						geo = (MultiPoint) shape;
 					}else{
-						geo = (com.vividsolutions.jts.geom.Point)((MultiPoint) shape).getGeometryN(0);
+						geo = (org.locationtech.jts.geom.Point)((MultiPoint) shape).getGeometryN(0);
 					}
 				}else{
 					throw new IllegalArgumentException();

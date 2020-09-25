@@ -21,14 +21,13 @@ import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.geotools.data.shapefile.shp.ShapefileWriter;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.impl.CoordinateArraySequence;
+import org.locationtech.jts.simplify.DouglasPeuckerSimplifier;
 
 public class Tool {
 
@@ -52,7 +51,7 @@ public class Tool {
 				FileOutputStream shx = new FileOutputStream(output + ".shx");){
 			
 			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			dfr.getHeader();
 			
@@ -173,7 +172,7 @@ public class Tool {
 				FileOutputStream shx = new FileOutputStream(output + ".shx");){
 			
 			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			dfr.getHeader();
 			
@@ -315,7 +314,7 @@ public class Tool {
 				FileOutputStream shx = new FileOutputStream(output+".shx");){
 			
 			ShpFiles sf = new ShpFiles(name+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			DbaseFileHeader inHeader = dfr.getHeader(); 
 			
@@ -380,7 +379,7 @@ public class Tool {
 				FileOutputStream shx = new FileOutputStream(output+".shx");){
 			
 			ShpFiles sf = new ShpFiles(name+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			DbaseFileHeader inHeader = dfr.getHeader(); 
 			
@@ -445,7 +444,7 @@ public class Tool {
 				FileOutputStream shx = new FileOutputStream(output+".shx")){
 			
 			ShpFiles sf = new ShpFiles(name+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			DbaseFileHeader inHeader = dfr.getHeader();
 			

@@ -110,7 +110,7 @@ public class Simulation implements Serializable {
 			model.setCurrent(manager().start());
 		//}
 		
-		folder = manager().expFolder()+"/outputs/scenario_"+scenario.number()+"/simulation_"+number+"/";
+		folder = manager().outputFolder()+"scenario_"+scenario.number()+"/simulation_"+number+"/";
 		new File(folder).mkdir();
 		run = false;
 

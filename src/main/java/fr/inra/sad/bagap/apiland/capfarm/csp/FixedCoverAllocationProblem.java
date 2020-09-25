@@ -42,12 +42,13 @@ public class FixedCoverAllocationProblem extends CoverAllocationProblem {
 		int ip, ic;
 		
 		if(solver.findSolution()) {
+			/*
 			for(Variable v : solver.getVars()){
 				if(v.getName().equalsIgnoreCase("a_cv_C05")){
 					//System.out.println(v.getName()+" : "+((IntVar) v).getValue());
 					allocator().getTerritory().getAttribute("prairies").setValue(time(), ((IntVar) v).getValue());
 				}
-			}
+			}*/
 			for(Parcel p : parcels().keySet()){
 				ip = parcels().get(p);
 				if(((IntVar) parcelsImplantedCoverContinue[ip]).getValue() == 0){

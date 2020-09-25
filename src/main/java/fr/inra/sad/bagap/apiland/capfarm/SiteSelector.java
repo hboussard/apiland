@@ -20,13 +20,12 @@ import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.geotools.data.shapefile.shp.ShapefileWriter;
-
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 public class SiteSelector {
 
@@ -64,7 +63,7 @@ public class SiteSelector {
 		Map<String, Set<Polygon>> areas = new TreeMap<String, Set<Polygon>>();
 		try {
 			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			header = dfr.getHeader();
 			
@@ -145,7 +144,7 @@ public class SiteSelector {
 	
 		try {
 			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			
 			minX = Double.MAX_VALUE;
@@ -253,7 +252,7 @@ public class SiteSelector {
 		
 		try {
 			ShpFiles sf = new ShpFiles(input+".shp");
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
 			header = dfr.getHeader();
 			

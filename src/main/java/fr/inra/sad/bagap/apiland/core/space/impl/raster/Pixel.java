@@ -35,7 +35,7 @@ package fr.inra.sad.bagap.apiland.core.space.impl.raster;
 
 import java.util.Iterator;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.GeometryImpl;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Friction;

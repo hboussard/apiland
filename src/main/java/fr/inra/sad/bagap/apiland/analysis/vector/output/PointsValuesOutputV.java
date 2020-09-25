@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Point;
 
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.AbstractMetricOutput;

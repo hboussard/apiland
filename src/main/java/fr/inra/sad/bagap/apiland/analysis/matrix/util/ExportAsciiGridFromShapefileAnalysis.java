@@ -18,23 +18,22 @@ import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileHeader;
 import org.geotools.data.shapefile.shp.ShapefileReader;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Lineal;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygonal;
-import com.vividsolutions.jts.geom.Puntal;
-import com.vividsolutions.jts.geom.prep.PreparedGeometry;
-import com.vividsolutions.jts.geom.prep.PreparedLineString;
-import com.vividsolutions.jts.geom.prep.PreparedPoint;
-import com.vividsolutions.jts.geom.prep.PreparedPolygon;
-import com.vividsolutions.jts.index.strtree.STRtree;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Lineal;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygonal;
+import org.locationtech.jts.geom.Puntal;
+import org.locationtech.jts.geom.prep.PreparedGeometry;
+import org.locationtech.jts.geom.prep.PreparedLineString;
+import org.locationtech.jts.geom.prep.PreparedPoint;
+import org.locationtech.jts.geom.prep.PreparedPolygon;
+import org.locationtech.jts.index.strtree.STRtree;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
@@ -257,8 +256,9 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 					pp.getGeometry().geometryChanged();
 					
 					//System.out.println(j+" "+i+" "+2);
-					if(current != null && ((type.isPolygonType() && pp.intersects(current))
-							/*|| (type.isLineType() && pp.getGeometry().distance(current) <= distance)*/)) {
+					if(current != null && (type.isPolygonType() && pp.intersects(current))
+					//if(current != null && (type.isPolygonType() && pp.getGeometry().distance(current) <= distance)
+							/*|| (type.isLineType() && pp.getGeometry().distance(current) <= distance)*/) {
 						//System.out.println("ici "+current.getUserData());
 						bw.write(current.getUserData()+" ");
 						//System.out.println(j+" "+i+"/"+ncols);
@@ -283,6 +283,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 							//System.out.println("là "+3);
 							
 							if((type.isPolygonType() && pp.intersects(g))
+							//if((type.isPolygonType() && pp.getGeometry().distance(g) <= distance)	
 									|| (type.isLineType() && pp.getGeometry().distance(g) <= distance)) {
 								//System.out.println("là "+4);
 								
@@ -341,7 +342,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	
 	private int getNumGeometries(ShpFiles sf){
 		try {
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 		
 			GeometryCollection gc;
 			int size = 0;
@@ -365,7 +366,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	
 	private ShapeType getShapeType(ShpFiles sf){
 		try {
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			ShapeType type = sfr.getHeader().getShapeType();
 			sfr.close();
 			return type;
@@ -401,7 +402,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	
 	private double[] getEnvelopeFromShapefile(ShpFiles sf){
 		try {
-			ShapefileReader sfr = new ShapefileReader(sf, true, false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			ShapefileHeader sfh = sfr.getHeader();
 			
 			double[] envelope = new double[4];
@@ -424,7 +425,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	
 	private Set<Geometry> getGeometries(ShpFiles sf, ShapeType type, int pos, Map<String, String> map) {
 		try {
-			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true,	Charset.defaultCharset());
 			GeometryCollection gc;
 			Geometry g;
@@ -465,7 +466,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	
 	private Set<PreparedGeometry> getPreparedGeometries(ShpFiles sf, ShapeType type, int pos, Map<String, String> map){
 		try {
-			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true,	Charset.defaultCharset());
 			GeometryCollection gc;
 			Geometry g;
@@ -513,7 +514,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 	
 	private STRtree getSpatialIndex(ShpFiles sf, int pos, Map<String, String> map, Envelope env){
 		try {
-			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new com.vividsolutions.jts.geom.GeometryFactory());
+			ShapefileReader sfr = new ShapefileReader(sf, true,	false, new org.locationtech.jts.geom.GeometryFactory());
 			DbaseFileReader dfr = new DbaseFileReader(sf, true,	Charset.defaultCharset());
 			GeometryCollection gc;
 			Geometry g;

@@ -40,52 +40,52 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.RasterComposite;
 
 public class GeometryFactory {
 	
-	public static final com.vividsolutions.jts.geom.GeometryFactory factory = new com.vividsolutions.jts.geom.GeometryFactory();
+	public static final org.locationtech.jts.geom.GeometryFactory factory = new org.locationtech.jts.geom.GeometryFactory();
 	
-	public static Geometry create(com.vividsolutions.jts.geom.Geometry g){
-		if(g instanceof com.vividsolutions.jts.geom.Point){
-			return create((com.vividsolutions.jts.geom.Point)g);
-		}else if(g instanceof com.vividsolutions.jts.geom.LineString){
-			return create((com.vividsolutions.jts.geom.LineString)g);
-		}else if(g instanceof com.vividsolutions.jts.geom.Polygon){
-			return create((com.vividsolutions.jts.geom.Polygon)g);
-		}else if(g instanceof com.vividsolutions.jts.geom.MultiPoint){
-			return create((com.vividsolutions.jts.geom.MultiPoint)g);
-		}else if(g instanceof com.vividsolutions.jts.geom.MultiLineString){
-			return create((com.vividsolutions.jts.geom.MultiLineString)g);
-		}else if(g instanceof com.vividsolutions.jts.geom.MultiPolygon){
-			return create((com.vividsolutions.jts.geom.MultiPolygon)g);
-		}else if(g instanceof com.vividsolutions.jts.geom.GeometryCollection){
-			return create((com.vividsolutions.jts.geom.GeometryCollection)g);
+	public static Geometry create(org.locationtech.jts.geom.Geometry g){
+		if(g instanceof org.locationtech.jts.geom.Point){
+			return create((org.locationtech.jts.geom.Point)g);
+		}else if(g instanceof org.locationtech.jts.geom.LineString){
+			return create((org.locationtech.jts.geom.LineString)g);
+		}else if(g instanceof org.locationtech.jts.geom.Polygon){
+			return create((org.locationtech.jts.geom.Polygon)g);
+		}else if(g instanceof org.locationtech.jts.geom.MultiPoint){
+			return create((org.locationtech.jts.geom.MultiPoint)g);
+		}else if(g instanceof org.locationtech.jts.geom.MultiLineString){
+			return create((org.locationtech.jts.geom.MultiLineString)g);
+		}else if(g instanceof org.locationtech.jts.geom.MultiPolygon){
+			return create((org.locationtech.jts.geom.MultiPolygon)g);
+		}else if(g instanceof org.locationtech.jts.geom.GeometryCollection){
+			return create((org.locationtech.jts.geom.GeometryCollection)g);
 		}
 		throw new IllegalArgumentException();
 	}
 	
-	public static Surface create(com.vividsolutions.jts.geom.Polygon g){
+	public static Surface create(org.locationtech.jts.geom.Polygon g){
 		return new Surface(new Vectorial(g));
 	}
 	
-	public static MultiCurve create(com.vividsolutions.jts.geom.LineString g){
+	public static MultiCurve create(org.locationtech.jts.geom.LineString g){
 		return new MultiCurve(new Vectorial(g));
 	}
 	
-	public static Point create(com.vividsolutions.jts.geom.Point g){
+	public static Point create(org.locationtech.jts.geom.Point g){
 		return new Point(new Vectorial(g));
 	}
 	
-	public static MultiSurface create(com.vividsolutions.jts.geom.MultiPolygon g){
+	public static MultiSurface create(org.locationtech.jts.geom.MultiPolygon g){
 		return new MultiSurface(new Vectorial(g));
 	}
 	
-	public static MultiCurve create(com.vividsolutions.jts.geom.MultiLineString g){
+	public static MultiCurve create(org.locationtech.jts.geom.MultiLineString g){
 		return new MultiCurve(new Vectorial(g));
 	}
 	
-	public static MultiPoint create(com.vividsolutions.jts.geom.MultiPoint g){
+	public static MultiPoint create(org.locationtech.jts.geom.MultiPoint g){
 		return new MultiPoint(new Vectorial(g));
 	}
 	
-	public static ComplexGeometry<Geometry> create(com.vividsolutions.jts.geom.GeometryCollection g){
+	public static ComplexGeometry<Geometry> create(org.locationtech.jts.geom.GeometryCollection g){
 		return new ComplexGeometry<Geometry>(new Vectorial(g));
 	}
 	

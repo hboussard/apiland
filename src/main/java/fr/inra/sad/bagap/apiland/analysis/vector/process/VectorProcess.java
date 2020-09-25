@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.prep.PreparedPolygon;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.prep.PreparedPolygon;
 
 import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;

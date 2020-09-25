@@ -50,6 +50,6 @@ public interface GeometryImpl extends Cloneable, Serializable{
 
 	boolean overlaps(GeometryImpl impl);
 	
-	com.vividsolutions.jts.geom.Geometry getJTS();
+	org.locationtech.jts.geom.Geometry getJTS();
 
 }

@@ -7,6 +7,7 @@ import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.GridAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.GridCsvOutput;
+import fr.inra.sad.bagap.apiland.analysis.matrix.output.HeaderGridAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetricManager;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.WindowMatrixAnalysis;
@@ -72,6 +73,7 @@ public class GridWindowMatrixTreatment extends Treatment implements AnalysisObse
 		builder.setMinRate(minRate);
 		if(csv != null){
 			builder.addObserver(new GridCsvOutput(gridSize, matrix, csv));
+			builder.addObserver(new HeaderGridAsciiGridOutput(gridSize, csv.replace(".csv", "")+"_header.txt"));
 		}
 		if(ascii != null){
 			if(ascii.endsWith(".asc") && metrics.size() == 1){

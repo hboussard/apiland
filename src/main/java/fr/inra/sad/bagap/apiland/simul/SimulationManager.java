@@ -81,7 +81,10 @@ public class SimulationManager implements Serializable{
 	private String path; 
 	
 	/** experience folder */
-	protected String expFolder; 
+	//protected String expFolder; 
+	
+	/** output folder */
+	private String outputFolder;
 	
 	///** output variables manager */
 	//private transient OutputManager outputM;
@@ -104,8 +107,6 @@ public class SimulationManager implements Serializable{
 			FileInputStream in = new FileInputStream(propertiesFile);
 			properties.load(in);
 			in.close();
-			
-			expFolder = new File(propertiesFile).getParent();
 			
 			if(properties.containsKey("start")){
 				start = Time.get(properties.getProperty("start"));
@@ -137,6 +138,17 @@ public class SimulationManager implements Serializable{
 			
 			if(properties.containsKey("path")){
 				path = properties.getProperty("path");
+			}else{
+				path = new File(propertiesFile).getParent();
+			}
+			
+			if(properties.containsKey("output")){
+				String o = properties.getProperty("output");
+				if(!o.endsWith("/")){
+					outputFolder = path+o+"/";
+				}else{
+					outputFolder = path+o;
+				}
 			}
 				
 		}catch(FileNotFoundException ex){
@@ -177,12 +189,23 @@ public class SimulationManager implements Serializable{
 	}
 
 	public String path() {
+		if(path == null || path.equalsIgnoreCase("")){
+			throw new IllegalArgumentException("path simulation undifined");
+		}
 		return path;
 	}
 	
+	public String outputFolder() {
+		if(outputFolder == null || outputFolder.equalsIgnoreCase("")){
+			outputFolder = path()+"outputs/";
+		}
+		return outputFolder;
+	}
+	
+	/*
 	public String expFolder() {
 		return expFolder;
-	}
+	}*/
 
 	public void setSimulations(int s){
 		this.simulations = s;
@@ -234,10 +257,11 @@ public class SimulationManager implements Serializable{
 			path = value;
 			return;
 		}
+		/*
 		if(key.equalsIgnoreCase("expFolder")){
 			expFolder = value;
 			return;
-		}
+		}*/
 	}
 	
 	public void setSimulatorProcess(SimulatorProcess sp){
@@ -285,6 +309,14 @@ public class SimulationManager implements Serializable{
 	
 	public void setPath(String path){
 		this.path = path;
+	}
+	
+	public void setOutputFolder(String output){
+		if(!output.endsWith("/")){
+			outputFolder = path+output+"/";
+		}else{
+			outputFolder = path+output;
+		}
 	}
 
 	public void setStart(Instant t){

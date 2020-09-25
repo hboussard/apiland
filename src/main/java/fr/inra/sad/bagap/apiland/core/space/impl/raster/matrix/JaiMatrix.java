@@ -222,7 +222,7 @@ public class JaiMatrix implements Matrix {
 				
 			} while (!ite.nextPixelDone());
 			ite.startPixels();
-			System.out.println((line++)+"/"+height());
+			//System.out.println((line++)+"/"+height());
 		} while (!ite.nextLineDone());
 		
 		/*

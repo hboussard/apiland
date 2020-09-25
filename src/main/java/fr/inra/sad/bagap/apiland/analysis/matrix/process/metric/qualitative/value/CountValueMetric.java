@@ -17,7 +17,7 @@ public class CountValueMetric extends MatrixMetric implements ValueMetric {
 
 	@Override
 	public void doCalculate(Counting co) {
-		if(co.countValues() > 0){
+		if(co.validValues() > 0){
 			value = co.countValue(v);
 		}
 	}

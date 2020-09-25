@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Point;
 
 import fr.inra.sad.bagap.apiland.analysis.vector.metric.VectorMetric;
 import fr.inra.sad.bagap.apiland.analysis.vector.process.VectorProcess;

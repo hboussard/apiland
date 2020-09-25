@@ -3,8 +3,8 @@ package fr.inra.sad.bagap.apiland.analysis.vector.metric;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 
 import fr.inra.sad.bagap.apiland.analysis.Stats;
 import fr.inra.sad.bagap.apiland.analysis.VariableManager;
