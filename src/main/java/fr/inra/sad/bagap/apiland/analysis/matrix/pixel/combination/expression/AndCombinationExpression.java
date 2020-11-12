@@ -9,6 +9,7 @@ public class AndCombinationExpression extends ComplexLogicalCombinationExpressio
 	@Override
 	public boolean evaluation() {
 		for(BooleanCombinationExpression lce : getBooleanCombinationExpressions()){
+			//System.out.println(lce);
 			if(!lce.evaluation()){
 				return false;
 			}

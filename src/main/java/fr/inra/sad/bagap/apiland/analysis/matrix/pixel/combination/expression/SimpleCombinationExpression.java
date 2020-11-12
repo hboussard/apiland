@@ -9,6 +9,8 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class SimpleCombinationExpression implements CombinationExpression {
 	
+	private String exp;
+	
 	private Set<String> names;
 	
 	private Expression expression;
@@ -16,6 +18,7 @@ public class SimpleCombinationExpression implements CombinationExpression {
 	private boolean hasnodata;
 	
 	public SimpleCombinationExpression(String exp, String... names){
+		this.exp = exp;
 		this.names = new TreeSet<String>();
 		for(String name : names){
 			this.names.add(name);
@@ -25,11 +28,14 @@ public class SimpleCombinationExpression implements CombinationExpression {
 	}
 	
 	public String toString(){
+		/*
 		StringBuilder sb = new StringBuilder();
 		for(String n : names){
 			sb.append(n+" ");
 		}
 		return sb.toString();
+		*/
+		return exp;
 	}
 	
 	protected Expression getExpression(){

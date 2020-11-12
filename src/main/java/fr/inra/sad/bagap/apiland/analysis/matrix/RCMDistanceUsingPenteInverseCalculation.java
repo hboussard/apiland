@@ -1,8 +1,5 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,7 +14,7 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Friction;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixFactory;
 
-public class RCMDistanceCalculation extends MatrixCalculation {
+public class RCMDistanceUsingPenteInverseCalculation extends MatrixCalculation {
 
 	private Collection<Integer> values;
 
@@ -28,6 +25,8 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 	private double[] mat;
 
 	private double[] frictionMat;
+	
+	private double[] mntMat;
 
 	private double threshold;
 	
@@ -36,20 +35,23 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 	
 	private int total;
 
-	public RCMDistanceCalculation(Matrix m, Friction f, Collection<Integer> values) {
-		this(m, f, values, Raster.getNoDataValue());
+	public RCMDistanceUsingPenteInverseCalculation(Matrix m, Friction f, Matrix mnt, Collection<Integer> values) {
+		this(m, f, mnt, values, Raster.getNoDataValue());
 	}
 
-	public RCMDistanceCalculation(Matrix m, Friction f, Collection<Integer> values, double threshold) {
+	public RCMDistanceUsingPenteInverseCalculation(Matrix m, Friction f, Matrix mnt, Collection<Integer> values, double threshold) {
 		super(m);
 		
 		this.width = m.width();
 		this.height = m.height();
 		
 		this.mat = new double[width*height];
+		this.mntMat = new double[width*height];
+		
 		for(int j=0; j<height; j++){
 			for(int i=0; i<width; i++){
 				this.mat[i+j*width] = m.get(i, j);
+				this.mntMat[i+j*width] = mnt.get(i, j);
 			}
 		}
 		
@@ -63,11 +65,11 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 		}
 	}
 
-	public RCMDistanceCalculation(Matrix m, Matrix f, Collection<Integer> values) {
-		this(m, f, values, Raster.getNoDataValue());
+	public RCMDistanceUsingPenteInverseCalculation(Matrix m, Matrix f, Matrix mnt, Collection<Integer> values) {
+		this(m, f, mnt, values, Raster.getNoDataValue());
 	}
 
-	public RCMDistanceCalculation(Matrix m, Matrix f, Collection<Integer> values, double threshold) {
+	public RCMDistanceUsingPenteInverseCalculation(Matrix m, Matrix f, Matrix mnt, Collection<Integer> values, double threshold) {
 		super(m);
 		
 		this.width = m.width();
@@ -75,11 +77,13 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 		
 		this.mat = new double[width*height];
 		this.frictionMat = new double[width*height];
+		this.mntMat = new double[width*height];
 		
 		for(int j=0; j<height; j++){
 			for(int i=0; i<width; i++){
 				this.mat[i+j*width] = m.get(i, j);
 				this.frictionMat[i+j*width] = f.get(i, j);
+				this.mntMat[i+j*width] = mnt.get(i, j);
 			}
 		}
 		
@@ -308,6 +312,7 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 			if (vd != Raster.getNoDataValue()) {
 				double fd = friction(vd, p.x(), p.y()); // friction au point de diffusion
 				if(fd != Raster.getNoDataValue()){
+					double ad = mntMat[p.x()+p.y()*width]; // altitude au point de diffusion
 					Pixel np;
 					double v, d;
 					Iterator<Pixel> ite = p.getCardinalMargins(); // pour chaque pixel cardinal (4)
@@ -319,14 +324,17 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 							if (v != Raster.getNoDataValue()) {
 								double fc = friction(v, np.x(), np.y());
 								if(fc != Raster.getNoDataValue()){
-									d = dd + (matrix().cellsize() / 2) * fd + (matrix().cellsize() / 2) * fc; // distance au point cardinal
-									double vdn = dist[np.x()+np.y()*width];
-									if (d < vdn) { // MAJ ?
-										dist[np.x()+np.y()*width] = d;
-										if(vdn != threshold){
-											waits.get(vdn).remove(np);
+									double ac = mntMat[np.x()+np.y()*width]; // altitude au point cardinal
+									if(ac >= ad){
+										d = dd + (matrix().cellsize() / 2) * fd + (matrix().cellsize() / 2) * fc; // distance au point cardinal
+										double vdn = dist[np.x()+np.y()*width];
+										if (d < vdn) { // MAJ ?
+											dist[np.x()+np.y()*width] = d;
+											if(vdn != threshold){
+												waits.get(vdn).remove(np);
+											}
+											setPixelAndValue(waits, np, d);
 										}
-										setPixelAndValue(waits, np, d);
 									}
 								}
 							}
@@ -341,14 +349,17 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 							if (v != Raster.getNoDataValue()) {
 								double fc = friction(v, np.x(), np.y());
 								if(fc != Raster.getNoDataValue()){
-									d = dd + (matrix().cellsize() * Math.sqrt(2) / 2) * fd + (matrix().cellsize() * Math.sqrt(2) / 2) * fc; // distance au point diagonal
-									double vdn = dist[np.x()+np.y()*width];
-									if (d < vdn) { // MAJ ?
-										dist[np.x()+np.y()*width] = d;
-										if(vdn != threshold){
-											waits.get(vdn).remove(np);
+									double ac = mntMat[np.x()+np.y()*width]; // altitude au point diagonal
+									if(ac >= ad){
+										d = dd + (matrix().cellsize() * Math.sqrt(2) / 2) * fd + (matrix().cellsize() * Math.sqrt(2) / 2) * fc; // distance au point diagonal
+										double vdn = dist[np.x()+np.y()*width];
+										if (d < vdn) { // MAJ ?
+											dist[np.x()+np.y()*width] = d;
+											if(vdn != threshold){
+												waits.get(vdn).remove(np);
+											}
+											setPixelAndValue(waits, np, d);
 										}
-										setPixelAndValue(waits, np, d);
 									}
 								}
 							}
@@ -381,3 +392,4 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 	}
 
 }
+

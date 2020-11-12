@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
@@ -43,6 +44,17 @@ public class Tool {
 		ids.add(39);
 		ids.add(42);
 		retrieveUnits(input, output, ids);
+	}
+	
+	public static String deleteExtension(String file){
+		String line="";
+		StringTokenizer st = new StringTokenizer(file,".");
+		String last="";
+		while(st.hasMoreTokens()){
+			last = last + line;
+			line = st.nextToken();
+		}
+		return last;
 	}
 	
 	public static void formatShapeFile(String input, String output){

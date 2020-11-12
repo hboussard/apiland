@@ -102,14 +102,14 @@ public class CombinationExpressionBuilder extends CombinationBaseListener {
 	
 	@Override 
 	public void enterAndgenericboolterm(@NotNull CombinationParser.AndgenericbooltermContext ctx) {  
-		//System.out.println("enterAndgenericboolterm "+ctx.getText());
-		addCombinationExpression(new AndCombinationExpression(2));
+		//System.out.println("enterAndgenericboolterm "+ctx.getText()+" "+ctx.genericboolterm().size());
+		addCombinationExpression(new AndCombinationExpression(ctx.genericboolterm().size()));
 	}
 	
 	@Override 
 	public void enterOrgenericboolterm(@NotNull CombinationParser.OrgenericbooltermContext ctx) {  
-		//System.out.println("enterOrgenericboolterm "+ctx.getText());
-		addCombinationExpression(new OrCombinationExpression(2));
+		//System.out.println("enterOrgenericboolterm "+ctx.getText()+" "+ctx.genericboolterm().size());
+		addCombinationExpression(new OrCombinationExpression(ctx.genericboolterm().size()));
 	}
 	
 	

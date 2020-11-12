@@ -1,5 +1,8 @@
 package fr.inra.sad.bagap.apiland.capfarm.simul;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.LinkedList;
 
@@ -28,6 +31,8 @@ public class CfmManager extends SimulationManager {
 	
 	private String probaTimeFolder;
 	
+	//private BufferedReader inputProbaTimeFolder;
+	
 	private String economicProfil;
 	
 	private String managmentProfil;
@@ -39,8 +44,13 @@ public class CfmManager extends SimulationManager {
 		setDelay(new YearDelay(1));
 		outputs = new LinkedList<OutputAnalysis>();
 		check = false;
+		
 		URL url = CfmManager.class.getResource("proba_times/");
-		if (url != null)probaTimeFolder = url.toString();
+		System.out.println(url);
+		if (url != null){
+			probaTimeFolder = url.toString();
+		}
+		
 	}
 	
 	@Override
@@ -107,6 +117,12 @@ public class CfmManager extends SimulationManager {
 	public String probaTimeFolder(){
 		return probaTimeFolder;
 	}
+	
+	/*
+	public BufferedReader inputProbaTimeFolder(){
+		return inputProbaTimeFolder;
+	}
+	*/
 	
 	public boolean checkConstraints(){
 		return check;

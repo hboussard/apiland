@@ -65,6 +65,8 @@ public class JaiMatrix implements Matrix {
 		maxV = Integer.MIN_VALUE;
 		if(read){
 			initValues();
+		}else{
+			RectIter ite2 = RectIterFactory.create(pi, new Rectangle(0, 0, pi.getWidth(), pi.getHeight()));
 		}
 	}
 	
@@ -207,6 +209,7 @@ public class JaiMatrix implements Matrix {
 		*/
 		
 		RectIter ite = RectIterFactory.create(pi, new Rectangle(0, 0, pi.getWidth(), pi.getHeight()));
+		
 		double v;
 		//minV = Integer.MAX_VALUE;
 		//maxV = Integer.MIN_VALUE;

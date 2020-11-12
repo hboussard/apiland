@@ -64,10 +64,11 @@ public class MatrixMetricManager {
 		statsMetrics = new TreeSet<String>();
 		metrics = new HashMap<String, String>();
 		CsvReader cr = null;
+		BufferedReader buf = null;
 		try{
 			//String buf = "c://Hugues/workspace/apiland-0.9.3.v4-analysis/src/fr/inra/sad_paysage/apiland/analysis/metric/metrics.csv";
 			//BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics.csv")));
-			BufferedReader buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics.csv")));
+			buf = new BufferedReader(new InputStreamReader(MatrixMetricManager.class.getResourceAsStream("metrics.csv")));
 			cr = new CsvReader(buf);
 			cr.setDelimiter(';');
 			cr.readHeaders();
@@ -117,7 +118,7 @@ public class MatrixMetricManager {
 					}
 				}
 			}
-			
+			buf.close();
 		}catch(FinalizedException ex){
 			ex.printStackTrace();
 		}catch(CatastrophicException ex){

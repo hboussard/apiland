@@ -1,14 +1,6 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.geotools.coverage.grid.GridCoverage2D;
-
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 public class CoverageChamferDistance extends Analysis {
@@ -31,29 +23,16 @@ public class CoverageChamferDistance extends Analysis {
 	private int width = 0, height = 0;
 
 	private float[] outDatas;
-
-	private float threshold;
-
-	private double posX;
-	
-	private double posY;
 	
 	private float cellSize;
-	
-	public CoverageChamferDistance(float[] outDatas, int width, int height, double posX, double posY, float cellSize, Collection<Integer> codes) {
-			this(outDatas, width, height, posX, posY, cellSize, codes, Raster.getNoDataValue());
-	}
 
-	public CoverageChamferDistance(float[] outDatas, int width, int height, double posX, double posY, float cellSize, Collection<Integer> codes, float threshold) {
+	public CoverageChamferDistance(float[] outDatas, int width, int height, float cellSize) {
 			this.chamfer = CoverageChamferDistance.chamfer13;
 			this.normalizer = this.chamfer[0][2];
 			this.outDatas = outDatas;
 			this.width = width;
 			this.height = height;
-			this.posX = posX;
-			this.posY = posY;
 			this.cellSize = cellSize;
-			this.threshold = threshold;
 	}
 
 	@Override
@@ -127,33 +106,6 @@ public class CoverageChamferDistance extends Analysis {
 				}
 			}
 		}
-		
-		
-		/*
-		// normalize
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				outDatas[y][x] = (outDatas[y][x] / normalizer) * cellSize;
-			}
-		}
-		*/
-		
-		/*
-		// nettoyage
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				float v = inDatas[y*width+x];
-				if (v == Raster.getNoDataValue()) {
-					outDatas[y][x] = Raster.getNoDataValue();
-				} else {
-					float v2 = outDatas[y][x];
-					if (threshold != Raster.getNoDataValue() && v2 > threshold) {
-						outDatas[y][x] = threshold;
-					}
-				}
-			}
-		}
-		*/
 		
 		return outDatas;
 	}

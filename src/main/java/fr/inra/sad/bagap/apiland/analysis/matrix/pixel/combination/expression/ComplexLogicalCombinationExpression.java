@@ -14,6 +14,14 @@ public abstract class ComplexLogicalCombinationExpression implements BooleanComb
 		booleanExpressions = new ArrayList<BooleanCombinationExpression>();
 	}
 	
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		for(BooleanCombinationExpression bce : booleanExpressions){
+			sb.append(bce.toString()+" ");
+		}
+		return sb.toString();
+	}
+	
 	protected List<BooleanCombinationExpression> getBooleanCombinationExpressions(){
 		return booleanExpressions;
 	}

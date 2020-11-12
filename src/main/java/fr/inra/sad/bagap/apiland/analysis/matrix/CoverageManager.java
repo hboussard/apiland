@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import javax.media.jai.ImageLayout;
 import javax.media.jai.JAI;
 import javax.media.jai.ParameterBlockJAI;
+import javax.media.jai.PlanarImage;
 import javax.media.jai.RenderedOp;
 
 import org.apache.commons.io.FileUtils;
@@ -47,6 +48,7 @@ import org.geotools.gce.geotiff.GeoTiffWriter;
 import org.geotools.geometry.Envelope2D;
 import org.geotools.geometry.GeneralEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.image.util.ImageUtilities;
 import org.geotools.metadata.i18n.Vocabulary;
 import org.geotools.metadata.i18n.VocabularyKeys;
 import org.geotools.parameter.AbstractParameterDescriptor;
@@ -54,6 +56,7 @@ import org.geotools.parameter.Parameter;
 import org.geotools.referencing.CRS;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.parameter.GeneralParameterValue;
+import org.opengis.parameter.ParameterValue;
 import org.opengis.parameter.ParameterValueGroup;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
@@ -93,7 +96,7 @@ public class CoverageManager {
 	public static void writeGeotiff(File out, float[] datas, int width, int height, double minX, double maxX, double minY, double maxY) {
 		
 		try {
-			final WritableRaster raster = RasterFactory.createBandedRaster(DataBuffer.TYPE_FLOAT, width, height, 1, null);
+			WritableRaster raster = RasterFactory.createBandedRaster(DataBuffer.TYPE_FLOAT, width, height, 1, null);
 			raster.setSamples(0, 0, width, height, 0, datas);
 			
 			//System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
@@ -110,57 +113,25 @@ public class CoverageManager {
 			GeoTiffWriter writer = new GeoTiffWriter(out);
 			
 			writer.write(coverage, params.values().toArray(new GeneralParameterValue[1]));
+			
+			coverage.dispose(true);
+			PlanarImage planarImage = (PlanarImage) coverage.getRenderedImage();
+			ImageUtilities.disposePlanarImageChain(planarImage);
+			coverage = null;
 			writer.dispose();
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public static void writeGeotiff2(File out, float[] datas) {
-		
-		int width = 1000;
-		int height = 1500;
-		
-		try {
-			// Inspired by org.geotools.coverage.grid.GridCoverageFactory
-			final WritableRaster raster = RasterFactory.createBandedRaster(DataBuffer.TYPE_INT, width, height, 1, null);
-			
-			raster.setSamples(0, 0, 100, 50, 0, datas);
-			
-			/*
-			int val;
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					val = y * width + x;
-					raster.setSample(x, y, 0, val);
-				}
-			}*/
-			
-			ReferencedEnvelope env = new ReferencedEnvelope(0.0, 1000.0, 0.0, 1500.0, CRS.decode("EPSG:2154"));
-			GridCoverageFactory gcf = new GridCoverageFactory();
-			GridCoverage2D coverage = gcf.create("TIMEGRID", raster, env);
-			((WritableRaster) coverage.getRenderedImage().getData()).setSamples(100, 100, 100, 50, 0, datas);
-			GeoTiffWriteParams wp = new GeoTiffWriteParams();
-			wp.setCompressionMode(GeoTiffWriteParams.MODE_EXPLICIT);
-			//wp.setCompressionType("LZW");
-			ParameterValueGroup params = new GeoTiffFormat().getWriteParameters();
-			params.parameter(AbstractGridFormat.GEOTOOLS_WRITE_PARAMS.getName().toString()).setValue(wp);
-			GeoTiffWriter writer = new GeoTiffWriter(out);
-			
-			writer.write(coverage, params.values().toArray(new GeneralParameterValue[1]));
-			writer.dispose();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	private static CoordinateReferenceSystem crs;
 
 	public static GridCoverage2D get(String raster) {
-		GridCoverage2D coverage = null;
+		AbstractGridCoverage2DReader reader = null;
 		try {
 			File file = new File(raster);
-			AbstractGridCoverage2DReader reader;
+			
 			if (raster.endsWith(".asc")) {
 				reader = new ArcGridReader(file);
 			} else if (raster.endsWith(".tif") || raster.endsWith(".tiff")) {
@@ -168,38 +139,28 @@ public class CoverageManager {
 			} else {
 				throw new IllegalArgumentException("format not supported for " + raster);
 			}
-			coverage = (GridCoverage2D) reader.read(null);
-			reader.dispose();
-			// System.out.println(reader.getCoordinateReferenceSystem());
-
-			//int imageWidth = (Integer) coverage.getProperty("image_width");
-			//int imageHeight = (Integer) coverage.getProperty("image_height");
-			//double imageMinX = coverage.getEnvelope().getMinimum(0);
-			//double imageMinY = coverage.getEnvelope().getMinimum(1);
-			//double imageMaxX = coverage.getEnvelope().getMaximum(0);
-			//double imageMaxY = coverage.getEnvelope().getMaximum(1);
-			//double cellSize = ((java.awt.geom.AffineTransform) coverage.getGridGeometry().getGridToCRS2D()).getScaleX();
-
-			// System.out.println(imageWidth+" "+imageHeight+" "+imageMinX+"
-			// "+imageMinY+" "+imageMaxX+" "+imageMaxY+" "+cellSize);
-
+			return (GridCoverage2D) reader.read(null);
+		
 		} catch (DataSourceException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			reader.dispose();
 		}
 
-		GeneralEnvelope env = (GeneralEnvelope) coverage.getEnvelope();
-		crs = coverage.getCoordinateReferenceSystem();
+		return null;
+		//GeneralEnvelope env = (GeneralEnvelope) coverage.getEnvelope();
+		//crs = coverage.getCoordinateReferenceSystem();
 
 		/*
 		 * Map<?,?> m = coverage.getProperties(); for(Entry<?,?> e :
 		 * m.entrySet()){ System.out.println(e.getValue()+" "+e.getKey()); }
 		 * System.out.println(coverage.getCoordinateReferenceSystem());
 		 */
-		return coverage;
+		//return coverage;
 	}
 
 	public static float[] getData(GridCoverage2D coverage, int roiX, int roiY, int roiWidth, int roiHeight) {
@@ -451,6 +412,52 @@ public class CoverageManager {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static void write(WritableRaster raster, int width, int height, double imageMinX, double imageMaxX, double imageMinY, double imageMaxY, float cellSize, String output) {
+
+		GridCoverage2D outC = CoverageManager.getCoverageUsingRaster(raster, width, height, imageMinX, imageMaxX, imageMinY, imageMaxY, cellSize);
+		
+		if(output.endsWith(".tif")){
+			writeTiff(outC, output);
+		}else if(output.endsWith(".asc")){
+			writeAsciiGrid(outC, output);
+		}else{
+			throw new IllegalArgumentException("extension of "+output+" unknown");
+		}
+		
+		outC.dispose(true);
+		PlanarImage planarImage = (PlanarImage) outC.getRenderedImage();
+		ImageUtilities.disposePlanarImageChain(planarImage);
+		outC = null;
+		
+	}
+
+	private static void writeAsciiGrid(GridCoverage2D outC, String output) {
+		try {
+			ArcGridWriter writer = new ArcGridWriter(new File(output));
+			writer.write(outC, null);
+			writer.dispose();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static void writeTiff(GridCoverage2D outC, String output) {
+		try {
+			
+			GeoTiffWriteParams wp = new GeoTiffWriteParams();
+			wp.setCompressionMode(GeoTiffWriteParams.MODE_EXPLICIT);
+			//wp.setForceToBigTIFF(true);
+			//wp.setCompressionType("LZW");
+			ParameterValueGroup params = new GeoTiffFormat().getWriteParameters();
+			params.parameter(AbstractGridFormat.GEOTOOLS_WRITE_PARAMS.getName().toString()).setValue(wp);
+			GeoTiffWriter writer = new GeoTiffWriter(new File(output));
+			writer.write(outC, params.values().toArray(new GeneralParameterValue[1]));
+			writer.dispose();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/*

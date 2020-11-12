@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+
 public abstract class Pixel2PixelAsciiGridCalculation {
 
 	private String out;
@@ -37,10 +39,10 @@ public abstract class Pixel2PixelAsciiGridCalculation {
 				}
 				
 				if(i>=6){
-					bw.write(treat(lines));
+					bw.write(treat(i, lines));
 					bw.newLine();
 				}else if(i == 5){
-					bw.write("NODATA_value -1");
+					bw.write("NODATA_value "+Raster.getNoDataValue());
 					bw.newLine();
 				}else{
 					bw.write(lines[0]);
@@ -59,16 +61,23 @@ public abstract class Pixel2PixelAsciiGridCalculation {
 		}
 	}
 
-	private String treat(String[] lines) {
+	private String treat(int ind, String[] lines) {
 		String[][] ss = new String[lines.length][];
 		double[][] vs = new double[lines.length][];
 		int width = -1;
 		for(int i=0; i<lines.length; i++){
 			ss[i] = lines[i].split(" ");
+			//System.out.println((ind-6)+" "+ss[i].length);
 			width = ss[i].length; 
 			vs[i] = new double[width];
 			for(int ii=0; ii<width; ii++){
-				vs[i][ii] = Double.parseDouble(ss[i][ii]);
+				//try{
+					vs[i][ii] = Double.parseDouble(ss[i][ii]);
+				//}catch(NumberFormatException ex){
+					//System.err.println(ss[i][ii]);
+					//throw new Exception();
+				//	vs[i][ii] = Raster.getNoDataValue();
+				//}
 			}
 		}
 		StringBuffer line = new StringBuffer();
