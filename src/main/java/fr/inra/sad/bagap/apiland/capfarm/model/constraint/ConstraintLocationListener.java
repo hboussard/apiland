@@ -237,6 +237,33 @@ public class ConstraintLocationListener extends LocationBaseListener {
 	}
 	
 	@Override 
+	public void enterStringatt(@NotNull LocationParser.StringattContext ctx) { 
+		//System.out.println("enterStringatt '"+ctx.getText()+"'");
+		
+		String condition = ctx.getText().replace("[", "").replace("]", "");
+		String[] infos = condition.split("=");
+		String att = infos[0].replace(" ", "");
+		String val = infos[1].replace(" ", "").replace("'", "");
+		
+		if(add){
+			for(Parcel p : allocator.parcels()){
+				if(((String) p.getAttribute(att).getValue(null)).equals(val)){
+					local.add(p);
+				}
+			}
+		}else{
+			for(Parcel p : allocator.parcels()){
+				if(((String) p.getAttribute(att).getValue(null)).equals(val)){
+					local.remove(p);
+				}
+			}
+		}
+		
+		first = false;
+	}
+	
+	
+	@Override 
 	public void enterNumatt(@NotNull LocationParser.NumattContext ctx) { 
 		//System.out.println("enterNumatt '"+ctx.getText()+"'");
 		
@@ -349,6 +376,8 @@ public class ConstraintLocationListener extends LocationBaseListener {
 	
 	@Override 
 	public void enterArea(@NotNull LocationParser.AreaContext ctx) {
+		//System.out.println("enterArea '"+ctx.getText()+"'");
+		
 		String condition = ctx.getText().replace("AREA", "");
 		
 		int code = -1; 

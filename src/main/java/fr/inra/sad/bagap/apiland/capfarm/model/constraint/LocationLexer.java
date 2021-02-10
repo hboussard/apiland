@@ -20,7 +20,7 @@ public class LocationLexer extends Lexer {
 		T__23=1, T__22=2, T__21=3, T__20=4, T__19=5, T__18=6, T__17=7, T__16=8, 
 		T__15=9, T__14=10, T__13=11, T__12=12, T__11=13, T__10=14, T__9=15, T__8=16, 
 		T__7=17, T__6=18, T__5=19, T__4=20, T__3=21, T__2=22, T__1=23, T__0=24, 
-		INTEGER=25, ATTRIBUTE=26, WS=27;
+		INTEGER=25, TEXT=26, WS=27;
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
 	};
@@ -36,7 +36,7 @@ public class LocationLexer extends Lexer {
 		"T__23", "T__22", "T__21", "T__20", "T__19", "T__18", "T__17", "T__16", 
 		"T__15", "T__14", "T__13", "T__12", "T__11", "T__10", "T__9", "T__8", 
 		"T__7", "T__6", "T__5", "T__4", "T__3", "T__2", "T__1", "T__0", "INTEGER", 
-		"ATTRIBUTE", "WS"
+		"TEXT", "WS"
 	};
 
 

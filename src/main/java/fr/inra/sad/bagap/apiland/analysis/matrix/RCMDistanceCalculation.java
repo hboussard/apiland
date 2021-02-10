@@ -217,7 +217,7 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 		}
 		/*
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter("F:/Requete_SIG_LabPSE/raster/continuite/continuite_boise.asc"));
+			BufferedWriter writer = new BufferedWriter(new FileWriter("F:/Requete_SIG_LabPSE/sud_mayenne/raster/continuite/continuite_boise_3.asc"));
 			
 			writer.write("ncols "+matrix().width());
 			writer.newLine();
@@ -246,7 +246,6 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 		}
 		
 		setResult(null);
-		
 		*/
 		
 		
@@ -262,7 +261,6 @@ public class RCMDistanceCalculation extends MatrixCalculation {
 		}
 		
 		setResult(mdist);
-		
 		
 	}
 

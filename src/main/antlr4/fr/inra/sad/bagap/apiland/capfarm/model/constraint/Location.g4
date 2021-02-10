@@ -6,17 +6,19 @@ evaluate :
  
 localisation : (partout | plusminus? terme)? (plusminus terme)* ;
 
-terme : parcelles | boolatt | numatt | distance | area | andterme | xorterme;
+terme : parcelles | boolatt | stringatt | numatt | distance | area | andterme | xorterme;
 
 plusminus : '+' | '-' ;
 
 parcelles : '[' INTEGER (',' INTEGER)* ']' ;
 
-boolatt : '[' ATTRIBUTE ('=' (('T'|'\'T\'') | ('F'|'\'F\'')))? ']' ;
+boolatt : '[' TEXT ('=' (('T'|'\'T\'') | ('F'|'\'F\'')))? ']' ;
 
-numatt : '[' ATTRIBUTE ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ']' ;
+stringatt : '[' TEXT '=' TEXT ']' ;
 
-distance : 'DISTANCE' '(' ATTRIBUTE ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ')' ;
+numatt : '[' TEXT ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ']' ;
+
+distance : 'DISTANCE' '(' TEXT ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ')' ;
 
 area : 'AREA' ('=' | '<' | '>' | '<=' | '>=') INTEGER ('.' INTEGER)? ;
 
@@ -28,7 +30,7 @@ xorterme : 'XOR' '(' localisation ',' localisation (',' localisation)* ')' ;
 
 INTEGER : ('0'..'9')+ ;
 
-ATTRIBUTE : (('a'..'z') | ('A'..'Z')) (('a'..'z') | ('A'..'Z') | ('0'..'9'))* ;
+TEXT : (('a'..'z') | ('A'..'Z')) (('a'..'z') | ('A'..'Z') | ('0'..'9'))* ;
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 

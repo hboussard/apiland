@@ -200,6 +200,86 @@ public class CfmUtil {
 		}
 	}
 	
+	public static void generateShapefileWithID(String input, String idColumnName){
+		generateShapefileWithID(input, idColumnName, 0);
+	}
+	
+	public static void generateShapefileWithID(String input, String idColumnName, int startIndex){
+		
+		String output = input+"_cfm";
+		
+		try(FileOutputStream fos = new FileOutputStream(output+".dbf");
+				FileOutputStream shp = new FileOutputStream(output+".shp");
+				FileOutputStream shx = new FileOutputStream(output+".shx");){
+			
+			ShpFiles sf = new ShpFiles(input+".shp");
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
+
+			int columnNameNb = 0;
+			for(; columnNameNb < dfr.getHeader().getNumFields(); columnNameNb++){
+				
+				String tempColmnName = dfr.getHeader().getFieldName(columnNameNb);
+				System.out.println(tempColmnName);
+				if(tempColmnName.equalsIgnoreCase(idColumnName)){
+					break;
+				}
+			}
+			
+			// gestion du header de sortie
+			DbaseFileHeader header = new DbaseFileHeader();
+			header.setNumRecords(dfr.getHeader().getNumRecords());
+			
+			header.addColumn("id", 'c', 8, 0);
+			header.addColumn("area", 'c', 2, 0);
+			header.addColumn("type", 'c', 8, 0);
+			header.addColumn("facility", 'c', 20, 0);
+			header.addColumn("farm", 'c', 8, 0);
+				
+			for(int i=0; i<dfr.getHeader().getNumFields(); i++){
+				header.addColumn(dfr.getHeader().getFieldName(i), 'c', 20, 0);
+			}
+			
+			DbaseFileWriter dfw = new DbaseFileWriter(header, fos.getChannel());
+			ShapefileWriter sfw = new ShapefileWriter(shp.getChannel(), shx.getChannel());
+			
+			sfw.writeHeaders(
+					new Envelope(sfr.getHeader().minX(), sfr.getHeader().maxX(), sfr.getHeader().minY(), sfr.getHeader().maxY()), 
+					ShapeType.POLYGON, dfr.getHeader().getNumRecords(), 1000000);
+			
+			Object[] data, entry = new Object[header.getNumFields()];
+			int id = startIndex;
+			while(sfr.hasNext()){
+				
+				data = dfr.readEntry();
+				
+				entry[0] = id++; // id
+				entry[1] = "AA"; // area
+				entry[2] = "parcel"; // type
+				entry[3] = ""; // facility
+				entry[4] = data[columnNameNb]; // farm
+				for(int i=5; i<header.getNumFields(); i++){
+					entry[i] = data[i-5];
+				}
+				
+				Geometry g = (Geometry) sfr.nextRecord().shape();
+				sfw.writeGeometry(g);
+				dfw.write(entry);
+			}
+			
+			sfr.close();
+			dfr.close();
+			dfw.close();
+			sfw.close();
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			copy(input+".prj", output+".prj");
+		}
+	}
+	
 	public static void copy(String sourceFile, String destFile){ 
 		try(InputStream input = new FileInputStream(sourceFile);
 				OutputStream output = new FileOutputStream(destFile)){ 

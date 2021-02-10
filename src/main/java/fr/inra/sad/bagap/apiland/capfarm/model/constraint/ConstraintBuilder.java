@@ -143,9 +143,11 @@ public class ConstraintBuilder {
 	}
 	
 	public void setLocation(String location){
+		
 		hasLocation = true;
 		LocationParser parser = new LocationParser(new CommonTokenStream(new LocationLexer(new ANTLRInputStream(location)))); 
 		ConstraintLocationListener listener = new ConstraintLocationListener(allocator);
+		
 		//ErrorConstraintLocationListener listener = new ErrorConstraintLocationListener();
 		new ParseTreeWalker().walk(listener, parser.evaluate());
 		

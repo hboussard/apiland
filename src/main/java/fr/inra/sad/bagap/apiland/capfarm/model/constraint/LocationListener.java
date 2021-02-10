@@ -49,16 +49,6 @@ public interface LocationListener extends ParseTreeListener {
 	 */
 	void exitDistance(@NotNull LocationParser.DistanceContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link LocationParser#andterme}.
-	 * @param ctx the parse tree
-	 */
-	void enterAndterme(@NotNull LocationParser.AndtermeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link LocationParser#andterme}.
-	 * @param ctx the parse tree
-	 */
-	void exitAndterme(@NotNull LocationParser.AndtermeContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link LocationParser#xorterme}.
 	 * @param ctx the parse tree
 	 */
@@ -78,6 +68,16 @@ public interface LocationListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLocalisation(@NotNull LocationParser.LocalisationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LocationParser#stringatt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringatt(@NotNull LocationParser.StringattContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LocationParser#stringatt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringatt(@NotNull LocationParser.StringattContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link LocationParser#partout}.
 	 * @param ctx the parse tree
@@ -118,6 +118,16 @@ public interface LocationListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBoolatt(@NotNull LocationParser.BoolattContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LocationParser#andterme}.
+	 * @param ctx the parse tree
+	 */
+	void enterAndterme(@NotNull LocationParser.AndtermeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LocationParser#andterme}.
+	 * @param ctx the parse tree
+	 */
+	void exitAndterme(@NotNull LocationParser.AndtermeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link LocationParser#evaluate}.
 	 * @param ctx the parse tree

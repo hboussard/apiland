@@ -65,18 +65,6 @@ public class LocationBaseListener implements LocationListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAndterme(@NotNull LocationParser.AndtermeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAndterme(@NotNull LocationParser.AndtermeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterXorterme(@NotNull LocationParser.XortermeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -96,6 +84,18 @@ public class LocationBaseListener implements LocationListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLocalisation(@NotNull LocationParser.LocalisationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStringatt(@NotNull LocationParser.StringattContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStringatt(@NotNull LocationParser.StringattContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -144,6 +144,18 @@ public class LocationBaseListener implements LocationListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBoolatt(@NotNull LocationParser.BoolattContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAndterme(@NotNull LocationParser.AndtermeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAndterme(@NotNull LocationParser.AndtermeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

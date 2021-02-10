@@ -65,7 +65,7 @@ public class ClusteredWindowMatrixTreatment  extends Treatment implements Analys
 		}
 		w = new MultipleWindow(ws);	 		
 		
-		WindowMatrixAnalysisBuilder builder = new WindowMatrixAnalysisBuilder(WindowAnalysisType.CLUSTERED);
+		WindowMatrixAnalysisBuilder builder = new WindowMatrixAnalysisBuilder(WindowAnalysisType.AREA);
 		builder.addMatrix(matrix);
 		builder.setWindow(w);
 		builder.setClusters(clusters);

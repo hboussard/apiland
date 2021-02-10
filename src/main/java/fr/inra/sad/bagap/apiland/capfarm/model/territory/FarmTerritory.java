@@ -101,6 +101,7 @@ public class FarmTerritory extends DefaultDynamicLayer<FarmUnit> {
 		Stats sf = new Stats();
 		for(FarmUnit tu : this){
 			if(tu instanceof Parcel){
+				//System.out.println(tu.getId());
 				sp.add(((Parcel) tu).getArea());
 			}else{
 				sf.add(((Facility) tu).getArea());

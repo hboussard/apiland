@@ -24,9 +24,16 @@ public class CoordinateManager {
 		return x * m.cellsize() + m.minX() + m.cellsize()/2;
 	}
 	
+	public static double getProjectedX(double minX, double cellSize, int x){
+		return x * cellSize + minX + cellSize/2;
+	}
+	
 	public static double getProjectedY(Matrix m, int y){
-		//return m.cellsize() * (m.height() - 1 - y) + m.minY();
 		return m.cellsize() * (m.height() - y) + m.minY() - m.cellsize()/2;
+	}
+	
+	public static double getProjectedY(double minY, double cellSize, int height, int y){
+		return cellSize * (height - y) + minY - cellSize/2;
 	}
 	
 	public static int getLocalX(Matrix m, double x){

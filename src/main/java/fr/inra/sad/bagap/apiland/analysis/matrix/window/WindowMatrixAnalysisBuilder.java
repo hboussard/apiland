@@ -185,9 +185,9 @@ public class WindowMatrixAnalysisBuilder {
 		case GRID : 
 			wa = (W) new GridWindowMatrixAnalysis(mat[0], window, processType, displacement, minRate);
 			break;
-		case CLUSTERED : 
+		/*case CLUSTERED : 
 			wa = (W) new ClusteredWindowMatrixAnalysis(mat[0], window, processType, clusters);
-			break;
+			break;*/
 		}
 		
 		for(WindowAnalysisObserver o : observers){

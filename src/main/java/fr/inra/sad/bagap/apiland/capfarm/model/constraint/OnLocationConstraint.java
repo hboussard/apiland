@@ -8,9 +8,6 @@ import fr.inra.sad.bagap.apiland.capfarm.model.Cover;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
-import fr.inra.sad.bagap.apiland.core.time.delay.Delay;
-import fr.inra.sad.bagap.apiland.core.time.delay.YearDelay;
-
 public class OnLocationConstraint extends CoverAllocationConstraint<Integer, Integer> {
 
 	private static final long serialVersionUID = 1L;
@@ -46,6 +43,7 @@ public class OnLocationConstraint extends CoverAllocationConstraint<Integer, Int
 			break;
 		case ALWAYS : // les couverts sélectionnés sont les seuls sur ces parcelles
 					// = les autres couverts ne sont pas sur ces parcelles
+					// les couverts sélectionnés peuvent être aussi ailleurs
 			for(Parcel p : location()){
 				int ip = cap.parcels().get(p);
 				for(CoverUnit cu : cap.allocator().coverUnits()){
