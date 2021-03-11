@@ -44,7 +44,7 @@ public class HugeChamferDistance extends Analysis {
 	
 	private float threshold;
 	
-	private int maxTile = 1000;
+	private int maxTile = 10000;
 	
 	private String path;
 	
@@ -75,21 +75,20 @@ public class HugeChamferDistance extends Analysis {
 		//String input = "C:/Hugues/temp/distance/test/carto_vallee_seiche_eau_dessus.asc";
 		//String output = "C:/Hugues/temp/distance/test/distance_bois.asc";
 		
-		//String input = "F:/data/sig/grand_ouest/Bretagne_2018_dispositif_bocage_reb/Bretagne_2018_dispositif_bocage_reb.tif";
-		//String output = "F:/temp/distance/distance_bois.tif";
+		String input = "F:/data/sig/bretagne/Bretagne_2018_dispositif_bocage_reb_4.tif";
+		String output = "F:/FDCCA/bretagne/grain2/distance_bois_bretagne.tif";
 		/*
 		String input = "F:/temp/distance/site1.asc";
 		String output = "F:/temp/distance/distance3/distance_bois.asc";
-		
+		*/
 		Set<Integer> c = new HashSet<Integer>();
 		//c.add(1);
 		//c.add(2);
 		//c.add(3);
 		c.add(4);
 		c.add(5);
-		c.add(6);
 		Raster.setNoDataValue(-1);
-		new HugeChamferDistance(input, output, c).allRun();*/
+		new HugeChamferDistance(input, output, c).allRun();
 		
 	}
 	
@@ -146,7 +145,7 @@ public class HugeChamferDistance extends Analysis {
 	protected void doRun() {
 		
 		//inCoverage = null;		
-		
+		/*
 		boolean finish = false;
 		int pass = 1;
 		while(!finish){
@@ -224,7 +223,7 @@ public class HugeChamferDistance extends Analysis {
 					dx = 0;
 					for(int x=0; x<width; dx++, x+=maxTile-1){
 						
-						//System.out.println("traitement de la tuile "+dx+" "+dy+" / "+dWidth+" "+dHeight);
+						System.out.println("traitement de la tuile "+dx+" "+dy+" / "+dWidth+" "+dHeight);
 						
 						int roiWidth = Math.min(maxTile, width - x);
 						int roiHeight = Math.min(maxTile, height - y);
@@ -309,12 +308,7 @@ public class HugeChamferDistance extends Analysis {
 				}
 			}
 			pass++;
-			/*
-			if (pass>=4){
-				finish = true;
-			}
-			*/
-		}
+		}*/
 		
 		// normalisation
 		normalisation();

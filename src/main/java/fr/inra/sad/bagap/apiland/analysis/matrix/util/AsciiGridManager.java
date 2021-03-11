@@ -85,6 +85,7 @@ public class AsciiGridManager {
 			cleaners.add(new IntegerAsciiGridCleaner());
 			//cleaners.add(new SearchAndReplaceCleaner("10.0096119938914", "10.0"));
 			cleaners.add(new SearchAndReplaceCleaner("-3.4e+38", "-1"));
+			cleaners.add(new SearchAndReplaceCleaner("-3.3999999521443642491e+38", "-1"));
 			//cleaners.add(new SearchAndReplaceCleaner("128", "-1"));
 
 			String line;

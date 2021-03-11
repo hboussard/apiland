@@ -187,7 +187,7 @@ public class CoverageManager {
 			RenderedOp ro = JAI.create("imageread", pbj, hints);
 
 			float[] inDatas = new float[roiWidth * roiHeight];
-			return ro.getData().getSamples(0, 0, roiWidth, roiHeight, 0, inDatas);
+			return ro.getData().getSamples(roiX, roiY, roiWidth, roiHeight, 0, inDatas);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

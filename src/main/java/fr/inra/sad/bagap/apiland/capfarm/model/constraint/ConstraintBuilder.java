@@ -1,6 +1,7 @@
 package fr.inra.sad.bagap.apiland.capfarm.model.constraint;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -384,7 +385,10 @@ public class ConstraintBuilder {
 			Domain<CoverUnit, CoverUnit> domain = buildCoverDomain();
 			CoverAllocationConstraint<?, ?> constraint = new NextCoverConstraint(code, checkOnly, mode, covers, location, domain);
 			allocator.addConstraint(constraint);
-		}else if(params != null){
+		}else if(params != null || !new File(params[0]).exists()){
+			/*if(!new File(params[0]).exists()){
+				throw new FileNotFoundException("le fichier précédent-suivant n'existe pas : "+params[0]);
+			}*/
 			try {	
 				//System.out.println("ici");
 				CsvReader cr = new CsvReader(params[0]);
@@ -424,7 +428,7 @@ public class ConstraintBuilder {
 				e.printStackTrace();
 			} catch (CatastrophicException e) {
 				e.printStackTrace();
-			}
+			} 
 		}else{
 			throw new IllegalArgumentException("initialization problem for NextCover constraint");
 		}

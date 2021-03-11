@@ -87,8 +87,8 @@ public class HugeChamferDistance2 extends Analysis {
 		//String input = "C:/Hugues/temp/distance/test/carto_vallee_seiche_eau_dessus.asc";
 		//String output = "C:/Hugues/temp/distance/test/distance_bois.asc";
 		
-		String input = "F:/data/sig/grand_ouest/Bretagne_2018_dispositif_bocage_reb/Bretagne_2018_dispositif_bocage_reb.tif";
-		String output = "F:/temp/distance/distance_bretagne/distance_bois.asc";
+		String input = "F:/data/sig/bretagne/Bretagne_2018_dispositif_bocage_reb_4.tif";
+		String output = "F:/FDCCA/bretagne/grain2/distance_bois_bretagne.asc";
 		
 		//String input = "F:/temp/distance/site1.asc";
 		//String output = "F:/temp/distance/distance5/distance_bois.asc";
@@ -99,7 +99,7 @@ public class HugeChamferDistance2 extends Analysis {
 		//c.add(3);
 		c.add(4);
 		c.add(5);
-		c.add(6);
+		//c.add(6);
 		Raster.setNoDataValue(-1);
 		new HugeChamferDistance2(input, output, c).allRun();
 
@@ -390,6 +390,7 @@ public class HugeChamferDistance2 extends Analysis {
 		
 		// normalisation
 		normalisation();
+		
 		
 		// compilation
 		compile4();
