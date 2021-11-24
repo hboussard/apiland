@@ -3,13 +3,14 @@ package fr.inra.sad.bagap.apiland.treatment.window;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import fr.inra.sad.bagap.apiland.analysis.combination.CombinationExpressionFactory;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.CsvOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.DeltaAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.HeaderAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.HeaderDeltaAsciiGridOutputBis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.InterpolateLinearSplineAsciiGridOutput;
 import fr.inra.sad.bagap.apiland.analysis.matrix.output.InterpolateLinearSplineCsvOutput;
-import fr.inra.sad.bagap.apiland.analysis.matrix.pixel.combination.CombinationExpressionFactory;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.MultipleWindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.WindowMatrixProcessType;
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetricManager;

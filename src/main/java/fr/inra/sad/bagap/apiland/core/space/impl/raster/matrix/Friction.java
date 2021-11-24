@@ -11,13 +11,13 @@ import com.csvreader.CsvReader.FinalizedException;
 
 public class Friction {
 
-	private Map<Double, Double> r;
+	private Map<Float, Float> r;
 	
-	private double min;
+	private float min;
 	
 	public Friction(String f){
-		r = new HashMap<Double, Double>();
-		min = Integer.MAX_VALUE;
+		r = new HashMap<Float, Float>();
+		min = Float.MAX_VALUE;
 		read(f);
 	}
 	
@@ -26,8 +26,8 @@ public class Friction {
 			CsvReader cr = new CsvReader(f,';');
 			cr.readHeaders();
 			while(cr.readRecord()){
-				r.put(new Double(cr.get("code")), new Double(cr.get("friction")));
-				min = Math.min(min, new Double(cr.get("friction")));
+				r.put(Float.parseFloat(cr.get("code")), Float.parseFloat(cr.get("friction")));
+				min = Math.min(min, Float.parseFloat(cr.get("friction")));
 			}
 			cr.close();
 		}catch(FinalizedException ex){
@@ -39,7 +39,7 @@ public class Friction {
 		}
 	}
 	
-	public double min(){
+	public float min(){
 		return min;
 	}
 	
@@ -48,12 +48,12 @@ public class Friction {
 		return r.get(v);
 	}
 	
-	public Map<Double, Double> getMap(){
+	public Map<Float, Float> getMap(){
 		return r;
 	}
 	
 	public void display(){
-		for(Entry<Double, Double> e : r.entrySet()){
+		for(Entry<Float, Float> e : r.entrySet()){
 			System.out.println(e.getKey()+" --> "+e.getValue());
 		}
 	}

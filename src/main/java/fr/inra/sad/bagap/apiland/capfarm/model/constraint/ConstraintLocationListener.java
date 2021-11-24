@@ -105,6 +105,44 @@ public class ConstraintLocationListener extends LocationBaseListener {
 	}
 	
 	@Override 
+	public void enterOrterme(@NotNull LocationParser.OrtermeContext ctx) { 
+		//System.out.println("enterXorterme '"+ctx.getText()+"'");
+		
+		level.add(local); // stockage de la localisation en cours
+		
+		stack.push(level); // stockage du level en cours
+		
+		level = new ArrayList<Set<Parcel>>(); // mise en place d'un nouveau level
+		
+		signs.push(add); // stockage du signe
+	}
+	
+	@Override 
+	public void exitOrterme(@NotNull LocationParser.OrtermeContext ctx) { 
+		//System.out.println("exitXorterme '"+ctx.getText()+"'");
+		
+		Set<Parcel> lor = new TreeSet<Parcel>();
+		lor.addAll(level.get(0));
+		for(int i=1; i<level.size(); i++){
+			lor.addAll(level.get(i));
+		}
+		
+		level = stack.pop();
+		local = level.get(level.size()-1);
+		
+		add = signs.pop();
+		if(add){
+			for(Parcel p : lor){
+				local.add(p);
+			}
+		}else{
+			for(Parcel p : lor){
+				local.remove(p);
+			}
+		}
+	}
+	
+	@Override 
 	public void enterXorterme(@NotNull LocationParser.XortermeContext ctx) { 
 		//System.out.println("enterXorterme '"+ctx.getText()+"'");
 		
@@ -175,6 +213,7 @@ public class ConstraintLocationListener extends LocationBaseListener {
 		//System.out.println("enterParcelles '"+ctx.getText()+"'");
 		
 		String[] pp = ctx.getText().replace("[", "").replace("]", "").split(",");
+		
 		if(add){
 			for(String p : pp){
 				local.add(allocator.parcel(p));

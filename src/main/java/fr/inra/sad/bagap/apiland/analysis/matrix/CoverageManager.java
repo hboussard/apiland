@@ -35,6 +35,7 @@ import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.GridCoverageFactory;
 import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.coverage.grid.io.AbstractGridFormat;
+import org.geotools.coverage.grid.io.GridCoverage2DReader;
 import org.geotools.coverage.grid.io.imageio.geotiff.GeoTiffIIOMetadataEncoder;
 import org.geotools.coverage.grid.io.imageio.geotiff.codes.GeoTiffGCSCodes;
 import org.geotools.coverage.util.CoverageUtilities;
@@ -63,6 +64,9 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.sun.media.jai.codecimpl.util.RasterFactory;
+import fr.inrae.act.bagap.raster.Coverage;
+import fr.inrae.act.bagap.raster.EnteteRaster;
+import fr.inrae.act.bagap.raster.FileCoverage;
 
 public class CoverageManager {
 
@@ -127,6 +131,46 @@ public class CoverageManager {
 	
 	private static CoordinateReferenceSystem crs;
 
+	public static Coverage getCoverage(String raster) {
+		// coverage et infos associees
+		GridCoverage2DReader reader = null;
+		
+		try {	
+			if(raster.endsWith(".asc")){
+				File file = new File(raster);
+				reader = new ArcGridReader(file);
+			}else if(raster.endsWith(".tif")){
+				File file = new File(raster);
+				reader = new GeoTiffReader(file);
+			}else{
+				throw new IllegalArgumentException(raster+" is not a recognize raster");
+			}
+			GridCoverage2D coverage2D = (GridCoverage2D) reader.read(null);
+			reader.dispose(); // a  tester, ca va peut-etre bloquer la lecture des donnees
+						
+			int inWidth = (Integer) coverage2D.getProperty("image_width");
+			int inHeight = (Integer) coverage2D.getProperty("image_height");
+			double inMinX = coverage2D.getEnvelope().getMinimum(0);
+			double inMinY = coverage2D.getEnvelope().getMinimum(1);
+			double inMaxX = coverage2D.getEnvelope().getMaximum(0);
+			double inMaxY = coverage2D.getEnvelope().getMaximum(1);
+			float inCellSize = (float) ((java.awt.geom.AffineTransform) coverage2D.getGridGeometry().getGridToCRS2D()).getScaleX();
+						
+			EnteteRaster entete = new EnteteRaster(inWidth, inHeight, inMinX, inMaxX, inMinY, inMaxY, inCellSize, -1);
+			Coverage coverage = new FileCoverage(coverage2D, entete);
+			
+			return coverage;
+		}catch (DataSourceException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
 	public static GridCoverage2D get(String raster) {
 		AbstractGridCoverage2DReader reader = null;
 		try {

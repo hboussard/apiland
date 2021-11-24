@@ -6,11 +6,11 @@ evaluate :
  
 localisation : (partout | plusminus? terme)? (plusminus terme)* ;
 
-terme : parcelles | boolatt | stringatt | numatt | distance | area | andterme | xorterme;
+terme : parcelles | boolatt | stringatt | numatt | distance | area | andterme | orterme | xorterme;
 
 plusminus : '+' | '-' ;
 
-parcelles : '[' INTEGER (',' INTEGER)* ']' ;
+parcelles : '[' TEXT (',' TEXT)* ']' ;
 
 boolatt : '[' TEXT ('=' (('T'|'\'T\'') | ('F'|'\'F\'')))? ']' ;
 
@@ -26,11 +26,13 @@ partout : 'ALL' |'All' | 'all' ;
 
 andterme : 'AND' '(' localisation ',' localisation (',' localisation)* ')' ;
 
+orterme : 'OR' '(' localisation ',' localisation (',' localisation)* ')' ;
+
 xorterme : 'XOR' '(' localisation ',' localisation (',' localisation)* ')' ;
 
 INTEGER : ('0'..'9')+ ;
 
-TEXT : (('a'..'z') | ('A'..'Z')) (('a'..'z') | ('A'..'Z') | ('0'..'9'))* ;
+TEXT : [a-zA-Z0-9_]+;
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 

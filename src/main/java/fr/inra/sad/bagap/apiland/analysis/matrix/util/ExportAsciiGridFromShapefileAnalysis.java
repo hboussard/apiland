@@ -205,6 +205,7 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 		Geometry current = null;
 		STRtree spatialIndex = null;
 		int decoup = nb / 1000000 + 1;
+		//int decoup = nb / 1000000 + 5;
 		int d = -1;
 		double yorigin;
 	
@@ -235,11 +236,13 @@ public class ExportAsciiGridFromShapefileAnalysis extends Analysis {
 				//System.out.println("line " + j + "/" + nrows);
 				//System.out.println(j+" 1");
 				if (j * decoup / nrows != d) {
+					//System.out.println("try "+j+" "+decoup+" "+nrows+" "+d+" "+(j * decoup / nrows));
 					d = j * decoup / nrows;
 					spatialIndex = getSpatialIndex(sf, pos, map,
 							new Envelope(minX - delta, maxX + delta, 
 									minY - delta + (decoup - d - 1) * ((maxY - minY) / decoup), 
 									maxY + delta - d * (maxY - minY) / decoup));
+					//System.out.println(spatialIndex.size());
 				}	
 				//System.out.println(j+" "+spatialIndex.size());
 				//System.out.println(j+" 2");

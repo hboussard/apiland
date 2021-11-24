@@ -5,7 +5,7 @@ import java.util.Set;
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
-import fr.inra.sad.bagap.apiland.analysis.matrix.ChamferDistance;
+import fr.inra.sad.bagap.apiland.analysis.matrix.ChamferDistanceCalculation;
 import fr.inra.sad.bagap.apiland.analysis.matrix.MatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.MatrixCalculation;
 import fr.inra.sad.bagap.apiland.analysis.matrix.RCMDistanceCalculation;
@@ -136,7 +136,7 @@ public class ClusteringDistanceAnalysis extends MatrixAnalysis implements Analys
 		}else if(frictionMat != null){
 			cdistance = new RCMDistanceCalculation(matrix, frictionMat, interest, getMaxDistance()/2);
 		}else{
-			cdistance = new ChamferDistance(matrix, interest);
+			cdistance = new ChamferDistanceCalculation(matrix, interest);
 		}
 		
 		cdistance.addObserver(this);

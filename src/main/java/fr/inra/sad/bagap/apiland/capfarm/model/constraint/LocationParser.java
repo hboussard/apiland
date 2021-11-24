@@ -17,24 +17,25 @@ public class LocationParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__23=1, T__22=2, T__21=3, T__20=4, T__19=5, T__18=6, T__17=7, T__16=8, 
-		T__15=9, T__14=10, T__13=11, T__12=12, T__11=13, T__10=14, T__9=15, T__8=16, 
-		T__7=17, T__6=18, T__5=19, T__4=20, T__3=21, T__2=22, T__1=23, T__0=24, 
-		INTEGER=25, TEXT=26, WS=27;
+		T__24=1, T__23=2, T__22=3, T__21=4, T__20=5, T__19=6, T__18=7, T__17=8, 
+		T__16=9, T__15=10, T__14=11, T__13=12, T__12=13, T__11=14, T__10=15, T__9=16, 
+		T__8=17, T__7=18, T__6=19, T__5=20, T__4=21, T__3=22, T__2=23, T__1=24, 
+		T__0=25, INTEGER=26, TEXT=27, WS=28;
 	public static final String[] tokenNames = {
-		"<INVALID>", "''F''", "'all'", "'XOR'", "'T'", "'AREA'", "'AND'", "'>='", 
-		"'['", "'<'", "'='", "']'", "'>'", "'<='", "'All'", "'ALL'", "'F'", "'('", 
-		"')'", "''T''", "'DISTANCE'", "'+'", "','", "'-'", "'.'", "INTEGER", "TEXT", 
-		"WS"
+		"<INVALID>", "''F''", "'XOR'", "'T'", "'AREA'", "'AND'", "'='", "'<='", 
+		"'All'", "'ALL'", "'('", "','", "'.'", "'all'", "'>='", "'['", "'<'", 
+		"']'", "'>'", "'OR'", "'F'", "')'", "''T''", "'DISTANCE'", "'+'", "'-'", 
+		"INTEGER", "TEXT", "WS"
 	};
 	public static final int
 		RULE_evaluate = 0, RULE_localisation = 1, RULE_terme = 2, RULE_plusminus = 3, 
 		RULE_parcelles = 4, RULE_boolatt = 5, RULE_stringatt = 6, RULE_numatt = 7, 
 		RULE_distance = 8, RULE_area = 9, RULE_partout = 10, RULE_andterme = 11, 
-		RULE_xorterme = 12;
+		RULE_orterme = 12, RULE_xorterme = 13;
 	public static final String[] ruleNames = {
 		"evaluate", "localisation", "terme", "plusminus", "parcelles", "boolatt", 
-		"stringatt", "numatt", "distance", "area", "partout", "andterme", "xorterme"
+		"stringatt", "numatt", "distance", "area", "partout", "andterme", "orterme", 
+		"xorterme"
 	};
 
 	@Override
@@ -81,8 +82,8 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(26); localisation();
-			setState(27); match(EOF);
+			setState(28); localisation();
+			setState(29); match(EOF);
 			}
 		}
 		catch (RecognitionException re) {
@@ -133,38 +134,38 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(34);
+			setState(36);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
 				{
-				setState(29); partout();
+				setState(31); partout();
 				}
 				break;
 			case 2:
 				{
-				setState(31);
+				setState(33);
 				_la = _input.LA(1);
-				if (_la==T__3 || _la==T__1) {
+				if (_la==T__1 || _la==T__0) {
 					{
-					setState(30); plusminus();
+					setState(32); plusminus();
 					}
 				}
 
-				setState(33); terme();
+				setState(35); terme();
 				}
 				break;
 			}
-			setState(41);
+			setState(43);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__3 || _la==T__1) {
+			while (_la==T__1 || _la==T__0) {
 				{
 				{
-				setState(36); plusminus();
-				setState(37); terme();
+				setState(38); plusminus();
+				setState(39); terme();
 				}
 				}
-				setState(43);
+				setState(45);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -184,6 +185,9 @@ public class LocationParser extends Parser {
 	public static class TermeContext extends ParserRuleContext {
 		public NumattContext numatt() {
 			return getRuleContext(NumattContext.class,0);
+		}
+		public OrtermeContext orterme() {
+			return getRuleContext(OrtermeContext.class,0);
 		}
 		public DistanceContext distance() {
 			return getRuleContext(DistanceContext.class,0);
@@ -224,54 +228,60 @@ public class LocationParser extends Parser {
 		TermeContext _localctx = new TermeContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_terme);
 		try {
-			setState(52);
+			setState(55);
 			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(44); parcelles();
+				setState(46); parcelles();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(45); boolatt();
+				setState(47); boolatt();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(46); stringatt();
+				setState(48); stringatt();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(47); numatt();
+				setState(49); numatt();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(48); distance();
+				setState(50); distance();
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(49); area();
+				setState(51); area();
 				}
 				break;
 			case 7:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(50); andterme();
+				setState(52); andterme();
 				}
 				break;
 			case 8:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(51); xorterme();
+				setState(53); orterme();
+				}
+				break;
+			case 9:
+				enterOuterAlt(_localctx, 9);
+				{
+				setState(54); xorterme();
 				}
 				break;
 			}
@@ -309,9 +319,9 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(54);
+			setState(57);
 			_la = _input.LA(1);
-			if ( !(_la==T__3 || _la==T__1) ) {
+			if ( !(_la==T__1 || _la==T__0) ) {
 			_errHandler.recoverInline(this);
 			}
 			consume();
@@ -329,9 +339,9 @@ public class LocationParser extends Parser {
 	}
 
 	public static class ParcellesContext extends ParserRuleContext {
-		public List<TerminalNode> INTEGER() { return getTokens(LocationParser.INTEGER); }
-		public TerminalNode INTEGER(int i) {
-			return getToken(LocationParser.INTEGER, i);
+		public List<TerminalNode> TEXT() { return getTokens(LocationParser.TEXT); }
+		public TerminalNode TEXT(int i) {
+			return getToken(LocationParser.TEXT, i);
 		}
 		public ParcellesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -354,23 +364,23 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(56); match(T__16);
-			setState(57); match(INTEGER);
-			setState(62);
+			setState(59); match(T__10);
+			setState(60); match(TEXT);
+			setState(65);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__2) {
+			while (_la==T__14) {
 				{
 				{
-				setState(58); match(T__2);
-				setState(59); match(INTEGER);
+				setState(61); match(T__14);
+				setState(62); match(TEXT);
 				}
 				}
-				setState(64);
+				setState(67);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(65); match(T__13);
+			setState(68); match(T__8);
 			}
 		}
 		catch (RecognitionException re) {
@@ -407,32 +417,32 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(67); match(T__16);
-			setState(68); match(TEXT);
-			setState(74);
+			setState(70); match(T__10);
+			setState(71); match(TEXT);
+			setState(77);
 			_la = _input.LA(1);
-			if (_la==T__14) {
+			if (_la==T__19) {
 				{
-				setState(69); match(T__14);
-				setState(72);
+				setState(72); match(T__19);
+				setState(75);
 				switch (_input.LA(1)) {
-				case T__20:
-				case T__5:
+				case T__22:
+				case T__3:
 					{
-					setState(70);
+					setState(73);
 					_la = _input.LA(1);
-					if ( !(_la==T__20 || _la==T__5) ) {
+					if ( !(_la==T__22 || _la==T__3) ) {
 					_errHandler.recoverInline(this);
 					}
 					consume();
 					}
 					break;
-				case T__23:
-				case T__8:
+				case T__24:
+				case T__5:
 					{
-					setState(71);
+					setState(74);
 					_la = _input.LA(1);
-					if ( !(_la==T__23 || _la==T__8) ) {
+					if ( !(_la==T__24 || _la==T__5) ) {
 					_errHandler.recoverInline(this);
 					}
 					consume();
@@ -444,7 +454,7 @@ public class LocationParser extends Parser {
 				}
 			}
 
-			setState(76); match(T__13);
+			setState(79); match(T__8);
 			}
 		}
 		catch (RecognitionException re) {
@@ -483,11 +493,11 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(78); match(T__16);
-			setState(79); match(TEXT);
-			setState(80); match(T__14);
-			setState(81); match(TEXT);
-			setState(82); match(T__13);
+			setState(81); match(T__10);
+			setState(82); match(TEXT);
+			setState(83); match(T__19);
+			setState(84); match(TEXT);
+			setState(85); match(T__8);
 			}
 		}
 		catch (RecognitionException re) {
@@ -528,25 +538,25 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(84); match(T__16);
-			setState(85); match(TEXT);
-			setState(86);
+			setState(87); match(T__10);
+			setState(88); match(TEXT);
+			setState(89);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__15) | (1L << T__14) | (1L << T__12) | (1L << T__11))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__18) | (1L << T__11) | (1L << T__9) | (1L << T__7))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			consume();
-			setState(87); match(INTEGER);
-			setState(90);
+			setState(90); match(INTEGER);
+			setState(93);
 			_la = _input.LA(1);
-			if (_la==T__0) {
+			if (_la==T__13) {
 				{
-				setState(88); match(T__0);
-				setState(89); match(INTEGER);
+				setState(91); match(T__13);
+				setState(92); match(INTEGER);
 				}
 			}
 
-			setState(92); match(T__13);
+			setState(95); match(T__8);
 			}
 		}
 		catch (RecognitionException re) {
@@ -587,26 +597,26 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(94); match(T__4);
-			setState(95); match(T__7);
-			setState(96); match(TEXT);
-			setState(97);
+			setState(97); match(T__2);
+			setState(98); match(T__15);
+			setState(99); match(TEXT);
+			setState(100);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__15) | (1L << T__14) | (1L << T__12) | (1L << T__11))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__18) | (1L << T__11) | (1L << T__9) | (1L << T__7))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			consume();
-			setState(98); match(INTEGER);
-			setState(101);
+			setState(101); match(INTEGER);
+			setState(104);
 			_la = _input.LA(1);
-			if (_la==T__0) {
+			if (_la==T__13) {
 				{
-				setState(99); match(T__0);
-				setState(100); match(INTEGER);
+				setState(102); match(T__13);
+				setState(103); match(INTEGER);
 				}
 			}
 
-			setState(103); match(T__6);
+			setState(106); match(T__4);
 			}
 		}
 		catch (RecognitionException re) {
@@ -646,20 +656,20 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(105); match(T__19);
-			setState(106);
+			setState(108); match(T__21);
+			setState(109);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__15) | (1L << T__14) | (1L << T__12) | (1L << T__11))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__19) | (1L << T__18) | (1L << T__11) | (1L << T__9) | (1L << T__7))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			consume();
-			setState(107); match(INTEGER);
-			setState(110);
+			setState(110); match(INTEGER);
+			setState(113);
 			_la = _input.LA(1);
-			if (_la==T__0) {
+			if (_la==T__13) {
 				{
-				setState(108); match(T__0);
-				setState(109); match(INTEGER);
+				setState(111); match(T__13);
+				setState(112); match(INTEGER);
 				}
 			}
 
@@ -698,9 +708,9 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(112);
+			setState(115);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__22) | (1L << T__10) | (1L << T__9))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__17) | (1L << T__16) | (1L << T__12))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			consume();
@@ -745,26 +755,87 @@ public class LocationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(114); match(T__18);
-			setState(115); match(T__7);
-			setState(116); localisation();
-			setState(117); match(T__2);
-			setState(118); localisation();
-			setState(123);
+			setState(117); match(T__20);
+			setState(118); match(T__15);
+			setState(119); localisation();
+			setState(120); match(T__14);
+			setState(121); localisation();
+			setState(126);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__2) {
+			while (_la==T__14) {
 				{
 				{
-				setState(119); match(T__2);
-				setState(120); localisation();
+				setState(122); match(T__14);
+				setState(123); localisation();
 				}
 				}
-				setState(125);
+				setState(128);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(126); match(T__6);
+			setState(129); match(T__4);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class OrtermeContext extends ParserRuleContext {
+		public LocalisationContext localisation(int i) {
+			return getRuleContext(LocalisationContext.class,i);
+		}
+		public List<LocalisationContext> localisation() {
+			return getRuleContexts(LocalisationContext.class);
+		}
+		public OrtermeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_orterme; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof LocationListener ) ((LocationListener)listener).enterOrterme(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof LocationListener ) ((LocationListener)listener).exitOrterme(this);
+		}
+	}
+
+	public final OrtermeContext orterme() throws RecognitionException {
+		OrtermeContext _localctx = new OrtermeContext(_ctx, getState());
+		enterRule(_localctx, 24, RULE_orterme);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(131); match(T__6);
+			setState(132); match(T__15);
+			setState(133); localisation();
+			setState(134); match(T__14);
+			setState(135); localisation();
+			setState(140);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==T__14) {
+				{
+				{
+				setState(136); match(T__14);
+				setState(137); localisation();
+				}
+				}
+				setState(142);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			setState(143); match(T__4);
 			}
 		}
 		catch (RecognitionException re) {
@@ -801,31 +872,31 @@ public class LocationParser extends Parser {
 
 	public final XortermeContext xorterme() throws RecognitionException {
 		XortermeContext _localctx = new XortermeContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_xorterme);
+		enterRule(_localctx, 26, RULE_xorterme);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(128); match(T__21);
-			setState(129); match(T__7);
-			setState(130); localisation();
-			setState(131); match(T__2);
-			setState(132); localisation();
-			setState(137);
+			setState(145); match(T__23);
+			setState(146); match(T__15);
+			setState(147); localisation();
+			setState(148); match(T__14);
+			setState(149); localisation();
+			setState(154);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__2) {
+			while (_la==T__14) {
 				{
 				{
-				setState(133); match(T__2);
-				setState(134); localisation();
+				setState(150); match(T__14);
+				setState(151); localisation();
 				}
 				}
-				setState(139);
+				setState(156);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(140); match(T__6);
+			setState(157); match(T__4);
 			}
 		}
 		catch (RecognitionException re) {
@@ -840,45 +911,51 @@ public class LocationParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\35\u0091\4\2\t\2"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\36\u00a2\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
-		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\3\2\3\2\3\2\3\3\3\3\5\3\"\n\3\3\3\5\3"+
-		"%\n\3\3\3\3\3\3\3\7\3*\n\3\f\3\16\3-\13\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
-		"\3\4\5\4\67\n\4\3\5\3\5\3\6\3\6\3\6\3\6\7\6?\n\6\f\6\16\6B\13\6\3\6\3"+
-		"\6\3\7\3\7\3\7\3\7\3\7\5\7K\n\7\5\7M\n\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3"+
-		"\b\3\t\3\t\3\t\3\t\3\t\3\t\5\t]\n\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3"+
-		"\n\5\nh\n\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\5\13q\n\13\3\f\3\f\3\r\3"+
-		"\r\3\r\3\r\3\r\3\r\3\r\7\r|\n\r\f\r\16\r\177\13\r\3\r\3\r\3\16\3\16\3"+
-		"\16\3\16\3\16\3\16\3\16\7\16\u008a\n\16\f\16\16\16\u008d\13\16\3\16\3"+
-		"\16\3\16\2\2\17\2\4\6\b\n\f\16\20\22\24\26\30\32\2\7\4\2\27\27\31\31\4"+
-		"\2\6\6\25\25\4\2\3\3\22\22\5\2\t\t\13\f\16\17\4\2\4\4\20\21\u0096\2\34"+
-		"\3\2\2\2\4$\3\2\2\2\6\66\3\2\2\2\b8\3\2\2\2\n:\3\2\2\2\fE\3\2\2\2\16P"+
-		"\3\2\2\2\20V\3\2\2\2\22`\3\2\2\2\24k\3\2\2\2\26r\3\2\2\2\30t\3\2\2\2\32"+
-		"\u0082\3\2\2\2\34\35\5\4\3\2\35\36\7\2\2\3\36\3\3\2\2\2\37%\5\26\f\2 "+
-		"\"\5\b\5\2! \3\2\2\2!\"\3\2\2\2\"#\3\2\2\2#%\5\6\4\2$\37\3\2\2\2$!\3\2"+
-		"\2\2$%\3\2\2\2%+\3\2\2\2&\'\5\b\5\2\'(\5\6\4\2(*\3\2\2\2)&\3\2\2\2*-\3"+
-		"\2\2\2+)\3\2\2\2+,\3\2\2\2,\5\3\2\2\2-+\3\2\2\2.\67\5\n\6\2/\67\5\f\7"+
-		"\2\60\67\5\16\b\2\61\67\5\20\t\2\62\67\5\22\n\2\63\67\5\24\13\2\64\67"+
-		"\5\30\r\2\65\67\5\32\16\2\66.\3\2\2\2\66/\3\2\2\2\66\60\3\2\2\2\66\61"+
-		"\3\2\2\2\66\62\3\2\2\2\66\63\3\2\2\2\66\64\3\2\2\2\66\65\3\2\2\2\67\7"+
-		"\3\2\2\289\t\2\2\29\t\3\2\2\2:;\7\n\2\2;@\7\33\2\2<=\7\30\2\2=?\7\33\2"+
-		"\2><\3\2\2\2?B\3\2\2\2@>\3\2\2\2@A\3\2\2\2AC\3\2\2\2B@\3\2\2\2CD\7\r\2"+
-		"\2D\13\3\2\2\2EF\7\n\2\2FL\7\34\2\2GJ\7\f\2\2HK\t\3\2\2IK\t\4\2\2JH\3"+
-		"\2\2\2JI\3\2\2\2KM\3\2\2\2LG\3\2\2\2LM\3\2\2\2MN\3\2\2\2NO\7\r\2\2O\r"+
-		"\3\2\2\2PQ\7\n\2\2QR\7\34\2\2RS\7\f\2\2ST\7\34\2\2TU\7\r\2\2U\17\3\2\2"+
-		"\2VW\7\n\2\2WX\7\34\2\2XY\t\5\2\2Y\\\7\33\2\2Z[\7\32\2\2[]\7\33\2\2\\"+
-		"Z\3\2\2\2\\]\3\2\2\2]^\3\2\2\2^_\7\r\2\2_\21\3\2\2\2`a\7\26\2\2ab\7\23"+
-		"\2\2bc\7\34\2\2cd\t\5\2\2dg\7\33\2\2ef\7\32\2\2fh\7\33\2\2ge\3\2\2\2g"+
-		"h\3\2\2\2hi\3\2\2\2ij\7\24\2\2j\23\3\2\2\2kl\7\7\2\2lm\t\5\2\2mp\7\33"+
-		"\2\2no\7\32\2\2oq\7\33\2\2pn\3\2\2\2pq\3\2\2\2q\25\3\2\2\2rs\t\6\2\2s"+
-		"\27\3\2\2\2tu\7\b\2\2uv\7\23\2\2vw\5\4\3\2wx\7\30\2\2x}\5\4\3\2yz\7\30"+
-		"\2\2z|\5\4\3\2{y\3\2\2\2|\177\3\2\2\2}{\3\2\2\2}~\3\2\2\2~\u0080\3\2\2"+
-		"\2\177}\3\2\2\2\u0080\u0081\7\24\2\2\u0081\31\3\2\2\2\u0082\u0083\7\5"+
-		"\2\2\u0083\u0084\7\23\2\2\u0084\u0085\5\4\3\2\u0085\u0086\7\30\2\2\u0086"+
-		"\u008b\5\4\3\2\u0087\u0088\7\30\2\2\u0088\u008a\5\4\3\2\u0089\u0087\3"+
-		"\2\2\2\u008a\u008d\3\2\2\2\u008b\u0089\3\2\2\2\u008b\u008c\3\2\2\2\u008c"+
-		"\u008e\3\2\2\2\u008d\u008b\3\2\2\2\u008e\u008f\7\24\2\2\u008f\33\3\2\2"+
-		"\2\16!$+\66@JL\\gp}\u008b";
+		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\3\2\3\2\3\3\3\3\5\3$\n\3"+
+		"\3\3\5\3\'\n\3\3\3\3\3\3\3\7\3,\n\3\f\3\16\3/\13\3\3\4\3\4\3\4\3\4\3\4"+
+		"\3\4\3\4\3\4\3\4\5\4:\n\4\3\5\3\5\3\6\3\6\3\6\3\6\7\6B\n\6\f\6\16\6E\13"+
+		"\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\5\7N\n\7\5\7P\n\7\3\7\3\7\3\b\3\b\3\b\3"+
+		"\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\5\t`\n\t\3\t\3\t\3\n\3\n\3\n\3\n\3"+
+		"\n\3\n\3\n\5\nk\n\n\3\n\3\n\3\13\3\13\3\13\3\13\3\13\5\13t\n\13\3\f\3"+
+		"\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\7\r\177\n\r\f\r\16\r\u0082\13\r\3\r\3\r"+
+		"\3\16\3\16\3\16\3\16\3\16\3\16\3\16\7\16\u008d\n\16\f\16\16\16\u0090\13"+
+		"\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\7\17\u009b\n\17\f\17"+
+		"\16\17\u009e\13\17\3\17\3\17\3\17\2\2\20\2\4\6\b\n\f\16\20\22\24\26\30"+
+		"\32\34\2\7\3\2\32\33\4\2\5\5\30\30\4\2\3\3\26\26\6\2\b\t\20\20\22\22\24"+
+		"\24\4\2\n\13\17\17\u00a8\2\36\3\2\2\2\4&\3\2\2\2\69\3\2\2\2\b;\3\2\2\2"+
+		"\n=\3\2\2\2\fH\3\2\2\2\16S\3\2\2\2\20Y\3\2\2\2\22c\3\2\2\2\24n\3\2\2\2"+
+		"\26u\3\2\2\2\30w\3\2\2\2\32\u0085\3\2\2\2\34\u0093\3\2\2\2\36\37\5\4\3"+
+		"\2\37 \7\2\2\3 \3\3\2\2\2!\'\5\26\f\2\"$\5\b\5\2#\"\3\2\2\2#$\3\2\2\2"+
+		"$%\3\2\2\2%\'\5\6\4\2&!\3\2\2\2&#\3\2\2\2&\'\3\2\2\2\'-\3\2\2\2()\5\b"+
+		"\5\2)*\5\6\4\2*,\3\2\2\2+(\3\2\2\2,/\3\2\2\2-+\3\2\2\2-.\3\2\2\2.\5\3"+
+		"\2\2\2/-\3\2\2\2\60:\5\n\6\2\61:\5\f\7\2\62:\5\16\b\2\63:\5\20\t\2\64"+
+		":\5\22\n\2\65:\5\24\13\2\66:\5\30\r\2\67:\5\32\16\28:\5\34\17\29\60\3"+
+		"\2\2\29\61\3\2\2\29\62\3\2\2\29\63\3\2\2\29\64\3\2\2\29\65\3\2\2\29\66"+
+		"\3\2\2\29\67\3\2\2\298\3\2\2\2:\7\3\2\2\2;<\t\2\2\2<\t\3\2\2\2=>\7\21"+
+		"\2\2>C\7\35\2\2?@\7\r\2\2@B\7\35\2\2A?\3\2\2\2BE\3\2\2\2CA\3\2\2\2CD\3"+
+		"\2\2\2DF\3\2\2\2EC\3\2\2\2FG\7\23\2\2G\13\3\2\2\2HI\7\21\2\2IO\7\35\2"+
+		"\2JM\7\b\2\2KN\t\3\2\2LN\t\4\2\2MK\3\2\2\2ML\3\2\2\2NP\3\2\2\2OJ\3\2\2"+
+		"\2OP\3\2\2\2PQ\3\2\2\2QR\7\23\2\2R\r\3\2\2\2ST\7\21\2\2TU\7\35\2\2UV\7"+
+		"\b\2\2VW\7\35\2\2WX\7\23\2\2X\17\3\2\2\2YZ\7\21\2\2Z[\7\35\2\2[\\\t\5"+
+		"\2\2\\_\7\34\2\2]^\7\16\2\2^`\7\34\2\2_]\3\2\2\2_`\3\2\2\2`a\3\2\2\2a"+
+		"b\7\23\2\2b\21\3\2\2\2cd\7\31\2\2de\7\f\2\2ef\7\35\2\2fg\t\5\2\2gj\7\34"+
+		"\2\2hi\7\16\2\2ik\7\34\2\2jh\3\2\2\2jk\3\2\2\2kl\3\2\2\2lm\7\27\2\2m\23"+
+		"\3\2\2\2no\7\6\2\2op\t\5\2\2ps\7\34\2\2qr\7\16\2\2rt\7\34\2\2sq\3\2\2"+
+		"\2st\3\2\2\2t\25\3\2\2\2uv\t\6\2\2v\27\3\2\2\2wx\7\7\2\2xy\7\f\2\2yz\5"+
+		"\4\3\2z{\7\r\2\2{\u0080\5\4\3\2|}\7\r\2\2}\177\5\4\3\2~|\3\2\2\2\177\u0082"+
+		"\3\2\2\2\u0080~\3\2\2\2\u0080\u0081\3\2\2\2\u0081\u0083\3\2\2\2\u0082"+
+		"\u0080\3\2\2\2\u0083\u0084\7\27\2\2\u0084\31\3\2\2\2\u0085\u0086\7\25"+
+		"\2\2\u0086\u0087\7\f\2\2\u0087\u0088\5\4\3\2\u0088\u0089\7\r\2\2\u0089"+
+		"\u008e\5\4\3\2\u008a\u008b\7\r\2\2\u008b\u008d\5\4\3\2\u008c\u008a\3\2"+
+		"\2\2\u008d\u0090\3\2\2\2\u008e\u008c\3\2\2\2\u008e\u008f\3\2\2\2\u008f"+
+		"\u0091\3\2\2\2\u0090\u008e\3\2\2\2\u0091\u0092\7\27\2\2\u0092\33\3\2\2"+
+		"\2\u0093\u0094\7\4\2\2\u0094\u0095\7\f\2\2\u0095\u0096\5\4\3\2\u0096\u0097"+
+		"\7\r\2\2\u0097\u009c\5\4\3\2\u0098\u0099\7\r\2\2\u0099\u009b\5\4\3\2\u009a"+
+		"\u0098\3\2\2\2\u009b\u009e\3\2\2\2\u009c\u009a\3\2\2\2\u009c\u009d\3\2"+
+		"\2\2\u009d\u009f\3\2\2\2\u009e\u009c\3\2\2\2\u009f\u00a0\7\27\2\2\u00a0"+
+		"\35\3\2\2\2\17#&-9CMO_js\u0080\u008e\u009c";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

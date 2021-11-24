@@ -1,6 +1,6 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance;
 
-import fr.inra.sad.bagap.apiland.analysis.matrix.pixel.combination.expression.CombinationExpression;
+import fr.inra.sad.bagap.apiland.analysis.combination.expression.CombinationExpression;
 
 public class CombinationExpressionDistanceFunction implements DistanceFunction {
 

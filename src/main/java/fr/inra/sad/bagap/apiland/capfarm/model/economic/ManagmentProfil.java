@@ -11,7 +11,6 @@ public abstract class ManagmentProfil {
 	private int[] works; 
 	// nb de jours travail / hectare / culture --> NON car pour la multiplication des scalaires a besoin d'entiers
 	// nb d'heure / hectare / culture / historique de cultures --> à construire
-	// quelle intégration des jours disponibles / bloc(irriguable, non irriguable) / sol ? dans maelia
 	
 	public ManagmentProfil(CoverUnit[] covers, int[] works){
 		this.covers = covers;

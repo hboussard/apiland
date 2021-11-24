@@ -1,14 +1,19 @@
 package fr.inra.sad.bagap.apiland.capfarm.model.economic.csp;
 
+import java.util.Set;
+
 import org.chocosolver.solver.ResolutionPolicy;
+import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.constraints.ICF;
 import org.chocosolver.solver.exception.ContradictionException;
 import org.chocosolver.solver.search.loop.monitors.SMF;
 import org.chocosolver.solver.search.strategy.ISF;
 import org.chocosolver.solver.search.strategy.strategy.AbstractStrategy;
 import org.chocosolver.solver.search.strategy.strategy.StrategiesSequencer;
+import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.variables.VF;
+import org.chocosolver.solver.variables.VariableFactory;
 import org.chocosolver.util.tools.ArrayUtils;
 
 import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocationProblem;
@@ -16,6 +21,7 @@ import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad.bagap.apiland.capfarm.model.Cover;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.capfarm.model.economic.EconomicProfil;
+import fr.inra.sad.bagap.apiland.capfarm.model.economic.MaeliaManagmentProfil;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 
@@ -23,13 +29,18 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 
 	private EconomicProfil ep;
 	
-	private IntVar profit, unprofit/*, work*/;
+	private MaeliaManagmentProfil mp;
 	
-	private IntVar[] coverAreas, coverCounts;
+	private IntVar profit, unprofit, work, sumDiffProfitsDiv1000AuCarre, nbcombinations, variance, distance;
 	
-	public OptimizeEconomicCoverAllocationProblem(CoverAllocator allocator, Instant t, EconomicProfil ep) {
+	private IntVar[] coverAreas, profits, diffProfitsDiv1000AuCarre;
+	
+	private BoolVar[] allocatedCovers;
+	
+	public OptimizeEconomicCoverAllocationProblem(CoverAllocator allocator, Instant t, EconomicProfil ep, MaeliaManagmentProfil mp) {
 		super(allocator, t);
 		this.ep = ep;
+		this.mp = mp;
 	}
 
 	public EconomicProfil getEconomicProfil(){
@@ -48,10 +59,9 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		profit = VF.bounded("profit", 0, 2000000000, solver); 
 		unprofit = VF.bounded("unprofit", -2000000000, 0, solver);
 		
-		//work = VF.bounded("work", 0, 999999999, solver);
+		work = VF.bounded("work", 0, VariableFactory.MAX_INT_BOUND, solver);
 		
 		coverAreas = new IntVar[covers().size()];
-		coverCounts = new IntVar[covers().size()];
 		
 	}
 	
@@ -61,179 +71,119 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		super.structureInitialisation();
 		
 		int totarea = allocator().totalParcelsArea();
+		System.out.println("total area "+totarea);
 		int[] areas = new int[allocator().parcels().size()];
-		int[] counts = new int[allocator().parcels().size()];
 		for(int i=0; i<areas.length; i++){
 			areas[i] = 0;
-			counts[i] = 1;
 		}
-		/*
-		Set<Integer> codes = new HashSet<Integer>();
-		if(allocator().getCode().equalsIgnoreCase("O1")){
-			codes.add(179);
-			codes.add(191);
-			codes.add(209);
-			codes.add(220);
-			codes.add(247);
-			codes.add(268);
-			codes.add(270);
-			codes.add(271);
-			codes.add(272);
-			codes.add(275);
-			codes.add(278);
-			codes.add(280);
-			codes.add(281);
-			codes.add(282);
-			codes.add(283);
-			codes.add(286);
-			codes.add(300);
-			codes.add(301);
-			codes.add(304);
-			codes.add(305);
-			codes.add(307);
-			codes.add(308);
-			codes.add(309);
-			codes.add(310);
-			codes.add(311);
-			codes.add(325);
-			codes.add(326);
-			codes.add(327);
-			codes.add(354);
-		}else if(allocator().getCode().equalsIgnoreCase("O2")){
-			codes.add(184);
-			codes.add(187);
-			codes.add(215);
-			codes.add(217);
-			codes.add(223);
-			codes.add(231);
-			codes.add(240);
-			codes.add(241);
-			codes.add(269);
-			codes.add(279);
-			codes.add(298);
-			codes.add(319);
-			codes.add(323);
-		}else if(allocator().getCode().equalsIgnoreCase("O3")){
-			codes.add(142);
-			codes.add(154);
-			codes.add(166);
-			codes.add(167);
-			codes.add(170);
-			codes.add(172);
-			codes.add(175);
-			codes.add(178);
-			codes.add(181);
-			codes.add(182);
-			codes.add(186);
-			codes.add(194);
-			codes.add(197);
-			codes.add(203);
-			codes.add(248);
-			codes.add(249);
-			codes.add(254);
-			codes.add(255);
-			codes.add(290);
-			codes.add(362);
-		}else if(allocator().getCode().equalsIgnoreCase("O4")){
-			codes.add(176);
-			codes.add(185);
-			codes.add(188);
-			codes.add(189);
-			codes.add(193);
-			codes.add(200);
-			codes.add(201);
-			codes.add(205);
-			codes.add(210);
-			codes.add(212);
-			codes.add(230);
-			codes.add(322);
-			codes.add(324);
-		}else if(allocator().getCode().equalsIgnoreCase("O5")){
-			codes.add(139);
-			codes.add(141);
-			codes.add(144);
-			codes.add(146);
-			codes.add(147);
-			codes.add(152);
-			codes.add(156);
-			codes.add(157);
-			codes.add(158);
-			codes.add(174);
-			codes.add(321);
-		}else if(allocator().getCode().equalsIgnoreCase("O6")){
-			codes.add(183);
-			codes.add(195);
-			codes.add(213);
-			codes.add(214);
-			codes.add(221);
-			codes.add(239);
-			codes.add(243);
-			codes.add(264);
-			codes.add(265);
-			codes.add(314);
-			codes.add(315);
-		}else if(allocator().getCode().equalsIgnoreCase("O7")){
-			codes.add(229);
-			codes.add(234);
-			codes.add(235);
-			codes.add(236);
-			codes.add(237);
-			codes.add(238);
-			codes.add(242);
-			codes.add(244);
-			codes.add(245);
-			codes.add(316);
-		}else if(allocator().getCode().equalsIgnoreCase("O8")){
-			codes.add(224);
-			codes.add(226);
-			codes.add(233);
-			codes.add(317);
-		}else if(allocator().getCode().equalsIgnoreCase("O9")){
-			codes.add(162);
-			codes.add(169);
-			codes.add(171);
-			codes.add(250);
-			codes.add(251);
-			codes.add(266);
-			codes.add(267);
-			codes.add(273);
-			codes.add(313);
-		}else if(allocator().getCode().equalsIgnoreCase("O10")){
-			codes.add(140);
-			codes.add(149);
-			codes.add(150);
-			codes.add(153);
-			codes.add(160);
-			codes.add(164);
-		}else{
-			System.out.println(allocator().getCode()+" inexistant");
-		}
-		*/
 		
 		for(Parcel p : parcels().keySet()){
-			/*
-			if(codes.contains(Integer.parseInt(p.getId()))){
-				areas[parcels().get(p)] = p.getArea()/100;  // surface en ares
-			}else{
-				areas[parcels().get(p)] = 0;  // surface en ares
-			}
-			*/
-			areas[parcels().get(p)] = p.getArea()/100;  // surface en ares
 			//areas[parcels().get(p)] = p.getArea();  // surface en m²
-		}
-					
+			areas[parcels().get(p)] = p.getArea()/100;  // surface en ares
+			//areas[parcels().get(p)] = p.getArea()/10000;  // surface en hectares
+		}			
 		for(CoverUnit c : covers().keySet()){
 			int ic = covers().get(c);
 			coverAreas[ic] = VF.bounded("a_cvs_"+ic, 0, totarea, solver());
 			solver().post(ICF.scalar(coversAndParcels(ic), areas, coverAreas[ic])); 
-			coverCounts[ic] = VF.bounded("c_cvs_"+ic, 0, 100, solver());
-			solver().post(ICF.scalar(coversAndParcels(ic), counts, coverCounts[ic]));
 		}
-			
+		
+		// ajout du profit
 		solver().post(ICF.arithm(profit, "+", unprofit, "=", 0));
 		solver().post(ICF.scalar(coverAreas, ep.profits(), profit));
+		
+		
+		// ajout du travail
+		solver().post(ICF.scalar(coverAreas, mp.works(), work));
+		
+		
+		// ajout variabilite du profit
+		int[][] historicalProfits = ep.getHistoricalProfits();
+		int nbCombinations = historicalProfits[0].length;
+		int nbCovers = coverAreas().length;
+		
+		profits = new IntVar[nbCombinations];
+		
+		diffProfitsDiv1000AuCarre = new IntVar[nbCombinations];
+		
+		IntVar divisor = VF.fixed(1000, solver());
+		IntVar profith, diffProfith, diffProfithDiv1000, diffProfithDiv1000AuCarre;
+		for(int h=0; h<nbCombinations; h++){
 			
-		//solver().post(ICF.scalar(coverCounts, ep.works(), work));
+			profith = VF.bounded("profit"+h, 0, VariableFactory.MAX_INT_BOUND, solver());
+			
+			int[] hp = new int[nbCovers];
+			for(int s=0; s<nbCovers; s++){
+				hp[s] = historicalProfits[s][h];
+			}
+			
+			solver().post(ICF.scalar(coverAreas(), hp, profith));
+			
+			profits[h] = profith;
+			
+			diffProfith = VF.bounded("diffprofit"+h, 0, 100000000, solver());
+			
+			solver().post(ICF.distance(profit, profith, "=", diffProfith));
+			
+			diffProfithDiv1000 = VF.bounded("diffprofit"+h+"div1000", 0, 100000000, solver());
+			
+			solver().post(ICF.eucl_div(diffProfith, divisor, diffProfithDiv1000));
+			
+			
+			diffProfithDiv1000AuCarre = VF.bounded("diffprofit"+h+"div1000aucarre", 0, VariableFactory.MAX_INT_BOUND, solver());
+			
+			solver().post(ICF.square(diffProfithDiv1000AuCarre, diffProfithDiv1000));
+			
+			diffProfitsDiv1000AuCarre[h] = diffProfithDiv1000AuCarre;	
+		}
+		
+		sumDiffProfitsDiv1000AuCarre = VF.bounded("sumdiffprofitdiv1000aucarre", 0, VariableFactory.MAX_INT_BOUND, solver());
+		solver().post(ICF.sum(diffProfitsDiv1000AuCarre, sumDiffProfitsDiv1000AuCarre));
+		
+		nbcombinations = VF.bounded("nbcombinations", nbCombinations, nbCombinations, solver());
+		
+		variance = VF.bounded("variance", 0, 10000000, solver()); 
+		solver().post(ICF.eucl_div(sumDiffProfitsDiv1000AuCarre, nbcombinations, variance));
+		/*
+		//ecarttype = VF.bounded("ecarttype", 0, 10000, solver()); 
+		
+		//solver().post(ICF.square(variance, ecarttype)); // marche pas car ne gèr eque des entiers e tle résultat doit être exactement égal
+		*/
+		
+		//ajout distance entre cultures
+		Set<CoverUnit> historicalCovers = historicalCovers();
+		
+		//Map<CoverUnit, Map<CoverUnit, Integer>> distanceCovers = mp.getDistanceCovers();
+		int[][] distanceCovers = mp.getDistanceCovers();
+		
+		if(distanceCovers != null){
+			int[] expCovers = new int[covers().size()];
+			
+			for(CoverUnit cu1  : covers().keySet()){
+				int min = 10;
+				for(CoverUnit cu2  : covers().keySet()){
+					if(historicalCovers.contains(cu2)){
+						//min = Math.min(min, distanceCovers.get(cu2).get(cu1));
+						min = Math.min(min, distanceCovers[covers().get(cu2)][covers().get(cu1)]);
+					}
+				}
+				expCovers[covers().get(cu1)] = min;
+				
+				//System.out.println(cu1+" "+min);
+			}
+			
+			allocatedCovers = new BoolVar[covers().size()];
+			for(int ic=0; ic<covers().size(); ic++){
+				BoolVar ac = VF.bool("alloc"+ic, solver());
+				Constraint ct = ICF.arithm(coverAreas[ic], ">", 0);
+				solver().post(ICF.arithm(ac , "=", ct.reif()));
+				allocatedCovers[ic] = ac;
+			}
+			
+			distance = VF.bounded("distancecovers", 0, covers().size()*10, solver());
+			solver().post(ICF.scalar(allocatedCovers, expCovers, distance));
+		}
+		
 	}
 	
 	@Override
@@ -245,22 +195,58 @@ public class OptimizeEconomicCoverAllocationProblem extends CoverAllocationProbl
 		solver.set(ISF.lastConflict(solver, new StrategiesSequencer(as1, as2)));
 
 		//SMF.limitFail(solver, 100000);
-		SMF.limitTime(solver, 30000);
+		SMF.limitTime(solver, 1000);
 	}
 	
 	@Override
 	protected boolean solve() {
 		int ip, ic;
 				
-		solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, profit);
-		//solver.findParetoFront(ResolutionPolicy.MINIMIZE, unprofit/*, work*/);
 		//solver.findOptimalSolution(ResolutionPolicy.MAXIMIZE, profit);
+		//solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, unprofit);
+		//solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, work);
+		//solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, variance);
+		//solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, distance);
+		solver.findParetoFront(ResolutionPolicy.MINIMIZE, unprofit, work, variance);
+		//solver.findParetoFront(ResolutionPolicy.MINIMIZE, unprofit, work, variance, distance);
 		if(solver.findSolution()){
 			try {
 				solver.restoreLastSolution();
 				//System.out.println(time().year());
-				//System.out.println("profit = "+profit.getValue());
-				allocator().getTerritory().getAttribute("profit").setValue(time(), profit.getValue());
+				System.out.println("profit = "+profit.getValue()/100+" euros"); // profit total de l'EA, 
+																				// division par 100 pour revenir à l'hectare
+				//allocator().getTerritory().getAttribute("profit").setValue(time(), profit.getValue());
+				
+				//System.out.println("work = "+work.getValue()/1200+" jours"); 	// quantité de travail en jours, 
+																				// division par 100 pour revenir à l'hectare, 
+																				// division par 12 pour revenir au nombre d'heures de travail par jour
+				
+				//System.out.println("work = "+work.getValue()/72000+" jours"); 	// quantité de travail en jours, 
+																				// division par 100 pour revenir à l'hectare, 
+																				// division par 720 (60 minutes * 12 heures) au nombre d'heures de travail par jour
+				
+				//allocator().getTerritory().getAttribute("work").setValue(time(), work.getValue());
+				
+				System.out.println("coeff var profit = "+1000.0*Math.sqrt(variance.getValue())/(profit.getValue()/100.0)); // coefficient de variation du profit,
+																															// multiplié pour réintégrer le divisor (ici 1000)
+				
+				//System.out.println("difficulté à intégrer les couverts = "+distance.getValue());
+				/*
+				System.out.println(allocatedCovers[0]);
+				System.out.println(allocatedCovers[1]);
+				System.out.println(allocatedCovers[2]);
+				System.out.println(allocatedCovers[3]);
+				System.out.println(allocatedCovers[4]);
+				System.out.println(allocatedCovers[5]);
+				*/
+				
+				/*
+				for(CoverUnit c : covers().keySet()){
+					int icc = covers().get(c);
+					System.out.println(c+" "+coverAreas[icc].getValue());
+				}
+				*/
+				
 				//System.out.println("travail = "+work.getValue());
 				//int[] areas = new int[coverAreas.length];
 				//int index = 0;

@@ -7,7 +7,7 @@ import java.util.Set;
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
-import fr.inra.sad.bagap.apiland.analysis.matrix.ChamferDistance;
+import fr.inra.sad.bagap.apiland.analysis.matrix.ChamferDistanceCalculation;
 import fr.inra.sad.bagap.apiland.analysis.matrix.MatrixAnalysis;
 import fr.inra.sad.bagap.apiland.analysis.matrix.MatrixCalculation;
 import fr.inra.sad.bagap.apiland.analysis.matrix.RCMDistanceCalculation;
@@ -114,7 +114,7 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 		}else if(frictionMat != null){
 			cdistance = new RCMDistanceCalculation(matrix, frictionMat, interest, getMaxDistance()+1/2);
 		}else{
-			cdistance = new ChamferDistance(matrix, interest);
+			cdistance = new ChamferDistanceCalculation(matrix, interest);
 		}
 		
 		cdistance.addObserver(this);
@@ -187,7 +187,14 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 			//Matrix mCluster = RasterManager.exportMatrix((Raster) cqa.allRun(), mClassif);
 			//MatrixManager.exportAsciiGrid(mCluster, path+"/cluster_queen.asc");
 			
-			ClusteringQueen ca = new ClusteringQueen(mClassif, vcluster);
+			MatrixAnalysis ca = null;
+			/*if(frictionMap != null || frictionMat != null){
+				ca = new ClusteringRook(mClassif, vcluster);
+			}else{//euclidian
+				ca = new ClusteringQueen(mClassif, vcluster);
+			}*/
+			ca = new ClusteringQueen(mClassif, vcluster);
+			
 			ca.addObserver(this);
 			Matrix mCluster = (Matrix) ca.allRun();
 			//MatrixManager.exportAsciiGridAndVisualize(m2, "C:/Hugues/temp/c5_queen.asc");

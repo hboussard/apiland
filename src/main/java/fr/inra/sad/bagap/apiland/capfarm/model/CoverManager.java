@@ -1,16 +1,16 @@
 package fr.inra.sad.bagap.apiland.capfarm.model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class CoverManager {
 
-	private static Map<String, CoverUnit> coverUnits = new HashMap<String, CoverUnit>();
+	private static Map<String, CoverUnit> coverUnits = new TreeMap<String, CoverUnit>();
 	
-	private static Map<String, CoverGroup> coverGroups = new HashMap<String, CoverGroup>();
+	private static Map<String, CoverGroup> coverGroups = new TreeMap<String, CoverGroup>();
 	
 	public static boolean hasCover(String code){
 		if(coverUnits.containsKey(code) || coverGroups.containsKey(code)){
@@ -28,6 +28,17 @@ public class CoverManager {
 	
 	public static CoverUnit getCoverUnit(String code){
 		return coverUnits.get(code);
+	}
+	
+	public static int getCoverIndex(String code){
+		int i=1;
+		for(String kc : coverUnits.keySet()){
+			if(kc.equalsIgnoreCase(code)){
+				return i;
+			}
+			i++;
+		}
+		throw new IllegalArgumentException();
 	}
 	
 	public static CoverUnit getCoverUnit(String code, String name){
