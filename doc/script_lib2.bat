@@ -30,3 +30,13 @@ call mvn install:install-file -Dfile=./xmlbeans-2.6.0.jar -DgroupId=org.apache.x
 call mvn install:install-file -Dfile=./commons-collections4-4.1.jar -DgroupId=org.apache.commons -DartifactId=commons-collections4 -Dversion=4.1 -Dpackaging=jar
 call mvn install:install-file -Dfile=./exp4j-0.4.8.jar -DgroupId=net.objecthunter.exp4j -DartifactId=exp4j -Dversion=0.4.8 -Dpackaging=jar
 call mvn install:install-file -Dfile=./commons-lang3-3.7.jar -DgroupId=org.apache.commons -DartifactId=lang3 -Dversion=3.7 -Dpackaging=jar
+call mvn install:install-file -Dfile=./opencsv-2.4.jar -DgroupId=au.com.bytecode -DartifactId=opencsv -Dversion=2.4 -Dpackaging=jar
+call mvn install:install-file -Dfile=./csv-1.0.jar -DgroupId=com.csvreader -DartifactId=csv -Dversion=1.0 -Dpackaging=jar
+call mvn install:install-file -Dfile=./exp4j-0.4.8.jar -DgroupId=net.objecthunter.exp4j -DartifactId=exp4j -Dversion=0.4.8 -Dpackaging=jar
+call mvn install:install-file -Dfile=./antlr-4.4.jar -DgroupId=org.antlr -DartifactId=antlr -Dversion=4.4 -Dpackaging=jar
+call mvn install:install-file -Dfile=./commons-lang3-3.7.jar -DgroupId=org.apache.commons -DartifactId=commons-lang3 -Dversion=3.7 -Dpackaging=jar
+call mvn install:install-file -Dfile=./poi-3.15.jar -DgroupId=org.apache.poi -DartifactId=poi -Dversion=3.15 -Dpackaging=jar
+
+
+
+call mvn install:install-file -Dfile=./.jar -DgroupId= -DartifactId= -Dversion= -Dpackaging=jar
