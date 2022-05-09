@@ -168,17 +168,19 @@ public class SpatialCsvManager {
 			CsvReader cr = new CsvReader(csv);
 			cr.setDelimiter(';');
 			cr.readHeaders();
-				
+			
 			if(metrics.size() == 1 && outputAsc != null){
 				for(String header : cr.getHeaders()){
-					if(header.contains(metrics.iterator().next())){
+					//if(header.contains(metrics.iterator().next())){
+					if(header.equalsIgnoreCase(metrics.iterator().next())){
 						writers.put(header, new BufferedWriter(new FileWriter(outputAsc)));	
 					}
 				}
 			}else if(metrics != null && metrics.size() != 0){
 				for(String metric : metrics){
 					for(String header : cr.getHeaders()){
-						if(header.contains(metric)){
+						//if(header.contains(metric)){
+						if(header.equalsIgnoreCase(metric)){
 							writers.put(header, new BufferedWriter(new FileWriter(folder+name+"_"+header+".asc")));	
 						}
 					}
@@ -217,9 +219,10 @@ public class SpatialCsvManager {
 			cr.readRecord();
 			double x = Double.parseDouble(cr.get("X"));
 			double y = Double.parseDouble(cr.get("Y"));
-			
+			boolean ok = true; 
 			for(double nextY=minY + (height-1)*cellSize + cellSize/2; nextY>=minY; nextY-=cellSize){
 				for(double nextX=minX + cellSize - cellSize/2; nextX<(minX + width*cellSize); nextX+=cellSize){
+					
 					if((Math.abs(y-nextY) < (cellSize/2.0)) && (Math.abs(x-nextX) < (cellSize/2.0))){
 						for(Entry<String, BufferedWriter> e : writers.entrySet()){
 							e.getValue().write(cr.get(e.getKey())+" ");

@@ -16,8 +16,14 @@ public class TabCoverage extends Coverage {
 		if(roi.x == 0 && roi.y == 0 && (roi.width*roi.height) == datas.length){
 			return datas;	
 		}else{
-			//System.out.println(roi.x+" "+roi.y+" "+roi.width+" "+roi.height);
-			throw new IllegalArgumentException(roi+" not accepted yet");
+			float[] d = new float[roi.width*roi.height];
+			int x, y;
+			for(int i=0; i<d.length; i++){
+				x = i%roi.width;
+				y = i/roi.width;
+				d[i] = datas[((roi.y+y)*width()) + roi.x + x];
+			}
+			return d;
 		}
 	}
 	

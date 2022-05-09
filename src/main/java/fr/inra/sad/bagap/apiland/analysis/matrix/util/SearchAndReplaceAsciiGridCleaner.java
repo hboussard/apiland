@@ -10,11 +10,11 @@ public class SearchAndReplaceAsciiGridCleaner implements AsciiGridCleaner {
 	
 	private int index = 0;
 	
-	public SearchAndReplaceAsciiGridCleaner(Map<Integer, String> changes){
+	public SearchAndReplaceAsciiGridCleaner(Map<String, String> changes){
 		this.changes = new HashMap<String, String>();
 		if(changes != null){
-			for(Entry<Integer, String> change : changes.entrySet()){
-				this.changes.put(String.valueOf(change.getKey()), change.getValue());
+			for(Entry<String, String> change : changes.entrySet()){
+				this.changes.put(change.getKey(), change.getValue());
 			}
 		}
 	}

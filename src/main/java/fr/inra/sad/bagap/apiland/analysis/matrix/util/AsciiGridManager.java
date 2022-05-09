@@ -119,7 +119,7 @@ public class AsciiGridManager {
 	}
 
 	public static void searchAndReplace(String inAscii, String outAscii,
-			int noData, Map<Integer, String> changes) {
+			int noData, Map<String, String> changes) {
 
 		File f = new File(inAscii);
 		String tempAscii = f.getParent() + "/" + f.getName().replace(".asc", "") + "_c.asc";

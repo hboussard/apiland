@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 import javax.media.jai.PlanarImage;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.image.util.ImageUtilities;
@@ -26,7 +29,7 @@ public class HugeChamferDistanceAnalysis extends Analysis {
 	
 	private float threshold;
 	
-	private int maxTile = 15000;
+	private int maxTile = 5000;
 	
 	//private String path;
 	
@@ -60,6 +63,29 @@ public class HugeChamferDistanceAnalysis extends Analysis {
 		//c.add(5);
 		//Raster.setNoDataValue(-1);
 		//new HugeChamferDistanceAnalysis(input, output, c).allRun();
+		
+		String input = "F:/FRC_Pays_de_la_Loire/data/BocagePdlL_V3/BocagePdlL_V3.tif";
+		String output = "F:/FRC_Pays_de_la_Loire/data/BocagePdlL_V3/test2/distance_bois_2021_2.asc";
+				
+		Set<Integer> c = new HashSet<Integer>();
+		c.add(1);
+		c.add(2);
+		c.add(3);
+		c.add(6);
+		c.add(8);
+		Raster.setNoDataValue(-1);
+		new HugeChamferDistanceAnalysis(input, output, c).allRun();
+		
+		/*
+		String input = "F:/chloe/winterschool/data/start/za.asc";
+		String output = "F:/chloe/winterschool/data/test/distance.asc";
+				
+		Set<Integer> c = new HashSet<Integer>();
+		c.add(4);
+		c.add(5);
+		Raster.setNoDataValue(-1);
+		new HugeChamferDistanceAnalysis(input, output, c).allRun();
+		*/
 	}
 	
 	public HugeChamferDistanceAnalysis(String input, String output, Collection<Integer> codes) {
@@ -91,6 +117,9 @@ public class HugeChamferDistanceAnalysis extends Analysis {
 		imageMaxX = inCoverage.getEnvelope().getMaximum(0);
 		imageMaxY = inCoverage.getEnvelope().getMaximum(1);
 		cellSize = (float) ((java.awt.geom.AffineTransform) inCoverage.getGridGeometry().getGridToCRS2D()).getScaleX();
+		
+		//System.out.println(width+" "+height);
+		//System.out.println(imageMinX+" "+imageMaxX+" "+imageMinY+" "+imageMaxY);
 		
 		dWidth = 0;
 		dHeight = 0;
@@ -478,6 +507,7 @@ public class HugeChamferDistanceAnalysis extends Analysis {
 						
 						if(x == 0){
 							
+							//System.out.println(temp+"_"+dx+"-"+dy+".tif");
 							GridCoverage2D cov = CoverageManager.get(temp+"_"+dx+"-"+dy+".tif");
 							float[] localDatas = CoverageManager.getData(cov, 0, 0, roiWidth, roiHeight);
 							
@@ -488,7 +518,6 @@ public class HugeChamferDistanceAnalysis extends Analysis {
 								//System.out.println(lx+" "+ly+" "+(li%roiWidth)+" "+(li/roiWidth));
 								datas[ly*width + lx] = localDatas[li];
 							}
-							
 							
 							cov.dispose(true);
 							PlanarImage planarImage = (PlanarImage) cov.getRenderedImage();

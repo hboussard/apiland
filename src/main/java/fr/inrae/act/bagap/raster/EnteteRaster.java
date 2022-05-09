@@ -1,5 +1,7 @@
 package fr.inrae.act.bagap.raster;
 
+import org.locationtech.jts.geom.Envelope;
+
 public class EnteteRaster {
 
 	private int width, height;
@@ -53,4 +55,20 @@ public class EnteteRaster {
 		return noDataValue;
 	}
 	
+	public static EnteteRaster getEntete(Envelope envelope, float cellsize, int noDataValue) {
+		
+		int ncols;
+		if((envelope.getMaxX() - envelope.getMinX())%cellsize == 0){
+			ncols = new Double((Math.floor((envelope.getMaxX() - envelope.getMinX()) / cellsize))).intValue();
+		}else{
+			ncols = new Double((Math.floor((envelope.getMaxX() - envelope.getMinX()) / cellsize)) + 1).intValue();
+		}
+		int nrows;
+		if((envelope.getMaxY() - envelope.getMinY())%cellsize == 0){
+			nrows = new Double((Math.floor((envelope.getMaxY() - envelope.getMinY()) / cellsize))).intValue();
+		}else{
+			nrows = new Double((Math.floor((envelope.getMaxY() - envelope.getMinY()) / cellsize)) + 1).intValue();
+		}
+		return new EnteteRaster(ncols, nrows, envelope.getMinX(), envelope.getMaxX(), envelope.getMinY(), envelope.getMaxY(), cellsize, noDataValue);
+	}
 }

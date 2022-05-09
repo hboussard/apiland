@@ -8,9 +8,11 @@ import java.awt.image.DataBufferFloat;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.awt.image.WritableRenderedImage;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -64,6 +66,8 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.sun.media.jai.codecimpl.util.RasterFactory;
+
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inrae.act.bagap.raster.Coverage;
 import fr.inrae.act.bagap.raster.EnteteRaster;
 import fr.inrae.act.bagap.raster.FileCoverage;
@@ -477,6 +481,68 @@ public class CoverageManager {
 		
 	}
 
+	public static void writeAsciiGrid(String ascii, EnteteRaster entete, float[] datas) {
+		
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(ascii));
+			
+			writer.write("ncols "+entete.width());
+			writer.newLine();
+			writer.write("nrows "+entete.height());
+			writer.newLine();
+			writer.write("xllcorner "+entete.minx());
+			writer.newLine();
+			writer.write("yllcorner "+entete.miny());
+			writer.newLine();
+			writer.write("cellsize "+entete.cellsize());
+			writer.newLine();
+			writer.write("NODATA_value "+entete.noDataValue());
+			writer.newLine();
+			
+			for(int j=0; j<entete.height(); j++){
+				for(int i=0; i<entete.width(); i++){
+					writer.write(datas[j*entete.width()+i]+" ");
+				}
+				writer.newLine();
+			}
+			
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void writeAsciiGrid(String ascii, float[] datas, int width, int height, double minx, double miny, double cellsize, int noDataValue) {
+		
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(ascii));
+			
+			writer.write("ncols "+width);
+			writer.newLine();
+			writer.write("nrows "+height);
+			writer.newLine();
+			writer.write("xllcorner "+minx);
+			writer.newLine();
+			writer.write("yllcorner "+miny);
+			writer.newLine();
+			writer.write("cellsize "+cellsize);
+			writer.newLine();
+			writer.write("NODATA_value "+noDataValue);
+			writer.newLine();
+			
+			for(int j=0; j<height; j++){
+				for(int i=0; i<width; i++){
+					writer.write(datas[j*width+i]+" ");
+				}
+				writer.newLine();
+			}
+			
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private static void writeAsciiGrid(GridCoverage2D outC, String output) {
 		try {
 			ArcGridWriter writer = new ArcGridWriter(new File(output));
@@ -504,6 +570,60 @@ public class CoverageManager {
 		}
 	}
 
+	public static void retile(String inputRaster, String outputRaster, double minx, double maxx, double miny, double maxy){
+		try {
+			// coverage et infos associees
+			GridCoverage2DReader reader;
+			if(inputRaster.endsWith(".asc")){
+				reader = new ArcGridReader(new File(inputRaster));
+			}else if(inputRaster.endsWith(".tif")){
+				reader = new GeoTiffReader(new File(inputRaster));
+			}else{
+				throw new IllegalArgumentException(inputRaster+" is not a recognize raster");
+			}
+			GridCoverage2D coverage2D = (GridCoverage2D) reader.read(null);
+			reader.dispose(); // a  tester, ca va peut-etre bloquer la lecture des donnees
+				
+			int inWidth = (Integer) coverage2D.getProperty("image_width");
+			int inHeight = (Integer) coverage2D.getProperty("image_height");
+			double inMinX = coverage2D.getEnvelope().getMinimum(0);
+			double inMinY = coverage2D.getEnvelope().getMinimum(1);
+			double inMaxX = coverage2D.getEnvelope().getMaximum(0);
+			double inMaxY = coverage2D.getEnvelope().getMaximum(1);
+			float inCellSize = (float) ((java.awt.geom.AffineTransform) coverage2D.getGridGeometry().getGridToCRS2D()).getScaleX();
+					
+			int roiX = (int) ((minx-inMinX)/inCellSize);
+			double outMinX = inMinX + roiX * inCellSize;
+				
+			int roiY = (int) ((inMaxY-maxy)/inCellSize);
+			double outMaxY = inMaxY - roiY * inCellSize;
+			
+			int roiWidth = (int) ((maxx-outMinX)/inCellSize);
+			int roiHeight = (int) ((outMaxY-miny)/inCellSize);
+			
+			System.out.println(roiX+" "+roiY+" "+roiWidth+" "+roiHeight);
+			
+			Rectangle roi = new Rectangle(roiX, roiY, roiWidth, roiHeight);
+			float[] datas = new float[roiWidth * roiHeight];
+			datas = coverage2D.getRenderedImage().getData(roi).getSamples(roi.x, roi.y, roi.width, roi.height, 0, datas);
+					
+			
+			if(outputRaster.endsWith("tif")){
+				CoverageManager.writeGeotiff(new File(outputRaster), datas, roiWidth, roiHeight, outMinX, maxx, miny, outMaxY);
+			}else if(outputRaster.endsWith(".asc")){
+				CoverageManager.writeAsciiGrid("F://dreal/ophelie/cgtv_baie_lancieux.asc", datas, roiWidth, roiHeight, outMinX, miny, inCellSize, Raster.getNoDataValue());
+			}else{
+				throw new IllegalArgumentException(outputRaster+" is not a recognize raster");
+			}
+			
+					
+		} catch (DataSourceException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/*
 	 * public static void split(GridCoverage2D coverage, short splitWidth, short
 	 * splitHeight, short overlay){
