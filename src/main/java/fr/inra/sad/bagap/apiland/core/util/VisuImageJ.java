@@ -39,20 +39,20 @@ import java.util.StringTokenizer;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
-import ij.plugin.AscReader;
+import fr.inra.sad.bagap.apiland.core.util.AscReader;
 import ij.plugin.LUT_Editor;
 import ij.plugin.LutLoader;
 import ij.process.ImageProcessor;
 
 /**
- * classe de modélisation de la visualisation
+ * classe de modï¿½lisation de la visualisation
  * en image via ImageJ
  * @author Hugues Boussard
  */
 public class VisuImageJ {
 	
 	/**
-	 * routine de création
+	 * routine de crï¿½ation
 	 * @param file : fichier image
 	 */
 	public VisuImageJ(String file){
@@ -125,7 +125,7 @@ public class VisuImageJ {
 	}
 	
 	/**
-	 * récupération du nom court d'un fichier
+	 * rï¿½cupï¿½ration du nom court d'un fichier
 	 * @param nom : nom absolu du fichier
 	 * @return le nom court
 	 */
