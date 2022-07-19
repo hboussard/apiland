@@ -145,7 +145,7 @@ public interface DynamicElement	extends Cloneable, Comparable<DynamicElement>, T
 	 * @param attName the attribute name
 	 * @return the attribute
 	 */
-	Attribute getInheritedAttribute(String attName);
+	Attribute<?> getInheritedAttribute(String attName);
 	
 	/**
 	 * to delete properly the element

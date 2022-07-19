@@ -2,7 +2,7 @@ package fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix;
 
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import ij.plugin.AscReader;
+import fr.inra.sad.bagap.apiland.core.util.AscReader;
 import ij.process.ImageProcessor;
 
 import java.awt.RenderingHints;
@@ -29,7 +29,7 @@ import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.data.DataSourceException;
 import org.geotools.gce.arcgrid.ArcGridReader;
 
-import com.csvreader.CsvReader;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
@@ -119,7 +119,7 @@ public class JaiMatrixFactory extends MatrixFactory {
 	}
 	
 	/**
-	 * récupération du nom court d'un fichier
+	 * rï¿½cupï¿½ration du nom court d'un fichier
 	 * @param nom : nom absolu du fichier
 	 * @return le nom court
 	 */

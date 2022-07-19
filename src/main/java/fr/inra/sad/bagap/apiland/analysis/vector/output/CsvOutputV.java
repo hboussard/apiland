@@ -3,8 +3,7 @@ package fr.inra.sad.bagap.apiland.analysis.vector.output;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
@@ -67,8 +66,6 @@ public class CsvOutputV extends AbstractMetricOutput {
 				}
 			}
 			out.endRecord();
-		} catch (FinalizedException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -101,8 +98,6 @@ public class CsvOutputV extends AbstractMetricOutput {
 			}
 			out.endRecord();
 						
-		} catch (FinalizedException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

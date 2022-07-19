@@ -2,7 +2,7 @@ package fr.inra.sad.bagap.apiland.treatment.window;
 
 import java.util.Set;
 
-import com.csvreader.CsvWriter;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;

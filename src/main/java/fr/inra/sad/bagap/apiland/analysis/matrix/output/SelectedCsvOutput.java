@@ -6,8 +6,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
@@ -91,8 +90,6 @@ public class SelectedCsvOutput extends AbstractMetricOutput implements MetricOut
 				out.write(column);
 			}
 			out.endRecord();
-		} catch (FinalizedException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -132,8 +129,6 @@ public class SelectedCsvOutput extends AbstractMetricOutput implements MetricOut
 			}
 			
 			out.endRecord();
-		} catch (FinalizedException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

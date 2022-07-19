@@ -20,8 +20,8 @@ public class SAUPPMetric extends VectorMetric {
 	public SAUPPMetric() {
 		super(VariableManager.get("SAU_PP"));
 		sau = new HashSet<String>();
-		sau.add("B");   // blé
-		sau.add("BE");  // bande enherbée
+		sau.add("B");   // blÃ©
+		sau.add("BE");  // bande enherbÃ©e
 		sau.add("C");   // colza
 		sau.add("M");   // mais
 		sau.add("O");   // orge

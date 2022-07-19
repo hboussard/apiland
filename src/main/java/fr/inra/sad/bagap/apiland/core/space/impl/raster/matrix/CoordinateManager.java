@@ -5,10 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelManager;
@@ -119,10 +117,6 @@ public class CoordinateManager {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 		return pixels;	
 	}
@@ -169,10 +163,6 @@ public class CoordinateManager {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 		return points;	
 	}
@@ -200,10 +190,6 @@ public class CoordinateManager {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 		return pixels;	
 	}
@@ -222,8 +208,6 @@ public class CoordinateManager {
 				cw.endRecord();
 			}
 			
-		}catch(com.csvreader.CsvWriter.FinalizedException ex){
-			ex.printStackTrace();
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}finally{
@@ -245,8 +229,6 @@ public class CoordinateManager {
 				cw.endRecord();
 			}
 			
-		}catch(com.csvreader.CsvWriter.FinalizedException ex){
-			ex.printStackTrace();
 		}catch(IOException ex){
 			ex.printStackTrace();
 		} finally{

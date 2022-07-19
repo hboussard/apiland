@@ -13,9 +13,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.capfarm.CAPFarm;
 import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
@@ -387,7 +385,7 @@ public class ConstraintBuilder {
 			allocator.addConstraint(constraint);
 		}else if(params != null || !new File(params[0]).exists()){
 			/*if(!new File(params[0]).exists()){
-				throw new FileNotFoundException("le fichier précédent-suivant n'existe pas : "+params[0]);
+				throw new FileNotFoundException("le fichier prï¿½cï¿½dent-suivant n'existe pas : "+params[0]);
 			}*/
 			try {	
 				//System.out.println("ici");
@@ -423,10 +421,6 @@ public class ConstraintBuilder {
 				
 				cr.close();
 			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (FinalizedException e) {
-				e.printStackTrace();
-			} catch (CatastrophicException e) {
 				e.printStackTrace();
 			} 
 		}else{

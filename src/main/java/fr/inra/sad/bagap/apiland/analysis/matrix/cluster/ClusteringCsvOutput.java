@@ -7,8 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
@@ -60,7 +59,7 @@ public class ClusteringCsvOutput implements AnalysisObserver{
 						cw.endRecord();
 					}
 					cw.close();
-				} catch (FinalizedException | IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				

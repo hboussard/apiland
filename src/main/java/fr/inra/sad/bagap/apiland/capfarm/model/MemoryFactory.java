@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.capfarm.csp.CoverAllocator;
 import fr.inra.sad.bagap.apiland.capfarm.simul.CoverLocationModel;
@@ -112,7 +110,7 @@ public class MemoryFactory {
 				}
 				cr.close();
 				
-			} catch (IOException | FinalizedException | CatastrophicException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -146,7 +144,7 @@ public class MemoryFactory {
 				}
 			}
 			cr.close();
-		} catch (IOException | FinalizedException | CatastrophicException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

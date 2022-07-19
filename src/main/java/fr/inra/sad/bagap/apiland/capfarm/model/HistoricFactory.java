@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
@@ -83,7 +81,7 @@ public class HistoricFactory {
 				cr.close();
 				
 				/*
-				// détermination du nombre d'années sur la première ligne
+				// dï¿½termination du nombre d'annï¿½es sur la premiï¿½re ligne
 				CsvReader cr = new CsvReader(historicFile);
 				cr.setDelimiter(';');
 				cr.readHeaders();
@@ -105,7 +103,7 @@ public class HistoricFactory {
 					nbYear += nb;
 				}
 				cr.close();
-				// fin détermination du nombre d'années
+				// fin dï¿½termination du nombre d'annï¿½es
 				
 				cr = new CsvReader(historicFile);
 				cr.setDelimiter(';');
@@ -129,7 +127,7 @@ public class HistoricFactory {
 				}
 				cr.close();
 				*/
-			} catch (IOException | FinalizedException | CatastrophicException e) {
+			} catch (IOException  e) {
 				e.printStackTrace();
 			}
 		}

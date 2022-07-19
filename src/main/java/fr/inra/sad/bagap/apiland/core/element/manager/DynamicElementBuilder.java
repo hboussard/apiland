@@ -90,10 +90,10 @@ public class DynamicElementBuilder implements Serializable {
 	}
 	
 	public void display(){
-		for(Attribute a : composition){
+		for(Attribute<?> a : composition){
 			a.display();
 		}
-		for(Representation r : structure){
+		for(Representation<?> r : structure){
 			r.display();
 		}
 	}
@@ -159,7 +159,7 @@ public class DynamicElementBuilder implements Serializable {
 		}
 	}
 	
-	public void setAttribute(Attribute attribute){
+	public void setAttribute(Attribute<?> attribute){
 		composition.addAttribute(attribute);
 	}
 		
@@ -171,7 +171,7 @@ public class DynamicElementBuilder implements Serializable {
 		structure.getRepresentation(name).setTime(t);
 	}
 	
-	public void setRepresentation(Representation representation){
+	public void setRepresentation(Representation<?> representation){
 		structure.addRepresentation(representation);
 	}
 

@@ -22,10 +22,8 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixManager;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
-import com.csvreader.CsvWriter;
+import org.jumpmind.symmetric.csv.CsvReader;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class SpatialCsvManager {
 	
@@ -151,10 +149,6 @@ public class SpatialCsvManager {
 			
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 	}
 	
@@ -258,10 +252,6 @@ public class SpatialCsvManager {
 			
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}finally{
 			
 		}
@@ -321,8 +311,6 @@ public class SpatialCsvManager {
 			ex.printStackTrace();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		} catch (com.csvreader.CsvWriter.FinalizedException e) {
-			e.printStackTrace();
 		}
 		
 	}
@@ -387,8 +375,6 @@ public class SpatialCsvManager {
 			br.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
-		} catch (com.csvreader.CsvWriter.FinalizedException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -470,8 +456,6 @@ public class SpatialCsvManager {
 				br.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (com.csvreader.CsvWriter.FinalizedException e) {
 			e.printStackTrace();
 		}
 	}
