@@ -12,8 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Count;
 import fr.inra.sad.bagap.apiland.analysis.matrix.MatrixAnalysis;
@@ -215,7 +214,7 @@ public abstract class NewClusteringAnalysis extends MatrixAnalysis {
 			}
 			
 			cw.close();
-		} catch (FinalizedException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		

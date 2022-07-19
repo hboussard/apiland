@@ -11,9 +11,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
 import fr.inra.sad.bagap.apiland.core.util.Couple;
@@ -119,10 +117,6 @@ public class MatrixMetricManager {
 				}
 			}
 			buf.close();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}finally{

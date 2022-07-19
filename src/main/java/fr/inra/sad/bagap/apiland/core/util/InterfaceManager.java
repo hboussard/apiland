@@ -6,8 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class InterfaceManager<E extends Comparable<E>> {
 
@@ -76,8 +75,6 @@ public class InterfaceManager<E extends Comparable<E>> {
 				cw.endRecord();
 			}
 			cw.close();
-		}catch(FinalizedException e){
-			e.printStackTrace();
 		}catch(IOException e){
 			e.printStackTrace();
 		}

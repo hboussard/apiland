@@ -33,8 +33,7 @@ import org.geotools.data.shapefile.shp.ShapefileWriter;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class CfmUtil {
 
@@ -125,9 +124,9 @@ public class CfmUtil {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (FinalizedException e) {
+		} /*catch (FinalizedException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public static void generateShapefile(String input, String codeFarm){

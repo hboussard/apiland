@@ -13,9 +13,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.capfarm.csp.ProbaTimeManager;
 import fr.inra.sad.bagap.apiland.simul.OutputAnalysis;
@@ -136,7 +134,7 @@ public abstract class CfmSimulator extends Simulator {
 					cr.close();
 				}
 			}
-		} catch (IOException | FinalizedException | CatastrophicException e) {
+		} catch (IOException  e) {
 			e.printStackTrace();
 		}
 	}

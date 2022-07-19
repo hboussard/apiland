@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
@@ -32,7 +30,7 @@ public class FixedFactory {
 				farm.setSolution(fixed);
 				
 				cr.close();
-			} catch (IOException | FinalizedException | CatastrophicException e) {
+			} catch (IOException  e) {
 				e.printStackTrace();
 			}
 		}

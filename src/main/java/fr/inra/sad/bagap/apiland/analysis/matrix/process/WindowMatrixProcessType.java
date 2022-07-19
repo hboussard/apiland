@@ -3,9 +3,7 @@ package fr.inra.sad.bagap.apiland.analysis.matrix.process;
 import java.io.File;
 import java.io.IOException;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.process.metric.MatrixMetric;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.type.Window;
@@ -116,7 +114,7 @@ public class WindowMatrixProcessType extends MatrixProcessType {
 				cr.close();
 				
 				((DistanceValueMetric) wm).setDistanceMatrix(dvm);
-			} catch (IOException | FinalizedException | CatastrophicException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			

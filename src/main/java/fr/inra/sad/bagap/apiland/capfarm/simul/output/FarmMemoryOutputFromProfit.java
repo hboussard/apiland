@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Parcel;
 import fr.inra.sad.bagap.apiland.capfarm.simul.CoverLocationModel;
 import fr.inra.sad.bagap.apiland.capfarm.simul.GlobalCoverLocationModel;
@@ -58,7 +57,7 @@ public class FarmMemoryOutputFromProfit extends OutputAnalysis {
 				cw.endRecord();
 				cws.put(model.getCoverAllocator().getCode(), cw);
 			}
-		} catch (com.csvreader.CsvWriter.FinalizedException|IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		//numbers = new HashMap<String, Integer>();
@@ -117,7 +116,7 @@ public class FarmMemoryOutputFromProfit extends OutputAnalysis {
 					cw.close();
 				}
 				
-			} catch (FinalizedException | IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

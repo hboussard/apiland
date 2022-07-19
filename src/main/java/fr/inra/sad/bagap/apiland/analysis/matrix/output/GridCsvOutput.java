@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
@@ -18,8 +17,8 @@ import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.AbstractMetricOutput;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
-import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class GridCsvOutput extends AbstractMetricOutput {
@@ -101,8 +100,6 @@ public class GridCsvOutput extends AbstractMetricOutput {
 				out.write(v);
 			}
 			out.endRecord();
-		} catch (FinalizedException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -137,8 +134,6 @@ public class GridCsvOutput extends AbstractMetricOutput {
 				}
 				out.endRecord();
 			}
-		} catch (FinalizedException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

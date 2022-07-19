@@ -101,7 +101,7 @@ public class Composition implements Composable, Iterable<Attribute<?>>{
 		attributes.remove(name);
 	}
 
-	public Attribute getAttribute(String name) {
+	public Attribute<?> getAttribute(String name) {
 		return attributes.get(name);
 	}
 	

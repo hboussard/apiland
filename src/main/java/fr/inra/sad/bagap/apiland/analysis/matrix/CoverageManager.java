@@ -150,7 +150,7 @@ public class CoverageManager {
 				throw new IllegalArgumentException(raster+" is not a recognize raster");
 			}
 			GridCoverage2D coverage2D = (GridCoverage2D) reader.read(null);
-			reader.dispose(); // a  tester, ca va peut-etre bloquer la lecture des donnees
+			reader.dispose(); // aï¿½ tester, ca va peut-etre bloquer la lecture des donnees
 						
 			int inWidth = (Integer) coverage2D.getProperty("image_width");
 			int inHeight = (Integer) coverage2D.getProperty("image_height");
@@ -582,7 +582,7 @@ public class CoverageManager {
 				throw new IllegalArgumentException(inputRaster+" is not a recognize raster");
 			}
 			GridCoverage2D coverage2D = (GridCoverage2D) reader.read(null);
-			reader.dispose(); // a  tester, ca va peut-etre bloquer la lecture des donnees
+			reader.dispose(); // aï¿½ tester, ca va peut-etre bloquer la lecture des donnees
 				
 			int inWidth = (Integer) coverage2D.getProperty("image_width");
 			int inHeight = (Integer) coverage2D.getProperty("image_height");
@@ -630,7 +630,7 @@ public class CoverageManager {
 	 * 
 	 * Rectangle roi = new Rectangle(roiX, roiY, roiWidth, roiHeight); float[]
 	 * inDatas = new float[roiWidth*roiHeight]; System.out.println(
-	 * "récupération des données"); inDatas =
+	 * "rï¿½cupï¿½ration des donnï¿½es"); inDatas =
 	 * coverage.getRenderedImage().getData(roi).getSamples(roi.x, roi.y,
 	 * roi.width, roi.height, 0, inDatas); }
 	 */

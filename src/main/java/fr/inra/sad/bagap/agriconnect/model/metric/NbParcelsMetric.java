@@ -21,8 +21,8 @@ public class NbParcelsMetric extends VectorMetric {
 	public NbParcelsMetric() {
 		super(VariableManager.get("NB"));
 		sau = new HashSet<String>();
-		sau.add("B");   // blé
-		sau.add("BE");  // bande enherbée
+		sau.add("B");   // blï¿½
+		sau.add("BE");  // bande enherbï¿½e
 		sau.add("C");   // colza
 		sau.add("M");   // mais
 		sau.add("O");   // orge

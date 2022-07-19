@@ -3,10 +3,8 @@ package fr.inra.sad.bagap.apiland.capfarm.model;
 import java.io.File;
 import java.io.IOException;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class CoverFactory {
 
@@ -34,10 +32,6 @@ public class CoverFactory {
 					cr.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (FinalizedException e) {
-				e.printStackTrace();
-			} catch (CatastrophicException e) {
 				e.printStackTrace();
 			}
 		}
@@ -73,10 +67,6 @@ public class CoverFactory {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (FinalizedException e) {
-			e.printStackTrace();
-		} catch (CatastrophicException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -101,7 +91,7 @@ public class CoverFactory {
 			}
 			
 			cw.close();
-		} catch (com.csvreader.CsvWriter.FinalizedException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -124,7 +114,7 @@ public class CoverFactory {
 			}
 			
 			cw.close();
-		} catch (com.csvreader.CsvWriter.FinalizedException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

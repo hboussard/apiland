@@ -26,9 +26,9 @@ public class SquareWindow extends WindowShape {
 	
 	private List<Pixel> removeVerticalDownList;
 	
-	// structure de données pour la fonction de distance
-	// ou structure de données pour les distances par pixel
-	// ou délégation à la forme de fenêtre
+	// structure de donnï¿½es pour la fonction de distance
+	// ou structure de donnï¿½es pour les distances par pixel
+	// ou dï¿½lï¿½gation ï¿½ la forme de fenï¿½tre
 	private double[][] distance;
 		
 	private double[][] weigted;

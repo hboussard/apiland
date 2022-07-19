@@ -35,7 +35,7 @@ public class LocateFunctionalWindow extends WindowShape {
 	
 	public LocateFunctionalWindow(int[] f, /*int theoricalSize,*/ DistanceFunction function){
 		super(function);
-		//System.out.println("création de la forme fonctionnelle en "+pixel);
+		//System.out.println("crï¿½ation de la forme fonctionnelle en "+pixel);
 		this.filter = f;
 		//this.theoricalSize = theoricalSize;
 		width = new Double(Math.sqrt(filter.length)).intValue();

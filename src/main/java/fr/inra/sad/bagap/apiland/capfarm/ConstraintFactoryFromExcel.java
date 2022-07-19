@@ -18,8 +18,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverFactory;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverManager;
@@ -139,7 +138,7 @@ public class ConstraintFactoryFromExcel {
 	private void integrateCovers(XSSFWorkbook workbook){
 		XSSFSheet sheet = workbook.getSheet("cultures-txt");
 			
-		// récupération des cultures d'interet
+		// rï¿½cupï¿½ration des cultures d'interet
 		covers = new ArrayList<String>();
 		for(Row r : sheet){
 			if(r.getRowNum() > 1){
@@ -182,10 +181,10 @@ public class ConstraintFactoryFromExcel {
 	
 	private void integrateSingleNextCovers(XSSFSheet sheet, int nb){
 		
-		// récupération de la localisation
+		// rï¿½cupï¿½ration de la localisation
 		String location = sheet.getRow(0).getCell(0).getStringCellValue();
 		
-		// récupération des cultures d'interet
+		// rï¿½cupï¿½ration des cultures d'interet
 		List<String> mycovers = new ArrayList<String>();
 		for(Cell c : sheet.getRow(0)){
 			String cover = c.getStringCellValue();
@@ -195,7 +194,7 @@ public class ConstraintFactoryFromExcel {
 		}
 		
 		if(mycovers.size() > 0){
-			// récupération des précédents-suivants
+			// rï¿½cupï¿½ration des prï¿½cï¿½dents-suivants
 			boolean[][] next = new boolean[mycovers.size()][mycovers.size()];
 			for(int j=0; j<mycovers.size(); j++){
 				Row r = sheet.getRow(j+1);
@@ -216,7 +215,7 @@ public class ConstraintFactoryFromExcel {
 	}
 	
 	private void writeNextCovers(List<String> mycovers, boolean[][] next, String location, int nb){
-		// écriture du fichier précédents-suivants
+		// ï¿½criture du fichier prï¿½cï¿½dents-suivants
 		try {
 			//CsvWriter cw2 = new CsvWriter(output+"next-"+nb+"-"+location+".txt");
 			CsvWriter cw2 = new CsvWriter(output+"next-"+nb+".txt");
@@ -238,13 +237,13 @@ public class ConstraintFactoryFromExcel {
 				cw2.endRecord();
 			}
 			cw2.close();
-		} catch (FinalizedException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void integrateGroups(XSSFWorkbook workbook){
-		// récupération des groupes
+		// rï¿½cupï¿½ration des groupes
 		for(Entry<String, Set<String>> e : groups.entrySet()){
 			String mycovers = e.getValue().toString().replaceAll("\\[", "{").replaceAll("\\]", "}").replaceAll(" ", "");
 			system.addCover(CoverManager.getCoverGroup(e.getKey(), e.getKey(), mycovers));
@@ -255,7 +254,7 @@ public class ConstraintFactoryFromExcel {
 		
 		XSSFSheet sheet = workbook.getSheet("parcellaire");
 		
-		// récupération des entetes
+		// rï¿½cupï¿½ration des entetes
 		Map<String, Integer> entetes = new HashMap<String, Integer>();
 		int i = 0;
 		for(Cell c : sheet.getRow(0)){
@@ -267,7 +266,7 @@ public class ConstraintFactoryFromExcel {
 			i++;
 		}
 		
-		// récupération des zonages
+		// rï¿½cupï¿½ration des zonages
 		zones = new HashMap<String, Set<String>>();
 		boolean zonage;
 		for(Entry<String, Integer> e : entetes.entrySet()){
@@ -286,7 +285,7 @@ public class ConstraintFactoryFromExcel {
 			}
 		}
 		
-		// récupération des parcelles
+		// rï¿½cupï¿½ration des parcelles
 		if(entetes.containsKey("id")){
 			parcelles = new ArrayList<String>();
 			Set<Set<String>> links = new HashSet<Set<String>>();
@@ -343,7 +342,7 @@ public class ConstraintFactoryFromExcel {
 		
 		XSSFSheet sheet = workbook.getSheet("contraintes");
 		
-		// récupération des entetes
+		// rï¿½cupï¿½ration des entetes
 		Map<String, Integer> entetes = new HashMap<String, Integer>();
 		int i = 0;
 		for(Cell c : sheet.getRow(0)){
@@ -446,7 +445,7 @@ public class ConstraintFactoryFromExcel {
 					locationConstraint = false;
 				}
 				
-				// gestion des distances au siège
+				// gestion des distances au siï¿½ge
 				String distance_siege_min = r.getCell(entetes.get("distance_siege_min")).toString();
 				String distance_siege_max = r.getCell(entetes.get("distance_siege_max")).toString();
 				if(!distance_siege_min.equalsIgnoreCase("") || !distance_siege_max.equalsIgnoreCase("")){

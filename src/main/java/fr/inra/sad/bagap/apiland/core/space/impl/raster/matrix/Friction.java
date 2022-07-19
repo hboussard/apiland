@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 public class Friction {
 
@@ -30,10 +28,6 @@ public class Friction {
 				min = Math.min(min, Float.parseFloat(cr.get("friction")));
 			}
 			cr.close();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}

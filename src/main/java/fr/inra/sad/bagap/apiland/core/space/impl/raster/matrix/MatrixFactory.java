@@ -59,7 +59,7 @@ import org.geotools.data.DataSourceException;
 import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.referencing.operation.transform.AffineTransform2D;
 */
-import com.csvreader.CsvReader;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.core.element.DynamicElement;
 import fr.inra.sad.bagap.apiland.core.element.DynamicFeature;
