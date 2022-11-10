@@ -1,6 +1,5 @@
 package fr.inra.sad.bagap.apiland.capfarm;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,20 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileWriter;
@@ -36,17 +23,6 @@ import org.locationtech.jts.geom.Geometry;
 import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class CfmUtil {
-
-	private final static String path = "C:/Hugues/modelisation/capfarm/methodo/bergerie/bergerie/Assolement_BN_2017/SIG_BN_2017/";
-	
-	public static void main(String[] args) {
-		
-		//generateShapefile(path+"Assolement_2017", "BN", 1);
-		//generateHistoric(path+"Yann_Corbeau_cfm_land", "id", "cov_2017");
-		
-		//generateShapefile(path+"bergerie");
-		//generateHistoric(path+"bergerie_cfm", "id", "os16", "os17");
-	}
 	
 	public static void generateParametersFromExcel(String path, String input){
 		new ConstraintFactoryFromExcel(path, input);
@@ -124,9 +100,7 @@ public class CfmUtil {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} /*catch (FinalizedException e) {
-			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	public static void generateShapefile(String input, String codeFarm){

@@ -105,14 +105,16 @@ public class MatrixMetricManager {
 					}else if(cr.get("process").equalsIgnoreCase("quantitative")){
 						quantitativeMetrics.add(cr.get("name"));
 					}*/
-					if(cr.get("type").equalsIgnoreCase("value")){
-						valueMetrics.add(cr.get("name"));
-					}else if(cr.get("type").equalsIgnoreCase("couple")){
-						coupleMetrics.add(cr.get("name"));
-					}else if(cr.get("type").equalsIgnoreCase("set")){
-						setMetrics.add(cr.get("name"));
-					}else if(cr.get("type").equalsIgnoreCase("metric")){
-						statsMetrics.add(cr.get("name"));
+					if(cr.get("type") != null){
+						if(cr.get("type").equalsIgnoreCase("value")){
+							valueMetrics.add(cr.get("name"));
+						}else if(cr.get("type").equalsIgnoreCase("couple")){
+							coupleMetrics.add(cr.get("name"));
+						}else if(cr.get("type").equalsIgnoreCase("set")){
+							setMetrics.add(cr.get("name"));
+						}else if(cr.get("type").equalsIgnoreCase("metric")){
+							statsMetrics.add(cr.get("name"));
+						}
 					}
 				}
 			}
