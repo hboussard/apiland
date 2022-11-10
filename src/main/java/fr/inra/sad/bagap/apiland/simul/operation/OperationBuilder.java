@@ -35,7 +35,6 @@ package fr.inra.sad.bagap.apiland.simul.operation;
 
 import java.io.Serializable;
 
-
 public class OperationBuilder implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

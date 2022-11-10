@@ -55,6 +55,10 @@ public class EnteteRaster {
 		return noDataValue;
 	}
 	
+	public void setNoDataValue(int noDataValue){
+		this.noDataValue = noDataValue;
+	}
+	
 	public static EnteteRaster getEntete(Envelope envelope, float cellsize, int noDataValue) {
 		
 		int ncols;

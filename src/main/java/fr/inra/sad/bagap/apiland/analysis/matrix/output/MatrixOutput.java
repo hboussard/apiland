@@ -104,6 +104,8 @@ public class MatrixOutput extends AbstractMetricOutput {
 		}
 	}
 
-	
+	public String getMetric(){
+		return metric;
+	}
 }
 

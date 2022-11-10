@@ -41,7 +41,7 @@ public class CfmManager extends SimulationManager {
 		check = false;
 		
 		URL url = CfmManager.class.getResource("proba_times/");
-		System.out.println(url);
+		//System.out.println(url);
 		if (url != null){
 			probaTimeFolder = url.toString();
 		}

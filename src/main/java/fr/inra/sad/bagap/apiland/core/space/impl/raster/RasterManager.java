@@ -1,5 +1,8 @@
 package fr.inra.sad.bagap.apiland.core.space.impl.raster;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
@@ -10,6 +13,7 @@ import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.MultiPolygon;
 
+import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 import fr.inra.sad.bagap.apiland.core.element.DynamicFeature;
 import fr.inra.sad.bagap.apiland.core.element.DynamicLayer;
 import fr.inra.sad.bagap.apiland.core.space.Geometry;
@@ -17,6 +21,9 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.ArrayMatrixFactor
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixFactory;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
+import fr.inra.sad.bagap.apiland.core.util.VisuImageJ;
+import fr.inrae.act.bagap.raster.EnteteRaster;
+import fr.inrae.act.bagap.raster.RasterPolygon;
 
 public class RasterManager {
 	
@@ -191,7 +198,6 @@ public class RasterManager {
 		return m;
 	}
 
-	
 	public static Matrix exportMatrix(Raster r, Matrix ref) {
 		Matrix m = MatrixFactory.get(ref.getType()).create(
 				ref.width(), ref.height(), ref.cellsize(), 
@@ -209,4 +215,81 @@ public class RasterManager {
 		return m;
 	}
 
+	public static float[] exportTab(DynamicLayer<?> layer, String name, Instant t, Map<String, String> map, EnteteRaster entete){
+		
+		float[] datas = new float[entete.width()*entete.height()];
+		
+		int indrp;
+		int xdelta, ydelta, xrp, yrp;
+		DynamicFeature f;
+		Iterator<DynamicFeature> ite = layer.deepIterator();
+		while(ite.hasNext()){
+			f = ite.next();
+			RasterPolygon rp = (RasterPolygon) f.getRepresentation("raster").getGeometry(t);
+			String cover = map.get(((CoverUnit) f.getAttribute(name).getValue(t)).getCode());
+			indrp = 0;
+			xdelta = rp.getDeltaI();
+			ydelta = rp.getDeltaJ();
+			for(double v : rp.getDatas()){
+				if(v == 1){
+					xrp = indrp % rp.getWidth();
+					yrp = indrp / rp.getWidth();
+					if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
+						datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = Integer.parseInt(cover);
+					}
+				}
+				indrp++;
+			}
+		}
+		
+		return datas;
+	}
+	
+	public static void exportAsciiGrid(String ascii, EnteteRaster entete, float[] datas) {
+		
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(ascii));
+			
+			writer.write("ncols "+entete.width());
+			writer.newLine();
+			writer.write("nrows "+entete.height());
+			writer.newLine();
+			writer.write("xllcorner "+entete.minx());
+			writer.newLine();
+			writer.write("yllcorner "+entete.miny());
+			writer.newLine();
+			writer.write("cellsize "+entete.cellsize());
+			writer.newLine();
+			writer.write("NODATA_value "+entete.noDataValue());
+			writer.newLine();
+			
+			for(int j=0; j<entete.height(); j++){
+				for(int i=0; i<entete.width(); i++){
+					writer.write(datas[j*entete.width()+i]+" ");
+				}
+				writer.newLine();
+			}
+			
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void visualize(String f) {
+		File file = new File(f);
+		if(file.isDirectory()){
+			for(File ff : file.listFiles()){
+				new VisuImageJ(ff.toString());
+			}
+		}else{
+			new VisuImageJ(f);
+		}
+	}
+	
+	public static void exportAsciiGridAndVisualize(String ascii, EnteteRaster entete, float[] datas){
+		exportAsciiGrid(ascii, entete, datas);
+		visualize(ascii);
+	}
+	
 }

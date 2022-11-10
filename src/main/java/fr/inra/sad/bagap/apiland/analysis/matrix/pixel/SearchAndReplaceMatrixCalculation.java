@@ -5,11 +5,11 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class SearchAndReplaceMatrixCalculation extends Pixel2PixelMatrixCalculation {
 
-	private Double[] oldValues;
+	private double[] oldValues;
 	
-	private Double[] newValues;
+	private double[] newValues;
 	
-	public SearchAndReplaceMatrixCalculation(Matrix m, Double[] oldValues, Double[] newValues){
+	public SearchAndReplaceMatrixCalculation(Matrix m, double[] oldValues, double[] newValues){
 		super(m);
 		this.oldValues = oldValues;
 		this.newValues = newValues;

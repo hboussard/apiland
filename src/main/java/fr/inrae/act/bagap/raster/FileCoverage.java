@@ -24,6 +24,7 @@ public class FileCoverage extends Coverage {
 	@Override
 	public float[] getDatas(Rectangle roi){
 		float[] inDatas = new float[roi.width * roi.height];
+		System.out.println(roi.x+" "+roi.y+" "+roi.width+" "+roi.height);
 		inDatas = coverage.getRenderedImage().getData(roi).getSamples(roi.x, roi.y, roi.width, roi.height, 0, inDatas);
 		return inDatas;
 	}
