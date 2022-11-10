@@ -285,7 +285,7 @@ public class Vectorial implements GeometryImpl  {
 //
 //	@Override
 //	public Vectorial addVectorial(Vectorial impl) {
-//		//GeometryCollection geo = this.g.getFactory().createGeometryCollection(new com.vividsolutions.jts.geom.Geometry[]{g,impl.g});
+//		//GeometryCollection geo = this.g.getFactory().createGeometryCollection(new org.locationtech.jts.geom.Geometry[]{g,impl.g});
 //		//Polygon g.union(impl.g) = (Polygon)g.union(impl.g);
 //		return new Vectorial(g.union(impl.g));
 //	}

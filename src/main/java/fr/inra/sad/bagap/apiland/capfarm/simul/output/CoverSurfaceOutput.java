@@ -3,7 +3,7 @@ package fr.inra.sad.bagap.apiland.capfarm.simul.output;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import com.csvreader.CsvWriter;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.Cover;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverGroup;
@@ -47,7 +47,7 @@ public class CoverSurfaceOutput extends OutputAnalysis {
 				cw.endRecord();
 			}
 			
-		} catch (com.csvreader.CsvWriter.FinalizedException|IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -87,7 +87,7 @@ public class CoverSurfaceOutput extends OutputAnalysis {
 						cw.endRecord();
 					}
 				}
-			} catch (com.csvreader.CsvWriter.FinalizedException|IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

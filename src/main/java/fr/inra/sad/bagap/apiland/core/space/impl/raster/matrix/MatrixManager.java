@@ -40,8 +40,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
+import org.jumpmind.symmetric.csv.CsvReader;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad.bagap.apiland.core.element.manager.Tool;

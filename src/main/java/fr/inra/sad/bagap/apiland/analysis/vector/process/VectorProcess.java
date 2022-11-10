@@ -128,7 +128,7 @@ public class VectorProcess extends Process<VectorMetric> {
 	}
 	
 	private void createBuffer(List<DynamicFeature> features, Instant t, Point p, double b){
-		//System.out.println("création");
+		//System.out.println("crï¿½ation");
 		polygons = new HashSet<Polygon>();
 		Polygon buffer = (Polygon) p.buffer(b);
 		PreparedPolygon pp = new PreparedPolygon(buffer);

@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverUnit;
 
@@ -48,7 +46,7 @@ public class ManagmentProfilFactory {
 			cr.close();
 			
 			return works;
-		} catch (IOException | FinalizedException | CatastrophicException e) {
+		} catch (IOException  e) {
 			e.printStackTrace();
 		}
 		
@@ -82,7 +80,7 @@ public class ManagmentProfilFactory {
 			cr.close();
 			
 			return distanceCovers;
-		} catch (IOException | FinalizedException | CatastrophicException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		

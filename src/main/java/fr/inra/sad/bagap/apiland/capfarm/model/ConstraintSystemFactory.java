@@ -3,14 +3,12 @@ package fr.inra.sad.bagap.apiland.capfarm.model;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.GenericConstraintBuilder;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.GenericCoverAllocationConstraint;
 
-import com.csvreader.CsvWriter;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class ConstraintSystemFactory {
 	
@@ -38,11 +36,11 @@ public class ConstraintSystemFactory {
 			cr.close();	
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (FinalizedException e) {
+		}/* catch (FinalizedException e) {
 			e.printStackTrace();
 		} catch (CatastrophicException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public static void exportSystem(ConstraintSystem system, String constraints) {
@@ -137,9 +135,9 @@ public class ConstraintSystemFactory {
 			cw.close();	
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (com.csvreader.CsvWriter.FinalizedException e) {
+		}/* catch (org.jumpmind.symmetric.csv.CsvWriter.FinalizedException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 }

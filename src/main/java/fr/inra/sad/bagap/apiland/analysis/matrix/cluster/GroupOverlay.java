@@ -8,8 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Count;
 import fr.inra.sad.bagap.apiland.analysis.matrix.pixel.Pixel2PixelMatrixCalculation;
@@ -78,7 +77,7 @@ public class GroupOverlay extends Pixel2PixelMatrixCalculation {
 		Set<Integer> toDelete = new HashSet<Integer>();
 		for(Entry<Integer, Map<Integer, Count>> e : patchs.entrySet()){
 			int patchNumber = e.getKey();
-			//System.out.println("numéro de patch : "+patchNumber); 
+			//System.out.println("numï¿½ro de patch : "+patchNumber); 
 			double totalSurface = 0.0;
 			for(Entry<Integer, Count> e2 : patchs.get(e.getKey()).entrySet()){
 				int ocsol = e2.getKey();
@@ -209,7 +208,7 @@ public class GroupOverlay extends Pixel2PixelMatrixCalculation {
 			}
 			
 			cw.close();
-		} catch (FinalizedException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

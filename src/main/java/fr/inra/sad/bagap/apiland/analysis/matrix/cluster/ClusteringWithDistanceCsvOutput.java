@@ -5,8 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvWriter.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisObserver;
@@ -57,7 +56,7 @@ public class ClusteringWithDistanceCsvOutput implements AnalysisObserver{
 						cw.write((int) pc.getUserData()+"");
 						cw.write(pc.size()+"");
 						cw.write(pc.getArea()+"");
-						System.out.println("calcul de distance à partir de "+pc.getValue()+"("+pc.getUserData()+")");
+						System.out.println("calcul de distance ï¿½ partir de "+pc.getValue()+"("+pc.getUserData()+")");
 						bounds1 = pc.getBounds();
 						for(int v : values){
 							double min = Double.MAX_VALUE;
@@ -88,7 +87,7 @@ public class ClusteringWithDistanceCsvOutput implements AnalysisObserver{
 					}
 
 					cw.close();
-				} catch (FinalizedException | IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				

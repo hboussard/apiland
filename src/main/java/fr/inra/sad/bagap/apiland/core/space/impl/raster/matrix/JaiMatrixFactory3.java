@@ -1,6 +1,6 @@
 package fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix;
 
-import com.csvreader.CsvReader;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 

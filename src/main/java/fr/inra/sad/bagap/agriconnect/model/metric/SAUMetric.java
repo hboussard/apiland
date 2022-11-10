@@ -20,8 +20,8 @@ public class SAUMetric extends VectorMetric {
 	public SAUMetric() {
 		super(VariableManager.get("SAU"));
 		sau = new HashSet<String>();
-		sau.add("B");   // blé
-		sau.add("BE");  // bande enherbée
+		sau.add("B");   // blï¿½
+		sau.add("BE");  // bande enherbï¿½e
 		sau.add("C");   // colza
 		sau.add("M");   // mais
 		sau.add("O");   // orge

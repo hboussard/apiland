@@ -3,9 +3,7 @@ package fr.inra.sad.bagap.apiland.core.util;
 import java.io.IOException;
 import java.io.Serializable;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
 
 public class TransitionMatrixFactory {
 
@@ -31,10 +29,6 @@ public class TransitionMatrixFactory {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		} catch (FinalizedException e) {
-			e.printStackTrace();
-		} catch (CatastrophicException e) {
-			e.printStackTrace();
 		}
 		
 		return tMat;

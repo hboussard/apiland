@@ -1,4 +1,5 @@
 package fr.inra.sad.bagap.apiland.analysis.matrix.output;
+package fr.inra.sad.bagap.apiland.analysis.matrix.output;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.analysis.AnalysisState;
