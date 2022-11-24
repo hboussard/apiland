@@ -14,7 +14,7 @@ import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceF
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
+import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class LocateFunctionalWindow extends WindowShape {
