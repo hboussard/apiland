@@ -5,10 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
-import com.csvreader.CsvReader.CatastrophicException;
-import com.csvreader.CsvReader.FinalizedException;
+import org.jumpmind.symmetric.csv.CsvReader;
+import org.jumpmind.symmetric.csv.CsvWriter;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelManager;

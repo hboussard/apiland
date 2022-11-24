@@ -6,7 +6,7 @@ import fr.inra.sad.bagap.apiland.analysis.process.Process;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.AbstractMetricOutput;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
 import fr.inra.sad.bagap.apiland.analysis.vector.process.VectorProcess;
-import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixFactory;
 

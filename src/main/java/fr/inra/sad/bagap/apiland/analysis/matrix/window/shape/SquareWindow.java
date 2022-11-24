@@ -8,10 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
-import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class SquareWindow extends WindowShape {

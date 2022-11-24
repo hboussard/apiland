@@ -11,10 +11,10 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.DistanceFunction;
-import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class LocateFunctionalWindow extends WindowShape {
