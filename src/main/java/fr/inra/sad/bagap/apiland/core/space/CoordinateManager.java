@@ -127,10 +127,6 @@ public class CoordinateManager {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 		return pixels;	
 	}
@@ -187,10 +183,6 @@ public class CoordinateManager {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 		return pixels;	
 	}
@@ -237,10 +229,6 @@ public class CoordinateManager {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 		return points;	
 	}
@@ -268,10 +256,6 @@ public class CoordinateManager {
 			cr.close();
 		}catch(IOException ex){
 			ex.printStackTrace();
-		}catch(FinalizedException ex){
-			ex.printStackTrace();
-		}catch(CatastrophicException ex){
-			ex.printStackTrace();
 		}
 		return pixels;	
 	}
@@ -290,8 +274,6 @@ public class CoordinateManager {
 				cw.endRecord();
 			}
 			
-		}catch(com.csvreader.CsvWriter.FinalizedException ex){
-			ex.printStackTrace();
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}finally{
@@ -313,8 +295,6 @@ public class CoordinateManager {
 				cw.endRecord();
 			}
 			
-		}catch(com.csvreader.CsvWriter.FinalizedException ex){
-			ex.printStackTrace();
 		}catch(IOException ex){
 			ex.printStackTrace();
 		} finally{
