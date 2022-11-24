@@ -21,10 +21,10 @@ import fr.inra.sad.bagap.apiland.analysis.process.ProcessState;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.AbstractMetricOutput;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.Metric;
 import fr.inra.sad.bagap.apiland.analysis.process.metric.MetricOutput;
+import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelWithID;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class SelectedCsvOutput extends AbstractMetricOutput implements MetricOutput {

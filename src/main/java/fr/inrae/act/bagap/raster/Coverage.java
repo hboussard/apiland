@@ -10,6 +10,8 @@ public abstract class Coverage {
 		this.entete = entete;
 	}
 
+	public abstract float[] getDatas();
+	
 	public abstract float[] getDatas(Rectangle roi);
 
 	public abstract void dispose();

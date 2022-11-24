@@ -15,8 +15,22 @@ public class ClusteringTabRookAnalysis extends Analysis{
 	
 	private Set<Integer> interest;
 	
-	public ClusteringTabRookAnalysis(int[] tabCover, int height, int width, int[] interest){	
+	public ClusteringTabRookAnalysis(int[] tabCover, int width, int height, int[] interest){	
 		this.tabCover = tabCover;
+		this.height = height;
+		this.width = width;
+		this.interest = new HashSet<Integer>();
+		for(int v : interest){
+			this.interest.add(v);
+		}
+	}
+	
+	public ClusteringTabRookAnalysis(float[] tabCover, int width, int height, int[] interest){	
+		this.tabCover = new int[tabCover.length];
+		int ind = 0;
+		for(float tc : tabCover){
+			this.tabCover[ind++] = (int) tc;
+		}
 		this.height = height;
 		this.width = width;
 		this.interest = new HashSet<Integer>();

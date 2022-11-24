@@ -12,6 +12,11 @@ public class TabCoverage extends Coverage {
 	}
 
 	@Override
+	public float[] getDatas() {
+		return datas;
+	}
+	
+	@Override
 	public float[] getDatas(Rectangle roi) {
 		if(roi.x == 0 && roi.y == 0 && (roi.width*roi.height) == datas.length){
 			return datas;	

@@ -1,6 +1,6 @@
 package fr.inra.sad.bagap.apiland.core.space.impl.raster;
 
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.CoordinateManager;
+import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class RefPointWithID extends RefPoint {

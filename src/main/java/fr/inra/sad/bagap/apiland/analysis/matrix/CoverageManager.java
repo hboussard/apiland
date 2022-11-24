@@ -601,7 +601,7 @@ public class CoverageManager {
 			int roiWidth = (int) ((maxx-outMinX)/inCellSize);
 			int roiHeight = (int) ((outMaxY-miny)/inCellSize);
 			
-			System.out.println(roiX+" "+roiY+" "+roiWidth+" "+roiHeight);
+			//System.out.println(roiX+" "+roiY+" "+roiWidth+" "+roiHeight);
 			
 			Rectangle roi = new Rectangle(roiX, roiY, roiWidth, roiHeight);
 			float[] datas = new float[roiWidth * roiHeight];

@@ -1,4 +1,4 @@
-package fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix;
+package fr.inra.sad.bagap.apiland.core.space;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -15,6 +15,8 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.PixelManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.RefPoint;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.RefPointWithID;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
+import fr.inrae.act.bagap.raster.EnteteRaster;
 
 public class CoordinateManager {
 
@@ -40,8 +42,16 @@ public class CoordinateManager {
 		return new Double(((x - m.minX()) / m.cellsize())).intValue() ;
 	}
 	
+	public static int getLocalX(EnteteRaster entete, double x){
+		return new Double(((x - entete.minx()) / entete.cellsize())).intValue() ;
+	}
+	
 	public static int getLocalY(Matrix m, double y){
 		return m.height() -1 - new Double((y - m.minY()) / m.cellsize()).intValue();
+	}
+	
+	public static int getLocalY(EnteteRaster entete, double y){
+		return entete.height() -1 - new Double((y - entete.miny()) / entete.cellsize()).intValue();
 	}
 	
 	/**
@@ -100,6 +110,66 @@ public class CoordinateManager {
 				
 				x = getLocalX(m, X);
 				y = getLocalY(m, Y);
+				
+				if(!(id = cr.get("id")).equals("")){
+					pixels.add(PixelManager.get(x, y, id, X, Y));
+				}else if(!(id = cr.get("ID")).equals("")){
+					pixels.add(PixelManager.get(x, y, id, X, Y));
+				}else if(!(id = cr.get("Id")).equals("")){
+					pixels.add(PixelManager.get(x, y, id, X, Y));
+				}else if(!(id = cr.get("iD")).equals("")){
+					pixels.add(PixelManager.get(x, y, id, X, Y));
+				}else{
+					pixels.add(PixelManager.get(x, y));
+				}
+			}
+			
+			//System.out.println(points);
+			
+			cr.close();
+		}catch(IOException ex){
+			ex.printStackTrace();
+		}catch(FinalizedException ex){
+			ex.printStackTrace();
+		}catch(CatastrophicException ex){
+			ex.printStackTrace();
+		}
+		return pixels;	
+	}
+	
+	/**
+	 * initialize a set of pixels using a text file of points
+	 * according to a given matrix
+	 * @param m a matrix
+	 * @param f a text file of points
+	 * @return a set of pixels
+	 */
+	public static Set<Pixel> initWithPoints(EnteteRaster entete, String f) {
+		Set<Pixel> pixels = new TreeSet<Pixel>();
+		try{
+			CsvReader cr = new CsvReader(f);
+			cr.setDelimiter(';');
+			cr.readHeaders();
+			
+			double X, Y;
+			int x, y;
+			String id;
+			while(cr.readRecord()){
+				
+				if(cr.get("X") != ""){
+					X = Double.parseDouble(cr.get("X"));
+				}else{
+					X = Double.parseDouble(cr.get("x"));
+				}
+				
+				if(cr.get("Y") != ""){
+					Y = Double.parseDouble(cr.get("Y"));
+				}else{
+					Y = Double.parseDouble(cr.get("y"));
+				}
+				
+				x = getLocalX(entete, X);
+				y = getLocalY(entete, Y);
 				
 				if(!(id = cr.get("id")).equals("")){
 					pixels.add(PixelManager.get(x, y, id, X, Y));
