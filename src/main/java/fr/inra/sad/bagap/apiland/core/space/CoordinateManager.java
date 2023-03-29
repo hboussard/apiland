@@ -138,7 +138,7 @@ public class CoordinateManager {
 	 * @param f a text file of points
 	 * @return a set of pixels
 	 */
-	public static Set<Pixel> initWithPoints(EnteteRaster entete, String f) {
+	public static Set<Pixel> initWithPoints(String f, EnteteRaster entete) {
 		Set<Pixel> pixels = new TreeSet<Pixel>();
 		try{
 			CsvReader cr = new CsvReader(f);
@@ -232,7 +232,6 @@ public class CoordinateManager {
 		}
 		return points;	
 	}
-	
 	
 	public static Set<Pixel> initWithPixels(String f) {
 		Set<Pixel> pixels = new TreeSet<Pixel>();

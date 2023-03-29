@@ -42,8 +42,7 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 	
 	@Override
 	protected void doInit() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
@@ -60,6 +59,9 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 	}
 
 	private void setPixelAndValue(Map<Float, Set<Pixel>> waits, Pixel pixel, float value) {
+		//System.out.println("before "+value);
+		value = (float) (Math.floor(value * 100.0)/100.0);
+		//System.out.println("after "+value);
 		if (!waits.containsKey(value)) {
 			waits.put(value, new HashSet<Pixel>());
 		}
@@ -142,7 +144,6 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 	@Override
 	protected void doClose() {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

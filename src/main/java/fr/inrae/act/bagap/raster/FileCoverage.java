@@ -1,6 +1,7 @@
 package fr.inrae.act.bagap.raster;
 
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import javax.media.jai.PlanarImage;
 
@@ -21,6 +22,10 @@ public class FileCoverage extends Coverage {
 		this.coverage = coverage;
 	}
 	
+	public void setCoverage2D(GridCoverage2D gc2d){
+		this.coverage = gc2d;
+	}
+	
 	@Override
 	public float[] getDatas(){
 		float[] inDatas = new float[getEntete().width() * getEntete().height()];
@@ -31,17 +36,22 @@ public class FileCoverage extends Coverage {
 	
 	@Override
 	public float[] getDatas(Rectangle roi){
+		
 		float[] inDatas = new float[roi.width * roi.height];
 		//System.out.println(roi.x+" "+roi.y+" "+roi.width+" "+roi.height);
+		
 		inDatas = coverage.getRenderedImage().getData(roi).getSamples(roi.x, roi.y, roi.width, roi.height, 0, inDatas);
+		
 		return inDatas;
 	}
 	
 	@Override
 	public void dispose(){
 		PlanarImage planarImage = (PlanarImage) coverage.getRenderedImage();
-		ImageUtilities.disposePlanarImageChain(planarImage);
+		ImageUtilities.disposeImage(planarImage);
+		planarImage = null;
 		coverage.dispose(true);
+		coverage = null;
 	}
 	
 }

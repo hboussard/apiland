@@ -45,14 +45,14 @@ import ij.plugin.LutLoader;
 import ij.process.ImageProcessor;
 
 /**
- * classe de mod�lisation de la visualisation
+ * classe de modelisation de la visualisation
  * en image via ImageJ
  * @author Hugues Boussard
  */
 public class VisuImageJ {
 	
 	/**
-	 * routine de cr�ation
+	 * routine de creation
 	 * @param file : fichier image
 	 */
 	public VisuImageJ(String file){

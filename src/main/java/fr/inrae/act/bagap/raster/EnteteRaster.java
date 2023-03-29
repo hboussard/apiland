@@ -73,6 +73,7 @@ public class EnteteRaster {
 		}else{
 			nrows = new Double((Math.floor((envelope.getMaxY() - envelope.getMinY()) / cellsize)) + 1).intValue();
 		}
-		return new EnteteRaster(ncols, nrows, envelope.getMinX(), envelope.getMaxX(), envelope.getMinY(), envelope.getMaxY(), cellsize, noDataValue);
+		return new EnteteRaster(ncols, nrows, envelope.getMinX(), envelope.getMinX() + ncols*cellsize, envelope.getMinY(), envelope.getMinY() + nrows*cellsize, cellsize, noDataValue);
+		//return new EnteteRaster(ncols, nrows, envelope.getMinX()-cellsize/2.0, envelope.getMinX()-cellsize/2.0 + ncols*cellsize, envelope.getMinY()-cellsize/2.0, envelope.getMinY()-cellsize/2.0 + nrows*cellsize, cellsize, noDataValue);
 	}
 }

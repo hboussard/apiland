@@ -101,6 +101,47 @@ public class CoverageManager {
 		}
 	}
 	
+	public static void writeGeotiff(String out, float[] datas, EnteteRaster entete) {
+		writeGeotiff(new File(out), datas, entete);
+	}
+	
+	public static void writeGeotiff(File out, float[] datas, EnteteRaster entete) {
+		
+		try {
+			WritableRaster raster = RasterFactory.createBandedRaster(DataBuffer.TYPE_FLOAT, entete.width(), entete.height(), 1, null);
+			raster.setSamples(0, 0, entete.width(), entete.height(), 0, datas);
+			
+			//System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
+			ReferencedEnvelope env = new ReferencedEnvelope(entete.minx(), entete.maxx(), entete.miny(), entete.maxy(), CRS.decode("EPSG:2154"));
+			GridCoverageFactory gcf = new GridCoverageFactory();
+			GridCoverage2D coverage = gcf.create("TIMEGRID", raster, env);
+			
+			//((WritableRenderedImage) coverage.getRenderedImage()).setData(raster);
+			GeoTiffWriteParams wp = new GeoTiffWriteParams();
+			wp.setCompressionMode(GeoTiffWriteParams.MODE_EXPLICIT);
+			//wp.setCompressionType("LZW");
+			ParameterValueGroup params = new GeoTiffFormat().getWriteParameters();
+			params.parameter(AbstractGridFormat.GEOTOOLS_WRITE_PARAMS.getName().toString()).setValue(wp);
+			GeoTiffWriter writer = new GeoTiffWriter(out);
+			
+			writer.write(coverage, params.values().toArray(new GeneralParameterValue[1]));
+			
+			coverage.dispose(true);
+			PlanarImage planarImage = (PlanarImage) coverage.getRenderedImage();
+			ImageUtilities.disposePlanarImageChain(planarImage);
+			coverage = null;
+			writer.dispose();
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
+	public static void writeGeotiff(String out, float[] datas, int width, int height, double minX, double maxX, double minY, double maxY) {
+		writeGeotiff(new File(out), datas, width, height, minX, maxX, minY, maxY);
+	}
+	
 	public static void writeGeotiff(File out, float[] datas, int width, int height, double minX, double maxX, double minY, double maxY) {
 		
 		try {
@@ -481,7 +522,7 @@ public class CoverageManager {
 		
 	}
 
-	public static void writeAsciiGrid(String ascii, EnteteRaster entete, float[] datas) {
+	public static void writeAsciiGrid(String ascii, float[] datas, EnteteRaster entete) {
 		
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(ascii));

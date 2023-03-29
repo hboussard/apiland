@@ -49,7 +49,7 @@ public class RCMDistanceTabAnalysis extends Analysis {
 
 	@Override
 	protected void doRun() {
-		
+		//System.out.println("1");
 		boolean hasValue = false;
 		for (int y=0; y<height; y++) {
 			for (int x=0; x<width; x++) {
@@ -76,7 +76,7 @@ public class RCMDistanceTabAnalysis extends Analysis {
 		
 		// pour la gestion des pixels a traiter en ordre croissant de distance
 		Map<Float, Set<Pixel>> waits = new TreeMap<Float, Set<Pixel>>();
-		
+		//System.out.println("2");
 		boolean maj = false;
 		// afin de limiter le nombre de calculs de diffusion, ne diffuser qu'à partir des bords d'habitats
 		for (int y=0; y<height; y++) {
@@ -108,7 +108,7 @@ public class RCMDistanceTabAnalysis extends Analysis {
 				
 			}
 		}
-		
+		//System.out.println("3");
 		// gestion des bords si maj
 		if(inEdges != null){
 			
@@ -127,7 +127,7 @@ public class RCMDistanceTabAnalysis extends Analysis {
 				setPixelAndValue(waits, new Pixel((width-1), y), inEdges[y*width+(width-1)]);
 			}
 		}
-		
+		//System.out.println("4");
 		if(hasValue){
 			ArrayRCMDistanceAnalysis rcm = new ArrayRCMDistanceAnalysis(output, inFriction, width, height, cellSize, waits);
 			setResult(rcm.allRun());

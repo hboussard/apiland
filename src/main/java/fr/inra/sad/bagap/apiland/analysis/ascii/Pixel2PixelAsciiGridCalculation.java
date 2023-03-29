@@ -66,13 +66,21 @@ public abstract class Pixel2PixelAsciiGridCalculation {
 		String[][] ss = new String[lines.length][];
 		double[][] vs = new double[lines.length][];
 		int width = -1;
+		String l;
 		for(int i=0; i<lines.length; i++){
-			ss[i] = lines[i].split(" ");
-			//System.out.println((ind-6)+" "+ss[i].length);
+			l = lines[i];
+			if(l.startsWith(" ")){
+				l = l.substring(1);
+			}
+			//System.out.println(lines[i]);
+			ss[i] = l.split(" ");
+			//System.out.println(ind-6)+" "+ss[i].length);
+			//System.out.println(i);
 			width = ss[i].length; 
 			vs[i] = new double[width];
 			for(int ii=0; ii<width; ii++){
 				//try{
+				//System.out.println(ss[i][ii]);
 					vs[i][ii] = Double.parseDouble(ss[i][ii]);
 				//}catch(NumberFormatException ex){
 					//System.err.println(ss[i][ii]);

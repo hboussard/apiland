@@ -296,7 +296,6 @@ public abstract class CountingDecorator extends Counting {
 		return decorate.getShannonDiversityPatchSize(classe);
 	}
 	
-	
 	@Override
 	public double getStandardDeviationPatchSize(){
 		return decorate.getStandardDeviationPatchSize();

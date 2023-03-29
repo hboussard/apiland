@@ -32,14 +32,14 @@ import org.geotools.data.shapefile.dbf.DbaseFileReader;
 
 public class TerritoryFactory {
 	
-	public static void init(Territory territory, Farm farm){
+	public static void initFarm(Territory territory, Farm farm){
 		for(FarmTerritory ft : (AgriculturalArea) territory.get("AA")){
 			if(ft.getId().equalsIgnoreCase(farm.getCode())){
 				farm.setTerritory(ft);
 				return;
 			}
 		}
-		throw new IllegalArgumentException("wrong farm code under territory");
+		throw new IllegalArgumentException("wrong farm code on territory");
 	}
 	
 	public static void init(Territory territory, FarmsAllocator farmsAllocator){

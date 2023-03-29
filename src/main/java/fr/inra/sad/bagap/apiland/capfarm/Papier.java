@@ -33,7 +33,7 @@ public class Papier {
 		
 		// intégration du territoire d'une ferme
 		Territory territory = TerritoryFactory.init(path+"sig/site_indre2.shp", start);
-		TerritoryFactory.init(territory, farm);
+		//TerritoryFactory.init(territory, farm);
 			
 		// création du type "laitier" ou "porcin"
 		//GenericFarmingSystem system = buildTypeLaitier();
