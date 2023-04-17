@@ -39,4 +39,4 @@ call mvn install:install-file -Dfile=./poi-3.15.jar -DgroupId=org.apache.poi -Da
 
 
 
-call mvn install:install-file -Dfile=./.jar -DgroupId= -DartifactId= -Dversion= -Dpackaging=jar
+call mvn install:install-file -Dfile=./apiland-1.0.jar -DgroupId=fr.inrae.act.bagap -DartifactId=apiland -Dversion=1.0 -Dpackaging=jar

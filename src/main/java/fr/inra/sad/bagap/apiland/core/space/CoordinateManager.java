@@ -148,6 +148,7 @@ public class CoordinateManager {
 			double X, Y;
 			int x, y;
 			String id;
+			int ind = 1;
 			while(cr.readRecord()){
 				
 				if(cr.get("X") != ""){
@@ -174,7 +175,8 @@ public class CoordinateManager {
 				}else if(!(id = cr.get("iD")).equals("")){
 					pixels.add(PixelManager.get(x, y, id, X, Y));
 				}else{
-					pixels.add(PixelManager.get(x, y));
+					//pixels.add(PixelManager.get(x, y));
+					pixels.add(PixelManager.get(x, y, (ind++)+"", X, Y));
 				}
 			}
 			

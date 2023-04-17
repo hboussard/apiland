@@ -37,6 +37,17 @@ public class ClusteringTabOutput extends Analysis {
 		this.cellSize = cellSize;
 	}
 	
+	public ClusteringTabOutput(int[] tabCluster, float[] tabCover, int[] initValues, double cellSize){
+		this.tabCluster = tabCluster;
+		this.tabCover = new int[tabCover.length];
+		int ind = 0;
+		for(float tc : tabCover){
+			this.tabCover[ind++] = (int) tc;
+		}
+		this.initValues = initValues;
+		this.cellSize = cellSize;
+	}
+	
 	public int getNbPatch(){
 		return nbPatch;
 	}

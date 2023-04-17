@@ -227,7 +227,7 @@ public class SpatialCsvManager {
 						}
 					}else{
 						for(Entry<String, BufferedWriter> e : writers.entrySet()){
-							e.getValue().write(Raster.getNoDataValue()+" ");
+							e.getValue().write(noDataValue+" ");
 						}
 					}
 				}
