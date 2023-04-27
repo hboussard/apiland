@@ -1,4 +1,4 @@
-package fr.inra.sad.bagap.apiland.analysis.matrix;
+package fr.inrae.act.bagap.raster;
 
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -17,11 +17,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.ImageLayout;
@@ -68,13 +70,12 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import com.sun.media.jai.codecimpl.util.RasterFactory;
 
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
-import fr.inrae.act.bagap.raster.Coverage;
-import fr.inrae.act.bagap.raster.EnteteRaster;
-import fr.inrae.act.bagap.raster.FileCoverage;
 
 public class CoverageManager {
 
 	// private static GeneralEnvelope env;
+	
+	private static CoordinateReferenceSystem crs;
 
 	public static void writeGeotiffHuge(GridCoverage2D coverage, File out, float[] datas, int width, int height, int roiWidth, int roiHeight, int posX, int posY, double minX, double maxX, double minY, double maxY) {
 		
@@ -174,9 +175,32 @@ public class CoverageManager {
 		}
 	}
 	
-	private static CoordinateReferenceSystem crs;
-
+	private static Coverage getTileCoverage(String raster) {
+		
+		File folder =  new File(raster);
+	
+		Set<Coverage> tiles = new HashSet<Coverage>();
+		Set<EnteteRaster> entetes = new HashSet<EnteteRaster>();
+		Coverage tile;
+		for(String file : folder.list()){
+			if(file.endsWith(".asc") || file.endsWith(".tif")){
+				tile = getCoverage(folder+"/"+file);
+				tiles.add(tile);
+				entetes.add(tile.getEntete());
+			}
+		}
+	
+		EnteteRaster entete = EnteteRaster.getEntete(entetes);
+		
+		return new TileCoverage(tiles, entete);
+	}
+	
 	public static Coverage getCoverage(String raster) {
+		
+		if(new File(raster).isDirectory()){
+			return getTileCoverage(raster);
+		}
+		
 		// coverage et infos associees
 		GridCoverage2DReader reader = null;
 		
@@ -216,6 +240,47 @@ public class CoverageManager {
 		return null;
 	}
 	
+	/*
+	public static Coverage getCoverage(String raster) {
+		// coverage et infos associees
+		GridCoverage2DReader reader = null;
+		
+		try {	
+			if(raster.endsWith(".asc")){
+				File file = new File(raster);
+				reader = new ArcGridReader(file);
+			}else if(raster.endsWith(".tif")){
+				File file = new File(raster);
+				reader = new GeoTiffReader(file);
+			}else{
+				throw new IllegalArgumentException(raster+" is not a recognize raster");
+			}
+			GridCoverage2D coverage2D = (GridCoverage2D) reader.read(null);
+			reader.dispose(); // a� tester, ca va peut-etre bloquer la lecture des donnees
+						
+			int inWidth = (Integer) coverage2D.getProperty("image_width");
+			int inHeight = (Integer) coverage2D.getProperty("image_height");
+			double inMinX = coverage2D.getEnvelope().getMinimum(0);
+			double inMinY = coverage2D.getEnvelope().getMinimum(1);
+			double inMaxX = coverage2D.getEnvelope().getMaximum(0);
+			double inMaxY = coverage2D.getEnvelope().getMaximum(1);
+			float inCellSize = (float) ((java.awt.geom.AffineTransform) coverage2D.getGridGeometry().getGridToCRS2D()).getScaleX();
+						
+			EnteteRaster entete = new EnteteRaster(inWidth, inHeight, inMinX, inMaxX, inMinY, inMaxY, inCellSize, -1);
+			Coverage coverage = new FileCoverage(coverage2D, entete);
+			
+			return coverage;
+		}catch (DataSourceException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}*/
+
 	public static GridCoverage2D get(String raster) {
 		AbstractGridCoverage2DReader reader = null;
 		try {

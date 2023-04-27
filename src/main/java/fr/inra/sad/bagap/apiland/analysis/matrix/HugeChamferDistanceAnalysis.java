@@ -18,6 +18,7 @@ import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inrae.act.bagap.raster.CoverageManager;
 
 public class HugeChamferDistanceAnalysis extends Analysis {
 

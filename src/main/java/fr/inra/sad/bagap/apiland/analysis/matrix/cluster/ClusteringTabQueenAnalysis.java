@@ -9,13 +9,17 @@ import fr.inra.sad.bagap.apiland.analysis.Analysis;
 
 public class ClusteringTabQueenAnalysis extends Analysis{
 
+	private int noDataValue;
+	
+	private int nbNoDataValue;
+	
 	private int[] tabCover;
 	
 	private int height, width;
 	
 	private Set<Integer> interest;
 	
-	public ClusteringTabQueenAnalysis(int[] tabCover, int width, int height, int[] interest){	
+	public ClusteringTabQueenAnalysis(int[] tabCover, int width, int height, int[] interest, int noDataValue){	
 		this.tabCover = tabCover;
 		this.height = height;
 		this.width = width;
@@ -23,9 +27,10 @@ public class ClusteringTabQueenAnalysis extends Analysis{
 		for(int v : interest){
 			this.interest.add(v);
 		}
+		this.noDataValue = noDataValue;
 	}
 	
-	public ClusteringTabQueenAnalysis(float[] tabCover, int width, int height, int[] interest){	
+	public ClusteringTabQueenAnalysis(float[] tabCover, int width, int height, int[] interest, int noDataValue){	
 		this.tabCover = new int[tabCover.length];
 		int ind = 0;
 		for(float tc : tabCover){
@@ -37,6 +42,7 @@ public class ClusteringTabQueenAnalysis extends Analysis{
 		for(int v : interest){
 			this.interest.add(v);
 		}
+		this.noDataValue = noDataValue;
 	}
 	
 	@Override
@@ -53,7 +59,9 @@ public class ClusteringTabQueenAnalysis extends Analysis{
 			for(int i=0; i<width; i++){
 				
 				v = (int) tabCover[j*width+i];
-				if(interest.contains(v)){
+				if(v == noDataValue){
+					nbNoDataValue++;
+				}else if(interest.contains(v)){
 					
 					if(j>0 && i>0 && i<width-1){ // cas 1
 						vci = tabCluster[j*width + (i-1)];
@@ -216,12 +224,16 @@ public class ClusteringTabQueenAnalysis extends Analysis{
 
 	@Override
 	protected void doInit() {
-		// do nothing
+		nbNoDataValue = 0;
 	}
 
 	@Override
 	protected void doClose() {
 		// do nothing
+	}
+	
+	public int getNbNoDataValue(){
+		return nbNoDataValue;
 	}
 
 }

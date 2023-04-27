@@ -1,10 +1,7 @@
 package fr.inrae.act.bagap.raster;
 
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-
 import javax.media.jai.PlanarImage;
-
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.image.util.ImageUtilities;
 
@@ -28,21 +25,14 @@ public class FileCoverage extends Coverage {
 	
 	@Override
 	public float[] getDatas(){
-		float[] inDatas = new float[getEntete().width() * getEntete().height()];
-		Rectangle roi = new Rectangle(0, 0, getEntete().width(), getEntete().height());
-		inDatas = coverage.getRenderedImage().getData(roi).getSamples(0, 0, getEntete().width(), getEntete().height(), 0, inDatas);
-		return inDatas;
+		return getDatas(new Rectangle(0, 0, getEntete().width(), getEntete().height()));
 	}
 	
 	@Override
 	public float[] getDatas(Rectangle roi){
-		
-		float[] inDatas = new float[roi.width * roi.height];
-		//System.out.println(roi.x+" "+roi.y+" "+roi.width+" "+roi.height);
-		
-		inDatas = coverage.getRenderedImage().getData(roi).getSamples(roi.x, roi.y, roi.width, roi.height, 0, inDatas);
-		
-		return inDatas;
+		float[] datas = new float[roi.width * roi.height];
+		datas = coverage.getRenderedImage().getData(roi).getSamples(roi.x, roi.y, roi.width, roi.height, 0, datas);
+		return datas;
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ import org.opengis.parameter.ParameterValueGroup;
 import com.sun.media.jai.codecimpl.util.RasterFactory;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.ArrayChamferDistanceAnalysis;
-import fr.inra.sad.bagap.apiland.analysis.matrix.CoverageManager;
+import fr.inrae.act.bagap.raster.CoverageManager;
 
 public class WriteHugeGeotiff {
 
