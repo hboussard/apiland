@@ -28,7 +28,7 @@ public class EnteteRaster {
 	
 	@Override
 	public String toString(){
-		return width+" "+height+" "+minx+" "+maxx+" "+miny+" "+maxy;
+		return width+" "+height+" "+minx+" "+maxx+" "+miny+" "+maxy+" "+noDataValue;
 	}
 	
 	public int width(){

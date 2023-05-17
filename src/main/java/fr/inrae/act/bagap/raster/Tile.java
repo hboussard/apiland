@@ -8,18 +8,18 @@ public class Tile {
 	
 	private int ncols, nrows;
 	
-	private double tileSize;
+	private double tileLength;
 	
-	public Tile(Envelope envelope, int ncols, int nrows, double tileSize){
+	public Tile(Envelope envelope, int ncols, int nrows, double tileLength){
 		this.envelope = envelope;
 		this.ncols = ncols;
 		this.nrows = nrows;
-		this.tileSize = tileSize;
+		this.tileLength = tileLength;
 	}
 	
 	@Override
 	public String toString(){
-		return envelope+" "+ncols+" "+nrows+" "+tileSize;
+		return envelope+" "+ncols+" "+nrows+" "+tileLength;
 	}
 	
 	public Envelope getEnvelope() {
@@ -27,7 +27,8 @@ public class Tile {
 	}
 	
 	public Envelope getEnvelope(int i, int j){
-		return new Envelope(envelope.getMinX()+i*tileSize, envelope.getMinX()+(i+1)*tileSize, envelope.getMaxY()-(j+1)*tileSize, envelope.getMaxY()-j*tileSize);
+		//System.out.println(i+" "+j+" "+(envelope.getMinX()+(i+1)*tileLength)+" "+(envelope.getMaxY()-(j+1)*tileLength));
+		return new Envelope(envelope.getMinX()+i*tileLength, envelope.getMinX()+(i+1)*tileLength, envelope.getMaxY()-(j+1)*tileLength, envelope.getMaxY()-j*tileLength);
 	}
 	
 	public double getMinX(){
@@ -54,9 +55,19 @@ public class Tile {
 		return nrows;
 	}
 
-	public double getTileSize() {
-		return tileSize;
+	public double getTileLength() {
+		return tileLength;
 	}
+	
+	/*
+	public int getTileWidth(double cellSize) {
+		return (int) Math.round(tileSize / cellSize);
+	}
+	
+	public int getTileHeight(double cellSize){
+		return (int) Math.round(tileSize / cellSize);
+	}
+	*/
 
 	public static Tile getTile(String tileFolder){
 		return getTile((TileCoverage) CoverageManager.getCoverage(tileFolder));
@@ -73,41 +84,41 @@ public class Tile {
 	}
 	
 	public static Tile getTile(Tile refTile, Envelope envelope){
-		int deltaMinX = new Double((envelope.getMinX() - refTile.getMinX())/refTile.tileSize).intValue();
-		int deltaMaxX = new Double((refTile.getMaxX() - envelope.getMaxX())/refTile.tileSize).intValue();
-		int deltaMinY = new Double((envelope.getMinY() - refTile.getMinY())/refTile.tileSize).intValue();
-		int deltaMaxY = new Double((refTile.getMaxY() - envelope.getMaxY())/refTile.tileSize).intValue();
+		int deltaMinX = new Double((envelope.getMinX() - refTile.getMinX())/refTile.tileLength).intValue();
+		int deltaMaxX = new Double((refTile.getMaxX() - envelope.getMaxX())/refTile.tileLength).intValue();
+		int deltaMinY = new Double((envelope.getMinY() - refTile.getMinY())/refTile.tileLength).intValue();
+		int deltaMaxY = new Double((refTile.getMaxY() - envelope.getMaxY())/refTile.tileLength).intValue();
 		
-		System.out.println(deltaMinX+" "+deltaMaxX+" "+deltaMinY+" "+deltaMaxY);
+		//System.out.println(deltaMinX+" "+deltaMaxX+" "+deltaMinY+" "+deltaMaxY);
 		
 		if(deltaMinX < 0){
 			deltaMinX--;
 		}
-		double minX = refTile.getMinX() + deltaMinX*refTile.tileSize;
+		double minX = refTile.getMinX() + deltaMinX*refTile.tileLength;
 		
 		if(deltaMaxX < 0){
 			deltaMaxX--;
 		}
-		double maxX = refTile.getMaxX() - deltaMaxX*refTile.tileSize;
+		double maxX = refTile.getMaxX() - deltaMaxX*refTile.tileLength;
 		
 		if(deltaMinY < 0){
 			deltaMinY--;
 		}
-		double minY = refTile.getMinY() + deltaMinY*refTile.tileSize;
+		double minY = refTile.getMinY() + deltaMinY*refTile.tileLength;
 		
 		if(deltaMaxY < 0){
 			deltaMaxY--;
 		}
-		double maxY = refTile.getMaxY() - deltaMaxY*refTile.tileSize;
-		System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
+		double maxY = refTile.getMaxY() - deltaMaxY*refTile.tileLength;
+		//System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
 		
 		Envelope env = new Envelope(minX, maxX, minY, maxY);
 		int ncols = refTile.ncols - deltaMinX - deltaMaxX;
 		int nrows = refTile.nrows - deltaMinY - deltaMaxY;
 		
-		System.out.println(ncols+" "+nrows);
+		//System.out.println(ncols+" "+nrows);
 		
-		return new Tile(env, ncols, nrows, refTile.getTileSize());
+		return new Tile(env, ncols, nrows, refTile.tileLength);
 	}
 	
 }

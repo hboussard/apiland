@@ -1,5 +1,6 @@
 package fr.inrae.act.bagap.raster;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -112,10 +113,22 @@ public class CoverageManager {
 			WritableRaster raster = RasterFactory.createBandedRaster(DataBuffer.TYPE_FLOAT, entete.width(), entete.height(), 1, null);
 			raster.setSamples(0, 0, entete.width(), entete.height(), 0, datas);
 			
+			//Category noDataCategory = Category.NODATA;
+			Category noDataCategory = new Category(
+	                Category.NODATA.getName(),
+	                new Color(0, 0, 0, 0),
+	                entete.noDataValue());
+	               
+			Category[] categories = new Category[] {noDataCategory};
+			GridSampleDimension[] bands;
+			bands = new GridSampleDimension[1];
+			bands[0] = new GridSampleDimension(null, categories, null);
+			
 			//System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
 			ReferencedEnvelope env = new ReferencedEnvelope(entete.minx(), entete.maxx(), entete.miny(), entete.maxy(), CRS.decode("EPSG:2154"));
 			GridCoverageFactory gcf = new GridCoverageFactory();
-			GridCoverage2D coverage = gcf.create("TIMEGRID", raster, env);
+			//GridCoverage2D coverage = gcf.create("TIMEGRID", raster, env);
+			GridCoverage2D coverage = gcf.create("TIMEGRID", raster, env, bands);
 			
 			//((WritableRenderedImage) coverage.getRenderedImage()).setData(raster);
 			GeoTiffWriteParams wp = new GeoTiffWriteParams();
@@ -138,7 +151,6 @@ public class CoverageManager {
 		}
 	}
 	
-	
 	public static void writeGeotiff(String out, float[] datas, int width, int height, double minX, double maxX, double minY, double maxY) {
 		writeGeotiff(new File(out), datas, width, height, minX, maxX, minY, maxY);
 	}
@@ -149,10 +161,19 @@ public class CoverageManager {
 			WritableRaster raster = RasterFactory.createBandedRaster(DataBuffer.TYPE_FLOAT, width, height, 1, null);
 			raster.setSamples(0, 0, width, height, 0, datas);
 			
+			Category noDataCategory = new Category(
+	                Category.NODATA.getName(),
+	                new Color(0, 0, 0, 0),
+	                Raster.getNoDataValue());
+			Category[] categories = new Category[] {noDataCategory};
+			GridSampleDimension[] bands;
+			bands = new GridSampleDimension[1];
+			bands[0] = new GridSampleDimension(null, categories, null);
+			
 			//System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
 			ReferencedEnvelope env = new ReferencedEnvelope(minX, maxX, minY, maxY, CRS.decode("EPSG:2154"));
 			GridCoverageFactory gcf = new GridCoverageFactory();
-			GridCoverage2D coverage = gcf.create("TIMEGRID", raster, env);
+			GridCoverage2D coverage = gcf.create("TIMEGRID", raster, env, bands);
 			
 			//((WritableRenderedImage) coverage.getRenderedImage()).setData(raster);
 			GeoTiffWriteParams wp = new GeoTiffWriteParams();
@@ -215,8 +236,9 @@ public class CoverageManager {
 				throw new IllegalArgumentException(raster+" is not a recognize raster");
 			}
 			GridCoverage2D coverage2D = (GridCoverage2D) reader.read(null);
-			reader.dispose(); // a� tester, ca va peut-etre bloquer la lecture des donnees
+			reader.dispose(); // a tester, ca va peut-etre bloquer la lecture des donnees
 						
+			
 			int inWidth = (Integer) coverage2D.getProperty("image_width");
 			int inHeight = (Integer) coverage2D.getProperty("image_height");
 			double inMinX = coverage2D.getEnvelope().getMinimum(0);
@@ -224,8 +246,16 @@ public class CoverageManager {
 			double inMaxX = coverage2D.getEnvelope().getMaximum(0);
 			double inMaxY = coverage2D.getEnvelope().getMaximum(1);
 			float inCellSize = (float) ((java.awt.geom.AffineTransform) coverage2D.getGridGeometry().getGridToCRS2D()).getScaleX();
+			
+			int noDataValue = Raster.getNoDataValue();
+			GridSampleDimension dim = coverage2D.getSampleDimension(0);
+			if(dim.getNoDataValues() != null){
+				noDataValue = (int) dim.getNoDataValues()[0];
+				//System.out.println(noDataValue);
+			}
+			//Raster.setNoDataValue(noDataValue);
 						
-			EnteteRaster entete = new EnteteRaster(inWidth, inHeight, inMinX, inMaxX, inMinY, inMaxY, inCellSize, -1);
+			EnteteRaster entete = new EnteteRaster(inWidth, inHeight, inMinX, inMaxX, inMinY, inMaxY, inCellSize, noDataValue);
 			Coverage coverage = new FileCoverage(coverage2D, entete);
 			
 			return coverage;

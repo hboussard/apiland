@@ -137,7 +137,7 @@ public class GroupDistanceAnalysis extends MatrixAnalysis implements AnalysisObs
 			};
 			accessibilite.addObserver(this);
 			Matrix m = accessibilite.allRun();
-			MatrixManager.exportAsciiGrid(m, path+"test.asc");
+			//MatrixManager.exportAsciiGrid(m, path+"test.asc");
 			return m;
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

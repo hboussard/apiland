@@ -19,6 +19,10 @@ public class TileCoverage extends Coverage {
 		initGrid(tiles);
 	}
 	
+	public Coverage getCoverage(int i, int j){
+		return grid[j*ncols + i];
+	}
+	
 	public int ncols(){
 		return ncols;
 	}
@@ -29,6 +33,10 @@ public class TileCoverage extends Coverage {
 	
 	public double tileSize(){
 		return tileWidth * getEntete().cellsize();
+	}
+	
+	public int tileWidth(){
+		return tileWidth;
 	}
 	
 	private void initGrid(Set<Coverage> tiles){
