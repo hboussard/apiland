@@ -617,6 +617,16 @@ public class CoverageManager {
 		
 	}
 
+	public static void write(String raster, float[] datas, EnteteRaster entete) {
+		if(raster.endsWith(".asc")){
+			writeAsciiGrid(raster, datas, entete);
+		}else if(raster.endsWith(".tif")){
+			writeGeotiff(raster, datas, entete);
+		}else{
+			throw new IllegalArgumentException("format for "+raster+ " not recognized.");
+		}
+	}
+	
 	public static void writeAsciiGrid(String ascii, float[] datas, EnteteRaster entete) {
 		
 		try {

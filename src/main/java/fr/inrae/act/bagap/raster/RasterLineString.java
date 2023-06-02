@@ -4,6 +4,8 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Lineal;
+import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.Point;
 
 import fr.inra.sad.bagap.apiland.core.space.ComplexGeometry;
@@ -30,12 +32,24 @@ public class RasterLineString extends Geometry {
 	}
 	
 	public static RasterLineString getRasterLineString(LineString line, double minx, double maxy, double cellsize){
-		Envelope internal = line.getEnvelopeInternal();
+		return getRasterLineString(line, minx, maxy, cellsize, 0);
+	}
+	
+	public static RasterLineString getRasterLineString(Lineal line, double minx, double maxy, double cellsize, double buffer){
+
+		Envelope internal = null;
+		if(line instanceof LineString){
+			internal = ((LineString) line).getEnvelopeInternal();
+		}else if(line instanceof MultiLineString){
+			internal = ((MultiLineString) line).getEnvelopeInternal();
+		}
 		
 		double iminx = internal.getMinX();
 		double imaxx = internal.getMaxX();
 		double iminy = internal.getMinY();
 		double imaxy = internal.getMaxY();
+		
+		//System.out.println(iminx+" "+imaxx+" "+iminy+" "+imaxy);
 		
 		int deltaI = new Double((iminx - minx)/cellsize).intValue();
 		int deltaJ = new Double((maxy-imaxy)/cellsize).intValue();
@@ -59,8 +73,9 @@ public class RasterLineString extends Geometry {
 			for(int i=0; i<width; i++){
 				x = eminx + (cellsize / 2.0) + i * cellsize;
 				p = gf.createPoint(new Coordinate(x, y));
-					
-				if(line.distance(p)<=((cellsize/2)*Math.sqrt(2))){
+				
+				if(((LineString)line).distance(p)<=(((cellsize+buffer)/2)*Math.sqrt(2))){
+					//System.out.println(line.distance(p)+" "+((cellsize+buffer)/2)*Math.sqrt(2));
 					datas[j*width+i] = 1;
 				}
 			}	

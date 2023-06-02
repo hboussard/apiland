@@ -21,11 +21,13 @@ import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 
 import fr.inra.sad.bagap.apiland.analysis.matrix.util.ExportAsciiGridFromShapefileAnalysis;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.util.VisuImageJ;
 import fr.inrae.act.bagap.raster.Coverage;
 import fr.inrae.act.bagap.raster.CoverageManager;
 import fr.inrae.act.bagap.raster.EnteteRaster;
 import fr.inrae.act.bagap.raster.RasterPolygon;
+import fr.inrae.act.bagap.raster.converter.ShapeFile2CoverageConverter;
 
 public class Test {
 
@@ -55,13 +57,27 @@ public class Test {
 		
 		String shapeInput = "C:/Hugues/data/data_ZA/PF_OS_L93/PF_2018/OCS_PUMA_ZA_2018.shp";
 		String attribute = "OS_2018";
-		double cellSize = 5;
-		/*
-		String asciiOutput1 = "H:/temp/test/ascii1.asc";
-		rasterize1(asciiOutput1, shapeInput, attribute, cellSize);
-		*/
-		String asciiOutput2 = "H:/temp/test/ascii2.asc";
-		rasterize2(asciiOutput2, shapeInput, attribute, cellSize);
+		float cellSize = 5;
+		int noDataValue = Raster.getNoDataValue();
+		
+		//String asciiOutput1 = "H:/temp/test/ascii1.asc";
+		//rasterize1(asciiOutput1, shapeInput, attribute, cellSize);
+		
+		//String asciiOutput2 = "H:/temp/test/ascii2.asc";
+		//rasterize2(asciiOutput2, shapeInput, attribute, cellSize);
+	
+		//String asciiOutput3 = "H:/temp/test/ascii3.tif";
+		//ShapeFile2CoverageConverter.rasterize(asciiOutput3, shapeInput, attribute, cellSize, noDataValue);
+		//ShapeFile2CoverageConverter.getCoverage(shapeInput, attribute, cellSize, noDataValue);
+		
+		String asciiOutput4 = "H:/temp/test/ascii4.tif";
+		double minx = 361700;
+		double maxx = 362700;
+		double miny = 6833000;
+		double maxy = 6834000;
+		ShapeFile2CoverageConverter.rasterize(asciiOutput4, shapeInput, attribute, cellSize, noDataValue, minx, maxx, miny, maxy);
+		//ShapeFile2CoverageConverter.getCoverage(shapeInput, attribute, cellSize, noDataValue, minx, maxx, miny, maxy);
+		
 	}
 	
 	private static void rasterize1(String asciiOutput, String shapeInput, String attribute, double cellSize){

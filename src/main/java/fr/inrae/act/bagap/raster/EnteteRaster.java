@@ -132,6 +132,43 @@ public class EnteteRaster {
 		
 		return new Rectangle(x, y, ncols, nrows);
 	}
+	
+	public static EnteteRaster getEntete(EnteteRaster refEntete, Envelope envelope){
+		int deltaMinX = new Double((envelope.getMinX() - refEntete.minx)/refEntete.cellsize).intValue();
+		int deltaMaxX = new Double((refEntete.maxx - envelope.getMaxX())/refEntete.cellsize).intValue();
+		int deltaMinY = new Double((envelope.getMinY() - refEntete.miny)/refEntete.cellsize).intValue();
+		int deltaMaxY = new Double((refEntete.maxy - envelope.getMaxY())/refEntete.cellsize).intValue();
+		
+		//System.out.println(deltaMinX+" "+deltaMaxX+" "+deltaMinY+" "+deltaMaxY);
+		
+		if(deltaMinX < 0){
+			deltaMinX--;
+		}
+		double minX = refEntete.minx + deltaMinX*refEntete.cellsize;
+		
+		if(deltaMaxX < 0){
+			deltaMaxX--;
+		}
+		double maxX = refEntete.maxx - deltaMaxX*refEntete.cellsize;
+		
+		if(deltaMinY < 0){
+			deltaMinY--;
+		}
+		double minY = refEntete.miny + deltaMinY*refEntete.cellsize;
+		
+		if(deltaMaxY < 0){
+			deltaMaxY--;
+		}
+		double maxY = refEntete.maxy - deltaMaxY*refEntete.cellsize;
+		//System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
+		
+		int ncols = refEntete.width - deltaMinX - deltaMaxX;
+		int nrows = refEntete.height - deltaMinY - deltaMaxY;
+		
+		//System.out.println(ncols+" "+nrows);
+		
+		return new EnteteRaster(ncols, nrows, minX, maxX, minY, maxY, refEntete.cellsize, refEntete.noDataValue);
+	}
 
 	/*
 	public static EnteteRaster getEntete(Envelope envelope, float cellsize, int noDataValue) {
