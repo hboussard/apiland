@@ -59,8 +59,8 @@ public class TileCoverage extends Coverage {
 		grid = new Coverage[ncols*nrows];
 		int posX, posY;
 		for(Coverage tile : tiles){
-			posX = new Double((tile.getEntete().minx() - getEntete().minx()) / (tileWidth * (int) getEntete().cellsize())).intValue();
-			posY = new Double((getEntete().maxy() - tile.getEntete().maxy()) / (tileHeight * (int) getEntete().cellsize())).intValue();
+			posX = new Double(Math.round(tile.getEntete().minx() - getEntete().minx()) / (tileWidth * (int) getEntete().cellsize())).intValue();
+			posY = new Double(Math.round(getEntete().maxy() - tile.getEntete().maxy()) / (tileHeight * (int) getEntete().cellsize())).intValue();
 			
 			//System.out.println(posX+" "+posY);
 			grid[posY*ncols + posX] = tile;
@@ -106,7 +106,7 @@ public class TileCoverage extends Coverage {
 		float[] datas = new float[roiEntete.width()*roiEntete.height()];
 		Arrays.fill(datas, Raster.getNoDataValue());
 		
-		Envelope tileEnv, localEnv;
+		Envelope tileEnv, localEnv, rowEnv;
 		Coverage tile;
 		Rectangle localRoi, tileRoi;
 		float[] localData;
@@ -119,13 +119,16 @@ public class TileCoverage extends Coverage {
 						localEnv = roiEnv.intersection(tileEnv);
 						if(!(localEnv.getMinX() == localEnv.getMaxX() || localEnv.getMinY() == localEnv.getMaxY())){
 							localRoi = EnteteRaster.getROI(tile.getEntete(), localEnv);
-							localData = tile.getDatas(localRoi);
-							tileRoi = EnteteRaster.getROI(roiEntete, localEnv);
-							for(int y=0; y<tileRoi.height; y++){
-								for(int x=0; x<tileRoi.width; x++){
-									datas[(y+tileRoi.y)*roiEntete.width() + x+tileRoi.x] = localData[y*localRoi.width + x];
+							if(localRoi.width != 0 && localRoi.height != 0){
+								localData = tile.getDatas(localRoi);
+								tileRoi = EnteteRaster.getROI(roiEntete, localEnv);
+								for(int y=0; y<tileRoi.height; y++){
+									for(int x=0; x<tileRoi.width; x++){
+										datas[(y+tileRoi.y)*roiEntete.width() + x+tileRoi.x] = localData[y*localRoi.width + x];
+									}
 								}
 							}
+							
 						}
 					}
 				}

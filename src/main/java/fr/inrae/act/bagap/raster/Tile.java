@@ -10,11 +10,29 @@ public class Tile {
 	
 	private double tileLength;
 	
+	private boolean[] grid;
+	
 	public Tile(Envelope envelope, int ncols, int nrows, double tileLength){
 		this.envelope = envelope;
 		this.ncols = ncols;
 		this.nrows = nrows;
 		this.tileLength = tileLength;
+	}
+	
+	public Tile(Envelope envelope, int ncols, int nrows, double tileLength, boolean[] grid){
+		this(envelope, ncols, nrows, tileLength);
+		this.grid = grid;
+	}
+	
+	public boolean hasTile(int i, int j){
+		if(grid != null){
+			return grid[j*ncols + i];	
+		}
+		return true;
+	}
+	
+	public boolean[] grid(){
+		return grid;
 	}
 	
 	@Override
@@ -80,7 +98,16 @@ public class Tile {
 		int nrows = tileCoverage.nrows();
 		double tileSize = tileCoverage.tileSize();
 		
-		return new Tile(envelope, ncols, nrows, tileSize);
+		boolean[] grid = new boolean[ncols*nrows];
+		for(int j=0; j<nrows; j++){
+			for(int i=0; i<ncols; i++){
+				if(tileCoverage.getCoverage(i, j) != null){
+					grid[j*ncols+i] = true;
+				}
+			}
+		}
+		
+		return new Tile(envelope, ncols, nrows, tileSize, grid);
 	}
 	
 	public static Tile getTile(Tile refTile, Envelope envelope){

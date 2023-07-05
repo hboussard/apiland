@@ -311,8 +311,9 @@ public class Tool {
 				OutputStream output = new FileOutputStream(destFile)){
 			byte[] buf = new byte[8192]; 
 			int len;
-			while((len=input.read(buf)) >= 0) 
+			while((len=input.read(buf)) >= 0) {
 				output.write(buf, 0, len); 
+			}
 		} 
 	}
 	

@@ -75,11 +75,11 @@ public class Test {
 		double maxx = 362700;
 		double miny = 6833000;
 		double maxy = 6834000;
-		ShapeFile2CoverageConverter.rasterize(asciiOutput4, shapeInput, attribute, cellSize, noDataValue, minx, maxx, miny, maxy);
+		//ShapeFile2CoverageConverter.rasterize(asciiOutput4, shapeInput, attribute, cellSize, noDataValue, minx, maxx, miny, maxy);
 		//ShapeFile2CoverageConverter.getCoverage(shapeInput, attribute, cellSize, noDataValue, minx, maxx, miny, maxy);
 		
 	}
-	
+	/*
 	private static void rasterize1(String asciiOutput, String shapeInput, String attribute, double cellSize){
 		
 		long begin = System.currentTimeMillis();
@@ -220,5 +220,5 @@ public class Test {
 				&& ((envelope.getMinY() >= miny && envelope.getMinY() <= maxy) || (envelope.getMinY() <= miny && envelope.getMaxY() >= maxy) || (envelope.getMaxY() >= miny && envelope.getMaxY() <= maxy));
 	}
 
-
+*/
 }

@@ -31,61 +31,29 @@ public class ShapeFile2CoverageConverter {
 	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue){
 		
 		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, noDataValue);
+		float[] data = getSurfaceData(input, entete, attribute, noDataValue);
 		CoverageManager.write(output, data, entete);
 	}
 	
 	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
 		
 		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, fillValue);
+		float[] data = getSurfaceData(input, entete, attribute, fillValue);
 		CoverageManager.write(output, data, entete);
 	}
 	
 	public static void rasterize(String output, String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue){
 		
 		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, codes, noDataValue);
+		float[] data = getSurfaceData(input, entete, attribute, codes, noDataValue);
 		CoverageManager.write(output, data, entete);
 	}
 	
 	public static void rasterize(String output, String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
 		
 		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, codes, fillValue);
+		float[] data = getSurfaceData(input, entete, attribute, codes, fillValue);
 		CoverageManager.write(output, data, entete);
-	}
-	
-	public static Coverage getCoverage(String input, String attribute, float cellSize, int noDataValue){
-		
-		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, noDataValue);
-
-		return new TabCoverage(data, entete);
-	}
-	
-	public static Coverage getCoverage(String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
-		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, fillValue);
-
-		return new TabCoverage(data, entete);
-	}
-	
-	public static Coverage getCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue){
-		
-		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, codes, noDataValue);
-
-		return new TabCoverage(data, entete);
-	}
-	
-	public static Coverage getCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
-		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
-		float[] data = getPolygonData(input, entete, attribute, codes, fillValue);
-
-		return new TabCoverage(data, entete);
 	}
 	
 	private static EnteteRaster getEntete(String zone, float cellSize, int noDataValue){
@@ -124,7 +92,46 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 	
-	private static float[] getPolygonData(String inputShape, EnteteRaster entete, String attribute, float fillValue){
+	public static Coverage getSurfaceCoverage(String input, String attribute, float cellSize, int noDataValue){
+		
+		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
+		float[] data = getSurfaceData(input, entete, attribute, noDataValue);
+
+		return new TabCoverage(data, entete);
+	}
+	
+	public static Coverage getSurfaceCoverage(String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
+		
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		float[] data = getSurfaceData(input, entete, attribute, fillValue);
+
+		return new TabCoverage(data, entete);
+	}
+	
+	public static Coverage getSurfaceCoverage(String input, EnteteRaster entete, float value, float fillValue){
+		
+		float[] data = getSurfaceData(input, entete, value, fillValue);
+
+		return new TabCoverage(data, entete);
+	}
+	
+	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue){
+		
+		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
+		float[] data = getSurfaceData(input, entete, attribute, codes, noDataValue);
+
+		return new TabCoverage(data, entete);
+	}
+	
+	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
+		
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		float[] data = getSurfaceData(input, entete, attribute, codes, fillValue);
+
+		return new TabCoverage(data, entete);
+	}
+	
+	private static float[] getSurfaceData(String inputShape, EnteteRaster entete, String attribute, float fillValue){
 		try{
 			
 			ShpFiles sf = new ShpFiles(inputShape);
@@ -213,7 +220,83 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 	
-	private static float[] getPolygonData(String inputShape, EnteteRaster entete, String attribute, Map<String, Integer> codes, float fillValue){
+	private static float[] getSurfaceData(String inputShape, EnteteRaster entete, float value, float fillValue){
+		try{
+			
+			ShpFiles sf = new ShpFiles(inputShape);
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new GeometryFactory());
+			float[] datas = new float[entete.width()*entete.height()];
+			Arrays.fill(datas, fillValue);
+			
+			Geometry the_geom;
+			Polygon the_poly;
+			RasterPolygon rp;
+			int indrp;
+			int xdelta, ydelta, xrp, yrp;
+			while(sfr.hasNext()){
+				
+				the_geom = (Geometry) sfr.nextRecord().shape();
+				
+				if(the_geom instanceof Polygon){
+					the_poly = (Polygon) the_geom;
+					
+					rp = RasterPolygon.getRasterPolygon(the_poly, entete.minx(), entete.maxy(), entete.cellsize());
+					indrp = 0;
+					xdelta = rp.getDeltaI();
+					ydelta = rp.getDeltaJ();
+					for(double v : rp.getDatas()){
+						if(v == 1){
+							xrp = indrp % rp.getWidth();
+							yrp = indrp / rp.getWidth();
+							if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
+								datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = value;
+							}
+						}
+						indrp++;
+					}	
+					
+				}else if(the_geom instanceof MultiPolygon){
+					
+					for(int i=0; i<the_geom.getNumGeometries(); i++){
+						the_poly = (Polygon) ((MultiPolygon) the_geom).getGeometryN(i);
+						
+						rp = RasterPolygon.getRasterPolygon(the_poly, entete.minx(), entete.maxy(), entete.cellsize());
+						indrp = 0;
+						xdelta = rp.getDeltaI();
+						ydelta = rp.getDeltaJ();
+						for(double v : rp.getDatas()){
+							if(v == 1){
+								xrp = indrp % rp.getWidth();
+								yrp = indrp / rp.getWidth();
+								if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
+									datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = value;
+								}
+							}
+							indrp++;
+						}
+					}
+					
+				}else{
+					System.out.println(the_geom);
+					//throw new IllegalArgumentException("probleme geometrique");
+				}
+			}
+			
+			sfr.close();
+			sf.dispose();
+			
+			return datas;
+			
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		return null;
+	}
+	
+	private static float[] getSurfaceData(String inputShape, EnteteRaster entete, String attribute, Map<String, Integer> codes, float fillValue){
 		try{
 			
 			ShpFiles sf = new ShpFiles(inputShape);
@@ -344,10 +427,10 @@ public class ShapeFile2CoverageConverter {
 			RasterLineString rls;
 			int indrp;
 			int xdelta, ydelta, xrp, yrp;
-			long value;
+			String value;
 			while(sfr.hasNext()){
 				dfr.read();
-				value = (long) dfr.readField(pos);
+				value = dfr.readField(pos).toString();
 				//System.out.println(value);
 				the_geom = (Geometry) sfr.nextRecord().shape();
 				
@@ -363,7 +446,7 @@ public class ShapeFile2CoverageConverter {
 							xrp = indrp % rls.getWidth();
 							yrp = indrp / rls.getWidth();
 							if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
-								datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = (float) value;
+								datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = Float.parseFloat(value);
 							}
 						}
 						indrp++;
@@ -383,7 +466,7 @@ public class ShapeFile2CoverageConverter {
 								xrp = indrp % rls.getWidth();
 								yrp = indrp / rls.getWidth();
 								if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
-									datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = (float) value;
+									datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = Float.parseFloat(value);
 								}
 							}
 							indrp++;
@@ -656,24 +739,21 @@ public class ShapeFile2CoverageConverter {
 		try{
 			ShpFiles sf = new ShpFiles(zone);
 			ShapefileReader sfr = new ShapefileReader(sf, true, false, new GeometryFactory());
-			DbaseFileReader dfr = new DbaseFileReader(sf, true, Charset.defaultCharset());
-			
 			
 			Geometry the_geom;
-			Object[] entry;
 			while(sfr.hasNext()){
 				the_geom = (Geometry) sfr.nextRecord().shape();
 				
-				entry = dfr.readEntry();
+				if(the_geom != null){
+					minx = Math.min(minx, the_geom.getEnvelopeInternal().getMinX());
+					maxx = Math.max(maxx, the_geom.getEnvelopeInternal().getMaxX());
+					miny = Math.min(miny, the_geom.getEnvelopeInternal().getMinY());
+					maxy = Math.max(maxy, the_geom.getEnvelopeInternal().getMaxY());
+				}
 				
-				minx = Math.min(minx, the_geom.getEnvelopeInternal().getMinX());
-				maxx = Math.max(maxx, the_geom.getEnvelopeInternal().getMaxX());
-				miny = Math.min(miny, the_geom.getEnvelopeInternal().getMinY());
-				maxy = Math.max(maxy, the_geom.getEnvelopeInternal().getMaxY());
 			}
 			
 			sfr.close();
-			dfr.close();
 			
 			return new Envelope(minx-buffer, maxx+buffer, miny-buffer, maxy+buffer);
 			
