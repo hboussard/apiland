@@ -1,8 +1,14 @@
 package fr.inrae.act.bagap.raster;
 
 import java.awt.Rectangle;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Set;
+import java.util.StringTokenizer;
 
+import org.jumpmind.symmetric.csv.CsvReader;
 import org.locationtech.jts.geom.Envelope;
 
 public class EnteteRaster {
@@ -168,6 +174,54 @@ public class EnteteRaster {
 		//System.out.println(ncols+" "+nrows);
 		
 		return new EnteteRaster(ncols, nrows, minX, maxX, minY, maxY, refEntete.cellsize, refEntete.noDataValue);
+	}
+	
+	public static EnteteRaster readFromAsciiGridHeader(String asciiHeader){
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(asciiHeader));
+
+			String line = br.readLine();
+			StringTokenizer st = new StringTokenizer(line, " ");
+			st.nextToken();
+			int width = Integer.parseInt(st.nextToken());
+
+			line = br.readLine();
+			st = new StringTokenizer(line, " ");
+			st.nextToken();
+			int height = Integer.parseInt(st.nextToken());
+
+			line = br.readLine();
+			st = new StringTokenizer(line, " ");
+			st.nextToken();
+			double minx = Double.parseDouble(st.nextToken());
+
+			line = br.readLine();
+			st = new StringTokenizer(line, " ");
+			st.nextToken();
+			double miny = Double.parseDouble(st.nextToken());
+			
+			line = br.readLine();
+			st = new StringTokenizer(line, " ");
+			st.nextToken();
+			float cellSize = Float.parseFloat(st.nextToken());
+
+			line = br.readLine();
+			st = new StringTokenizer(line, " ");
+			st.nextToken();
+			int noDataValue = Integer.parseInt(st.nextToken());
+						
+			br.close();
+			
+			double maxx = minx + width*cellSize;
+			double maxy = miny + height*cellSize;
+			
+			return new EnteteRaster(width, height, minx, maxx, miny, maxy, cellSize, noDataValue);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	/*

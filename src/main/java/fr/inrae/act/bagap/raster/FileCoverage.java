@@ -24,12 +24,12 @@ public class FileCoverage extends Coverage {
 	}
 	
 	@Override
-	public float[] getDatas(){
-		return getDatas(new Rectangle(0, 0, getEntete().width(), getEntete().height()));
+	public float[] getData(){
+		return getData(new Rectangle(0, 0, getEntete().width(), getEntete().height()));
 	}
 	
 	@Override
-	public float[] getDatas(Rectangle roi){
+	public float[] getData(Rectangle roi){
 		float[] datas = new float[roi.width * roi.height];
 		datas = coverage.getRenderedImage().getData(roi).getSamples(roi.x, roi.y, roi.width, roi.height, 0, datas);
 		return datas;
@@ -37,11 +37,13 @@ public class FileCoverage extends Coverage {
 	
 	@Override
 	public void dispose(){
-		PlanarImage planarImage = (PlanarImage) coverage.getRenderedImage();
-		ImageUtilities.disposeImage(planarImage);
-		planarImage = null;
-		coverage.dispose(true);
-		coverage = null;
+		if(coverage != null){
+			PlanarImage planarImage = (PlanarImage) coverage.getRenderedImage();
+			ImageUtilities.disposeImage(planarImage);
+			planarImage = null;
+			coverage.dispose(true);
+			coverage = null;
+		}
 	}
 	
 }

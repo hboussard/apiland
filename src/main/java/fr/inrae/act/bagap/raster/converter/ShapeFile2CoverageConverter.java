@@ -1,5 +1,6 @@
 package fr.inrae.act.bagap.raster.converter;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import java.util.TreeMap;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.files.ShpFiles;
+import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
 import org.locationtech.jts.geom.Envelope;
@@ -19,6 +21,9 @@ import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 
+import fr.inra.sad.bagap.apiland.core.space.Linear;
+import fr.inra.sad.bagap.apiland.core.space.Local;
+import fr.inra.sad.bagap.apiland.core.space.Surfacic;
 import fr.inrae.act.bagap.raster.Coverage;
 import fr.inrae.act.bagap.raster.CoverageManager;
 import fr.inrae.act.bagap.raster.EnteteRaster;
@@ -28,6 +33,35 @@ import fr.inrae.act.bagap.raster.TabCoverage;
 
 public class ShapeFile2CoverageConverter {
 
+	public static ShapeType getShapeType(String shape){
+	
+		try{
+			ShpFiles sf;
+			if(shape.endsWith(".shp")){
+				sf = new ShpFiles(shape);
+			}else{
+				sf = new ShpFiles(shape + ".shp");
+			}
+		
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
+			
+			ShapeType st = sfr.getHeader().getShapeType();
+		
+			sfr.close();
+			
+			return st; 
+			
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (ShapefileException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	
+		return null;
+	}
+	
 	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue){
 		
 		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
@@ -90,6 +124,13 @@ public class ShapeFile2CoverageConverter {
 			e.printStackTrace();
 		}	
 		return null;
+	}
+	
+	public static Coverage getSurfaceCoverage(String input, String attribute, EnteteRaster entete, int fillValue){
+		
+		float[] data = getSurfaceData(input, entete, attribute, fillValue);
+
+		return new TabCoverage(data, entete);
 	}
 	
 	public static Coverage getSurfaceCoverage(String input, String attribute, float cellSize, int noDataValue){

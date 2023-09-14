@@ -3,27 +3,14 @@ package fr.inrae.act.bagap.raster;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferFloat;
-import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.awt.image.WritableRenderedImage;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -33,7 +20,6 @@ import javax.media.jai.ParameterBlockJAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.RenderedOp;
 
-import org.apache.commons.io.FileUtils;
 import org.geotools.coverage.Category;
 import org.geotools.coverage.GridSampleDimension;
 import org.geotools.coverage.grid.GridCoverage2D;
@@ -41,9 +27,6 @@ import org.geotools.coverage.grid.GridCoverageFactory;
 import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.coverage.grid.io.AbstractGridFormat;
 import org.geotools.coverage.grid.io.GridCoverage2DReader;
-import org.geotools.coverage.grid.io.imageio.geotiff.GeoTiffIIOMetadataEncoder;
-import org.geotools.coverage.grid.io.imageio.geotiff.codes.GeoTiffGCSCodes;
-import org.geotools.coverage.util.CoverageUtilities;
 import org.geotools.data.DataSourceException;
 import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.gce.arcgrid.ArcGridWriter;
@@ -52,20 +35,13 @@ import org.geotools.gce.geotiff.GeoTiffReader;
 import org.geotools.gce.geotiff.GeoTiffWriteParams;
 import org.geotools.gce.geotiff.GeoTiffWriter;
 import org.geotools.geometry.Envelope2D;
-import org.geotools.geometry.GeneralEnvelope;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.image.util.ImageUtilities;
-import org.geotools.metadata.i18n.Vocabulary;
-import org.geotools.metadata.i18n.VocabularyKeys;
-import org.geotools.parameter.AbstractParameterDescriptor;
-import org.geotools.parameter.Parameter;
 import org.geotools.referencing.CRS;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.parameter.GeneralParameterValue;
-import org.opengis.parameter.ParameterValue;
 import org.opengis.parameter.ParameterValueGroup;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.sun.media.jai.codecimpl.util.RasterFactory;
@@ -76,7 +52,7 @@ public class CoverageManager {
 
 	// private static GeneralEnvelope env;
 	
-	private static CoordinateReferenceSystem crs;
+	//private static CoordinateReferenceSystem crs;
 
 	public static void writeGeotiffHuge(GridCoverage2D coverage, File out, float[] datas, int width, int height, int roiWidth, int roiHeight, int posX, int posY, double minX, double maxX, double minY, double maxY) {
 		
@@ -210,7 +186,7 @@ public class CoverageManager {
 				entetes.add(tile.getEntete());
 			}
 		}
-	
+		
 		EnteteRaster entete = EnteteRaster.getEntete(entetes);
 		
 		return new TileCoverage(tiles, entete);
@@ -755,9 +731,9 @@ public class CoverageManager {
 					
 			
 			if(outputRaster.endsWith("tif")){
-				CoverageManager.writeGeotiff(new File(outputRaster), datas, roiWidth, roiHeight, outMinX, maxx, miny, outMaxY);
+				CoverageManager.writeGeotiff(outputRaster, datas, roiWidth, roiHeight, outMinX, maxx, miny, outMaxY);
 			}else if(outputRaster.endsWith(".asc")){
-				CoverageManager.writeAsciiGrid("F://dreal/ophelie/cgtv_baie_lancieux.asc", datas, roiWidth, roiHeight, outMinX, miny, inCellSize, Raster.getNoDataValue());
+				CoverageManager.writeAsciiGrid(outputRaster, datas, roiWidth, roiHeight, outMinX, miny, inCellSize, Raster.getNoDataValue());
 			}else{
 				throw new IllegalArgumentException(outputRaster+" is not a recognize raster");
 			}

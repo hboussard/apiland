@@ -18,14 +18,66 @@ import java.util.TreeSet;
 import au.com.bytecode.opencsv.CSVReader;
 import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixManager;
+import fr.inrae.act.bagap.raster.CoverageManager;
+import fr.inrae.act.bagap.raster.EnteteRaster;
 
 import org.jumpmind.symmetric.csv.CsvReader;
 import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class SpatialCsvManager {
+	
+	public static void exportGeoTiff(String csv, String output, String variable, EnteteRaster entete) {
+		
+		double minX = entete.minx();
+		double minY = entete.miny();
+		int width = entete.width();
+		int height = entete.height();
+		float cellSize = entete.cellsize();
+		int noDataValue = entete.noDataValue();
+		
+		float[] data = new float[width*height];
+		
+		try {	
+			CsvReader cr = new CsvReader(csv);
+			cr.setDelimiter(';');
+			cr.readHeaders();
+			
+			cr.readRecord();
+			double x = Double.parseDouble(cr.get("X"));
+			double y = Double.parseDouble(cr.get("Y"));
+			int i=0, j=0;
+			for(double nextY=minY + (height-1)*cellSize + cellSize/2; nextY>=minY; nextY-=cellSize, j++){
+				i=0;
+				for(double nextX=minX + cellSize - cellSize/2; nextX<(minX + width*cellSize); nextX+=cellSize, i++){
+					
+					if((Math.abs(y-nextY) < (cellSize/2.0)) && (Math.abs(x-nextX) < (cellSize/2.0))){
+						
+						data[j*width+i] = Float.parseFloat(cr.get(variable));
+						
+						if(cr.readRecord()){
+							x = Double.parseDouble(cr.get("X"));
+							y = Double.parseDouble(cr.get("Y"));
+						}
+					}else{
+						
+						data[j*width+i] = noDataValue;
+					}
+				}
+			}
+			
+			CoverageManager.writeGeotiff(output, data, entete);
+			
+			cr.close();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 	
 	public static void exportAsciiGrid(String csv, String folder, String outputName, Matrix matrix) {
 		exportAsciiGrid(csv, folder, outputName, null, matrix.width(), matrix.height(), matrix.minX(), matrix.minY(), 1, matrix.cellsize(), matrix.noDataValue());

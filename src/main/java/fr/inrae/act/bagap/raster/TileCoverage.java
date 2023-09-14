@@ -20,6 +20,9 @@ public class TileCoverage extends Coverage {
 	}
 	
 	public Coverage getCoverage(int i, int j){
+		if(i<0 || i>=tileWidth || j<0 || j>= tileHeight){
+			return null;
+		}
 		return grid[j*ncols + i];
 	}
 	
@@ -69,7 +72,7 @@ public class TileCoverage extends Coverage {
 	}
 
 	@Override
-	public float[] getDatas() {
+	public float[] getData() {
 		float[] datas = new float[width()*height()];
 		float[] d;
 		Coverage tile;
@@ -77,7 +80,7 @@ public class TileCoverage extends Coverage {
 			for(int i=0; i<ncols; i++){
 				tile = grid[j*ncols + i];
 				if(tile != null){
-					d = tile.getDatas();
+					d = tile.getData();
 					for(int y=0; y<tileHeight; y++){
 						for(int x=0; x<tileWidth; x++){
 							datas[((j*tileHeight)+y)*width() + ((i*tileWidth)+x)] = d[y*tileWidth + x];
@@ -97,7 +100,7 @@ public class TileCoverage extends Coverage {
 	}
 
 	@Override
-	public float[] getDatas(Rectangle roi) {
+	public float[] getData(Rectangle roi) {
 		
 		EnteteRaster roiEntete = EnteteRaster.getEntete(getEntete(), roi); 
 		Envelope roiEnv = roiEntete.getEnvelope();
@@ -120,7 +123,7 @@ public class TileCoverage extends Coverage {
 						if(!(localEnv.getMinX() == localEnv.getMaxX() || localEnv.getMinY() == localEnv.getMaxY())){
 							localRoi = EnteteRaster.getROI(tile.getEntete(), localEnv);
 							if(localRoi.width != 0 && localRoi.height != 0){
-								localData = tile.getDatas(localRoi);
+								localData = tile.getData(localRoi);
 								tileRoi = EnteteRaster.getROI(roiEntete, localEnv);
 								for(int y=0; y<tileRoi.height; y++){
 									for(int x=0; x<tileRoi.width; x++){
@@ -140,9 +143,11 @@ public class TileCoverage extends Coverage {
 
 	@Override
 	public void dispose() {
-		for(Coverage tile : grid){
-			if(tile != null){
-				tile.dispose();
+		if(grid != null){
+			for(Coverage tile : grid){
+				if(tile != null){
+					tile.dispose();
+				}
 			}
 		}
 		grid = null;

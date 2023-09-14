@@ -51,7 +51,7 @@ public abstract class Pixel2PixelCoverage2AsciiCalculation {
 				//out = new float[entete.width() * h];
 				
 				for(int j=0; j<v.length; j++){
-					in[j] = coverages[j].getDatas(roi);
+					in[j] = coverages[j].getData(roi);
 				}
 				
 				for(int i=0; i<(entete.width() * h); i++){

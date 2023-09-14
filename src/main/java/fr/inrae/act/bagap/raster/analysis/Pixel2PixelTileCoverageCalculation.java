@@ -52,7 +52,7 @@ public abstract class Pixel2PixelTileCoverageCalculation {
 					
 					localEntete = localCoverage[0].getEntete();
 					for(int j=0; j<v.length; j++){
-						localDatas[j] = localCoverage[j].getDatas();
+						localDatas[j] = localCoverage[j].getData();
 						localCoverage[j].dispose();
 					}
 					
