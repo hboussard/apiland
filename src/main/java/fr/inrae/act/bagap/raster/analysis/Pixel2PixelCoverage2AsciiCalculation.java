@@ -1,9 +1,12 @@
-package fr.inrae.act.bagap.raster;
+package fr.inrae.act.bagap.raster.analysis;
 
 import java.awt.Rectangle;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import fr.inrae.act.bagap.raster.Coverage;
+import fr.inrae.act.bagap.raster.EnteteRaster;
 
 public abstract class Pixel2PixelCoverage2AsciiCalculation {
 

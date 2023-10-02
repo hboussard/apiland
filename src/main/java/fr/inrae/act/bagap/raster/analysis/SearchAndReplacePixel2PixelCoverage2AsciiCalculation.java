@@ -1,6 +1,9 @@
-package fr.inrae.act.bagap.raster;
+package fr.inrae.act.bagap.raster.analysis;
 
 import java.util.Map;
+
+import fr.inrae.act.bagap.raster.Coverage;
+import fr.inrae.act.bagap.raster.EnteteRaster;
 
 public class SearchAndReplacePixel2PixelCoverage2AsciiCalculation extends Pixel2PixelCoverage2AsciiCalculation {
 

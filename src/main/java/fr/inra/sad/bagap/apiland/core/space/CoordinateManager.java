@@ -24,12 +24,20 @@ public class CoordinateManager {
 		return x * m.cellsize() + m.minX() + m.cellsize()/2;
 	}
 	
+	public static double getProjectedX(EnteteRaster entete, int x){
+		return x * entete.cellsize() + entete.minx() + entete.cellsize()/2;
+	}
+	
 	public static double getProjectedX(double minX, double cellSize, int x){
 		return x * cellSize + minX + cellSize/2;
 	}
 	
 	public static double getProjectedY(Matrix m, int y){
 		return m.cellsize() * (m.height() - y) + m.minY() - m.cellsize()/2;
+	}
+	
+	public static double getProjectedY(EnteteRaster entete, int y){
+		return entete.cellsize() * (entete.height() - y) + entete.miny() - entete.cellsize()/2;
 	}
 	
 	public static double getProjectedY(double minY, double cellSize, int height, int y){

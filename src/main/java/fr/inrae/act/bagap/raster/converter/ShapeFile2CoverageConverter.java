@@ -438,6 +438,89 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 	
+	public static Coverage getLinearCoverage(String input, EnteteRaster entete, float value, float fillValue){
+		
+		float[] data = getLinearData(input, entete, value, fillValue);
+
+		return new TabCoverage(data, entete);
+	}
+	
+	private static float[] getLinearData(String inputShape, EnteteRaster entete, float value, float fillValue){
+		try{
+			
+			ShpFiles sf = new ShpFiles(inputShape);
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new GeometryFactory());
+			float[] datas = new float[entete.width()*entete.height()];
+			Arrays.fill(datas, fillValue);
+			
+			Geometry the_geom;
+			LineString the_line;
+			RasterLineString rls;
+			int indrp;
+			int xdelta, ydelta, xrp, yrp;
+			while(sfr.hasNext()){
+				
+				the_geom = (Geometry) sfr.nextRecord().shape();
+				
+				if(the_geom instanceof LineString){
+					the_line = (LineString) the_geom;
+					
+					rls = RasterLineString.getRasterLineString(the_line, entete.minx(), entete.maxy(), entete.cellsize());
+					indrp = 0;
+					xdelta = rls.getDeltaI();
+					ydelta = rls.getDeltaJ();
+					for(double v : rls.getDatas()){
+						if(v == 1){
+							xrp = indrp % rls.getWidth();
+							yrp = indrp / rls.getWidth();
+							if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
+								datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = value;
+							}
+						}
+						indrp++;
+					}	
+					
+				}else if(the_geom instanceof MultiLineString){
+					
+					for(int i=0; i<the_geom.getNumGeometries(); i++){
+						the_line = (LineString) ((MultiLineString) the_geom).getGeometryN(i);
+						
+						rls = RasterLineString.getRasterLineString(the_line, entete.minx(), entete.maxy(), entete.cellsize());
+						indrp = 0;
+						xdelta = rls.getDeltaI();
+						ydelta = rls.getDeltaJ();
+						for(double v : rls.getDatas()){
+							if(v == 1){
+								xrp = indrp % rls.getWidth();
+								yrp = indrp / rls.getWidth();
+								if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
+									datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = value;
+								}
+							}
+							indrp++;
+						}
+					}
+					
+				}else{
+					System.out.println(the_geom);
+					//throw new IllegalArgumentException("probleme geometrique");
+				}
+			}
+			
+			sfr.close();
+			sf.dispose();
+			
+			return datas;
+			
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		return null;
+	}
+	
 	public static Coverage getLinearCoverage(String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){
 		
 		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);

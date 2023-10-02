@@ -19,6 +19,7 @@ import javax.media.jai.JAI;
 import javax.media.jai.ParameterBlockJAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.RenderedOp;
+import javax.rmi.CORBA.Util;
 
 import org.geotools.coverage.Category;
 import org.geotools.coverage.GridSampleDimension;
@@ -46,7 +47,10 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.sun.media.jai.codecimpl.util.RasterFactory;
 
+import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
+import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixManager;
 
 public class CoverageManager {
 
@@ -631,6 +635,12 @@ public class CoverageManager {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally{
+			try {
+				Tool.copy(DynamicLayerFactory.class.getResourceAsStream(MatrixManager.epsg()), ascii.replace(".asc", "")+".prj");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
