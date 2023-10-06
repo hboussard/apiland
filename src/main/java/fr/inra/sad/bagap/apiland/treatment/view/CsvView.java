@@ -1,10 +1,10 @@
 package fr.inra.sad.bagap.apiland.treatment.view;
 
-import fr.inra.sad.bagap.apiland.analysis.matrix.util.SpatialCsvManager;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.treatment.Treatment;
 import fr.inra.sad.bagap.apiland.treatment.TreatmentObserver;
 import fr.inra.sad.bagap.apiland.treatment.TreatmentState;
+import fr.inrae.act.bagap.apiland.util.SpatialCsvManager;
 
 public class CsvView implements TreatmentObserver {
 

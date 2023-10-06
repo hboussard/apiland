@@ -9,8 +9,8 @@ public class SearchAndReplacePixel2PixelCoverage2AsciiCalculation extends Pixel2
 
 	private Map<Float, Float> sarMap;
 	
-	public SearchAndReplacePixel2PixelCoverage2AsciiCalculation(String asciiOut, EnteteRaster entete, Map<Float, Float> sarMap, Coverage... coverages) {
-		super(asciiOut, entete, coverages);
+	public SearchAndReplacePixel2PixelCoverage2AsciiCalculation(String asciiOut, EnteteRaster entete, Map<Float, Float> sarMap, Coverage coverage) {
+		super(asciiOut, entete, coverage);
 		this.sarMap = sarMap;
 	}
 

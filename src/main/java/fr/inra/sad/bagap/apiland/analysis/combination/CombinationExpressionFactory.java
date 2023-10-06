@@ -9,7 +9,7 @@ import fr.inra.sad.bagap.apiland.analysis.ascii.Pixel2PixelCombinationExpression
 import fr.inra.sad.bagap.apiland.analysis.combination.CombinationParser.EvaluateContext;
 import fr.inra.sad.bagap.apiland.analysis.matrix.Pixel2PixelCombinationExpressionMatrixCalculation;
 import fr.inra.sad.bagap.apiland.analysis.matrix.window.shape.distance.CombinationExpressionDistanceFunction;
-import fr.inra.sad.bagap.apiland.analysis.tab.Pixel2PixelCombinationExpressionTabCalculation;
+import fr.inra.sad.bagap.apiland.analysis.tab.CombinationExpressionPixel2PixelTabCalculation;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 
 public class CombinationExpressionFactory {
@@ -40,10 +40,10 @@ public class CombinationExpressionFactory {
 		return new Pixel2PixelCombinationExpressionAsciiGridCalculation(listener.getCombinationExpression(), names, outAscii, inAscii);
 	}
 	
-	public static Pixel2PixelCombinationExpressionTabCalculation createPixel2PixelTabCalculation(float[] outAscii, String combination, int noDataValue, String[] names, float[]... inAscii){
+	public static CombinationExpressionPixel2PixelTabCalculation createPixel2PixelTabCalculation(float[] outAscii, String combination, int noDataValue, String[] names, float[]... inAscii){
 		ConcreteCombinationExpressionListener listener = parse(combination);
 		
-		return new Pixel2PixelCombinationExpressionTabCalculation(outAscii, listener.getCombinationExpression(), noDataValue, names, inAscii);
+		return new CombinationExpressionPixel2PixelTabCalculation(outAscii, listener.getCombinationExpression(), noDataValue, names, inAscii);
 	}
 	
 	public static CombinationExpressionDistanceFunction createDistanceFunction(String combination, double distanceMax){

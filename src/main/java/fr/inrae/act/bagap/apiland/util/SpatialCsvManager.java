@@ -1,4 +1,4 @@
-package fr.inra.sad.bagap.apiland.analysis.matrix.util;
+package fr.inrae.act.bagap.apiland.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,8 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,6 +21,9 @@ import java.util.TreeSet;
 import au.com.bytecode.opencsv.CSVReader;
 import fr.inra.sad.bagap.apiland.core.element.manager.DynamicLayerFactory;
 import fr.inra.sad.bagap.apiland.core.element.manager.Tool;
+import fr.inra.sad.bagap.apiland.core.space.CoordinateManager;
+import fr.inra.sad.bagap.apiland.core.space.Point;
+import fr.inra.sad.bagap.apiland.core.space.impl.raster.RefPoint;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.Matrix;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.matrix.MatrixManager;
 import fr.inrae.act.bagap.raster.CoverageManager;
@@ -27,6 +33,215 @@ import org.jumpmind.symmetric.csv.CsvReader;
 import org.jumpmind.symmetric.csv.CsvWriter;
 
 public class SpatialCsvManager {
+	
+	public static void merge(String outputCsv, String[] inputCsv, Set<String> ids){
+		
+		try {
+			CsvWriter cw = new CsvWriter(outputCsv);
+			cw.setDelimiter(';');
+			for(String id : ids){
+				cw.write(id);
+			}
+			
+			Map<CsvReader, Set<Integer>> readers = new HashMap<CsvReader, Set<Integer>>();
+			CsvReader reader;
+			Set<Integer> index;
+			for(String icsv : inputCsv){
+				
+				reader = new CsvReader(icsv);
+				reader.setDelimiter(';');
+				reader.readHeaders();
+				
+				index = new HashSet<Integer>();
+				for(int c=0; c<reader.getHeaderCount(); c++){
+					if(!ids.contains(reader.getHeader(c))){
+						index.add(c);
+					}
+				}
+				readers.put(reader, index);	
+			}
+			
+			for(Entry<CsvReader, Set<Integer>> r : readers.entrySet()){
+				for(int ind : r.getValue()){
+					cw.write(r.getKey().getHeader(ind));
+				}
+			}
+			cw.endRecord();
+			
+			boolean again = true;
+			boolean first;
+			while(again){
+				first = true;
+				for(Entry<CsvReader, Set<Integer>> r : readers.entrySet()){
+					
+					if(r.getKey().readRecord()){
+						if(first){
+							for(String id : ids){
+								cw.write(r.getKey().get(id));
+							}
+							first = false;
+						}
+						
+						for(int i : r.getValue()){
+							cw.write(r.getKey().get(i));
+						}
+					}else{
+						again = false;
+					}
+				}
+				cw.endRecord();
+			}
+						
+			cw.close();
+			for(CsvReader r : readers.keySet()){
+				r.close();
+			}
+			readers.clear();
+			readers = null;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public static void mergeXY(String outputCsv, String[] inputCsv, String idX, String idY, EnteteRaster entete){
+		
+		try {
+			CsvWriter cw = new CsvWriter(outputCsv);
+			cw.setDelimiter(';');
+			cw.write(idX);
+			cw.write(idY);
+			
+			Map<CsvReader, Set<Integer>> readers = new HashMap<CsvReader, Set<Integer>>();
+			CsvReader reader;
+			Set<Integer> index;
+			for(String icsv : inputCsv){
+				
+				reader = new CsvReader(icsv);
+				reader.setDelimiter(';');
+				reader.readHeaders();
+				
+				index = new HashSet<Integer>();
+				for(int c=0; c<reader.getHeaderCount(); c++){
+					if(!idX.equalsIgnoreCase(reader.getHeader(c)) && !idY.equalsIgnoreCase(reader.getHeader(c))){
+						index.add(c);
+					}
+				}
+				readers.put(reader, index);	
+			}
+			
+			for(Entry<CsvReader, Set<Integer>> r : readers.entrySet()){
+				for(int ind : r.getValue()){
+					cw.write(r.getKey().getHeader(ind));
+				}
+			}
+			cw.endRecord();
+			
+			Map<CsvReader, Map<RefPoint, List<String>>> waits = new HashMap<CsvReader, Map<RefPoint, List<String>>>();
+			Map<CsvReader, List<String>> local;
+			boolean export;
+			RefPoint lp, rp;
+			List<String> values;
+			for(int j=0; j<entete.height(); j++){
+				for(int i=0; i<entete.width(); i++){
+					export = false;
+					lp = new RefPoint(CoordinateManager.getProjectedX(entete, i), CoordinateManager.getProjectedY(entete, j));
+					local = new HashMap<CsvReader, List<String>>();
+					for(Entry<CsvReader, Set<Integer>> r : readers.entrySet()){
+						
+						if(waits.containsKey(r.getKey())){
+							if(waits.get(r.getKey()).containsKey(lp)){
+								local.put(r.getKey(), waits.get(r.getKey()).get(lp));
+								waits.remove(r.getKey());
+								export = true;
+							}else{
+								values = new ArrayList<String>();
+								for(int ind : r.getValue()){
+									values.add(entete.noDataValue()+"");
+								}
+								local.put(r.getKey(), values);
+							}
+						}else if(r.getKey().readRecord()){
+							rp = new RefPoint(Double.parseDouble(r.getKey().get(idX)), Double.parseDouble(r.getKey().get(idY)));
+							values = new ArrayList<String>();
+							for(int ind : r.getValue()){
+								values.add(r.getKey().get(ind));
+							}
+							if(rp.equals(lp)){
+								local.put(r.getKey(), values);
+								export = true;
+							}else{
+								if(!waits.containsKey(r.getKey())){
+									waits.put(r.getKey(), new HashMap<RefPoint, List<String>>());
+								}
+								waits.get(r.getKey()).put(rp, values);
+								values = new ArrayList<String>();
+								for(int ind : r.getValue()){
+									values.add(entete.noDataValue()+"");
+								}
+								local.put(r.getKey(), values);
+							}
+						}else{
+							values = new ArrayList<String>();
+							for(int ind : r.getValue()){
+								values.add(entete.noDataValue()+"");
+							}
+							local.put(r.getKey(), values);
+						}
+					}
+					
+					if(export){
+						cw.write(CoordinateManager.getProjectedX(entete, i)+"");
+						cw.write(CoordinateManager.getProjectedY(entete, j)+"");
+						for(Entry<CsvReader, List<String>> r : local.entrySet()){
+							for(String v : r.getValue()){
+								cw.write(v);
+							}
+						}
+						cw.endRecord();
+					}
+					//System.out.println(CoordinateManager.getProjectedX(entete, i)+" "+CoordinateManager.getProjectedY(entete, j));
+					
+				}	
+			}
+			/*
+			while(again){
+				
+				for(Entry<CsvReader, Set<Integer>> r : readers.entrySet()){
+					
+					if(r.getKey().readRecord()){
+						if(first){
+							for(String id : ids){
+								cw.write(r.getKey().get(id));
+							}
+							first = false;
+						}
+						
+						for(int i : r.getValue()){
+							cw.write(r.getKey().get(i));
+						}
+					}else{
+						again = false;
+					}
+				}
+				cw.endRecord();
+			}
+					*/	
+			cw.close();
+			for(CsvReader r : readers.keySet()){
+				r.close();
+			}
+			readers.clear();
+			readers = null;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 	
 	public static void exportGeoTiff(String csv, String output, String variable, EnteteRaster entete) {
 		

@@ -2,7 +2,7 @@ package fr.inra.sad.bagap.apiland.analysis.tab;
 
 import fr.inra.sad.bagap.apiland.analysis.combination.expression.CombinationExpression;
 
-public class Pixel2PixelCombinationExpressionTabCalculation extends Pixel2PixelTabCalculation {
+public class CombinationExpressionPixel2PixelTabCalculation extends Pixel2PixelTabCalculation {
 
 	private String[] names;
 	
@@ -10,7 +10,7 @@ public class Pixel2PixelCombinationExpressionTabCalculation extends Pixel2PixelT
 	
 	private int noDataValue;
 	
-	public Pixel2PixelCombinationExpressionTabCalculation(float[] outTab, CombinationExpression expression, int noDataValue, String[] names, float[]... inTab) {
+	public CombinationExpressionPixel2PixelTabCalculation(float[] outTab, CombinationExpression expression, int noDataValue, String[] names, float[]... inTab) {
 		super(outTab, inTab);
 		this.names = names;
 		this.expression = expression;
