@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 
 import fr.inra.sad.bagap.apiland.analysis.Analysis;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
-import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 public class ArrayRCMDistanceAnalysis extends Analysis {
 	
@@ -27,7 +26,7 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 	private Map<Float, Set<Pixel>> waits;
 
 	public ArrayRCMDistanceAnalysis(float[] outDatas, float[] frictionDatas, int width, int height, float cellSize, int noDataValue, Map<Float, Set<Pixel>> waits) {
-		this(outDatas, frictionDatas, width, height, cellSize, noDataValue, waits, Raster.getNoDataValue());
+		this(outDatas, frictionDatas, width, height, cellSize, noDataValue, waits, noDataValue);
 	}
 
 	public ArrayRCMDistanceAnalysis(float[] outDatas, float[] frictionDatas, int width, int height, float cellSize, int noDataValue, Map<Float, Set<Pixel>> waits, double threshold) {
@@ -38,7 +37,7 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 		this.cellSize = cellSize;
 		this.noDataValue = noDataValue;
 		this.waits = waits;
-		if(threshold == Raster.getNoDataValue()){
+		if(threshold == noDataValue){
 			this.threshold = Integer.MAX_VALUE;
 		}else{
 			this.threshold = threshold;

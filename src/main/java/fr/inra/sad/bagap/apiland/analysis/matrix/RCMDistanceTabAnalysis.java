@@ -129,7 +129,8 @@ public class RCMDistanceTabAnalysis extends Analysis {
 		}
 		//System.out.println("4");
 		if(hasValue){
-			ArrayRCMDistanceAnalysis rcm = new ArrayRCMDistanceAnalysis(output, inFriction, width, height, cellSize, waits);
+			//ArrayRCMDistanceAnalysis rcm = new ArrayRCMDistanceAnalysis(output, inFriction, width, height, cellSize, waits);
+			ArrayRCMDistanceAnalysis rcm = new ArrayRCMDistanceAnalysis(output, inFriction, width, height, cellSize, Raster.getNoDataValue(), waits, threshold);
 			setResult(rcm.allRun());
 		}
 		

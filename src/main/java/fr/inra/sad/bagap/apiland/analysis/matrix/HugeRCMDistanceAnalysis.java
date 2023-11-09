@@ -244,7 +244,8 @@ public class HugeRCMDistanceAnalysis extends Analysis {
 						}
 						
 						if(hasValue){
-							ArrayRCMDistanceAnalysis rcm = new ArrayRCMDistanceAnalysis(outDatas, frictionDatas, roiWidth, roiHeight, cellSize, waits);
+							ArrayRCMDistanceAnalysis rcm = new ArrayRCMDistanceAnalysis(outDatas, frictionDatas, roiWidth, roiHeight, cellSize, Raster.getNoDataValue(), waits, threshold);
+							//ArrayRCMDistanceAnalysis rcm = new ArrayRCMDistanceAnalysis(outDatas, frictionDatas, roiWidth, roiHeight, cellSize, waits);
 							outDatas = (float[]) rcm.allRun();
 							
 							// maj des bords
@@ -383,7 +384,8 @@ public class HugeRCMDistanceAnalysis extends Analysis {
 							// récupération des valeurs de friction
 							float[] frictionDatas = CoverageManager.getData(frictionCoverage, x, y, roiWidth, roiHeight);
 							
-							ArrayRCMDistanceAnalysis ccd = new ArrayRCMDistanceAnalysis(outDatas, frictionDatas, roiWidth, roiHeight, cellSize, waits);
+							ArrayRCMDistanceAnalysis ccd = new ArrayRCMDistanceAnalysis(outDatas, frictionDatas, roiWidth, roiHeight, cellSize, Raster.getNoDataValue(), waits, threshold);
+							//ArrayRCMDistanceAnalysis ccd = new ArrayRCMDistanceAnalysis(outDatas, frictionDatas, roiWidth, roiHeight, cellSize, waits);
 							outDatas = (float[]) ccd.allRun();
 								
 							// maj des bords
