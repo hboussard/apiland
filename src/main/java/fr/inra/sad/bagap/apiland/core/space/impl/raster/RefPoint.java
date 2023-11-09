@@ -42,9 +42,9 @@ public class RefPoint implements Comparable<RefPoint>{
 	
 	@Override
 	public int compareTo(RefPoint p) {
-		if(this.Y < p.Y){
+		if(this.Y > p.Y){
 			return -1;
-		}else if(this.Y > p.Y){
+		}else if(this.Y < p.Y){
 			return 1;
 		}else{
 			if(this.X < p.X){

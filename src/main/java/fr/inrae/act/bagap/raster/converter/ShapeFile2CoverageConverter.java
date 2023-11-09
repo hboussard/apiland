@@ -126,6 +126,13 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 	
+	public static Coverage getSurfaceCoverage(float[] data, String input, String attribute, EnteteRaster entete){
+		
+		float[] datas = getSurfaceData(data, input, entete, attribute);
+
+		return new TabCoverage(datas, entete);
+	}
+	
 	public static Coverage getSurfaceCoverage(String input, String attribute, EnteteRaster entete, int fillValue){
 		
 		float[] data = getSurfaceData(input, entete, attribute, fillValue);
@@ -170,6 +177,92 @@ public class ShapeFile2CoverageConverter {
 		float[] data = getSurfaceData(input, entete, attribute, codes, fillValue);
 
 		return new TabCoverage(data, entete);
+	}
+	
+	private static float[] getSurfaceData(float[] datas, String inputShape, EnteteRaster entete, String attribute){
+		try{
+			
+			ShpFiles sf = new ShpFiles(inputShape);
+			ShapefileReader sfr = new ShapefileReader(sf, true, false, new GeometryFactory());
+			DbaseFileReader dfr = new DbaseFileReader(sf, true,	Charset.defaultCharset());
+			DbaseFileHeader dfh = dfr.getHeader();
+			int pos = -1;
+			for (int f=0; f<dfh.getNumFields(); f++) {
+				if (dfh.getFieldName(f).equalsIgnoreCase(attribute)) {
+					pos = f;
+				}
+			}
+			
+			Geometry the_geom;
+			Polygon the_poly;
+			RasterPolygon rp;
+			int indrp;
+			int xdelta, ydelta, xrp, yrp;
+			String value;
+			while(sfr.hasNext()){
+				dfr.read();
+				value = dfr.readField(pos).toString();
+				
+				the_geom = (Geometry) sfr.nextRecord().shape();
+				
+				if(the_geom instanceof Polygon){
+					the_poly = (Polygon) the_geom;
+					
+					rp = RasterPolygon.getRasterPolygon(the_poly, entete.minx(), entete.maxy(), entete.cellsize());
+					indrp = 0;
+					xdelta = rp.getDeltaI();
+					ydelta = rp.getDeltaJ();
+					for(double v : rp.getDatas()){
+						if(v == 1){
+							xrp = indrp % rp.getWidth();
+							yrp = indrp / rp.getWidth();
+							if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
+								datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = Float.parseFloat(value);
+							}
+						}
+						indrp++;
+					}	
+					
+				}else if(the_geom instanceof MultiPolygon){
+					
+					for(int i=0; i<the_geom.getNumGeometries(); i++){
+						the_poly = (Polygon) ((MultiPolygon) the_geom).getGeometryN(i);
+						
+						rp = RasterPolygon.getRasterPolygon(the_poly, entete.minx(), entete.maxy(), entete.cellsize());
+						indrp = 0;
+						xdelta = rp.getDeltaI();
+						ydelta = rp.getDeltaJ();
+						for(double v : rp.getDatas()){
+							if(v == 1){
+								xrp = indrp % rp.getWidth();
+								yrp = indrp / rp.getWidth();
+								if(xdelta+xrp >= 0 && xdelta+xrp < entete.width() && ydelta+yrp >= 0 && ydelta+yrp < entete.height()){
+									datas[(ydelta+yrp)*entete.width() + (xdelta+xrp)] = Float.parseFloat(value);
+								}
+							}
+							indrp++;
+						}
+					}
+					
+				}else{
+					System.out.println(the_geom);
+					//throw new IllegalArgumentException("probleme geometrique");
+				}
+			}
+			
+			sfr.close();
+			dfr.close();
+			sf.dispose();
+			
+			return datas;
+			
+		} catch (ShapefileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		return null;
 	}
 	
 	private static float[] getSurfaceData(String inputShape, EnteteRaster entete, String attribute, float fillValue){
@@ -519,6 +612,13 @@ public class ShapeFile2CoverageConverter {
 		}	
 		
 		return null;
+	}
+	
+	public static Coverage getLinearCoverage(String input, String attribute, EnteteRaster entete, float fillValue, double buffer){
+		
+		float[] data = getLinearData(input, entete, attribute, fillValue, buffer);
+
+		return new TabCoverage(data, entete);
 	}
 	
 	public static Coverage getLinearCoverage(String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){

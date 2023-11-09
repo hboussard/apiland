@@ -11,6 +11,8 @@ import fr.inra.sad.bagap.apiland.core.space.impl.raster.Pixel;
 import fr.inra.sad.bagap.apiland.core.space.impl.raster.Raster;
 
 public class ArrayRCMDistanceAnalysis extends Analysis {
+	
+	private int indexG = 0;
 
 	private float[] outDatas, frictionDatas;
 
@@ -20,18 +22,21 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 	
 	private float cellSize;
 	
+	private int noDataValue;
+	
 	private Map<Float, Set<Pixel>> waits;
 
-	public ArrayRCMDistanceAnalysis(float[] outDatas, float[] frictionDatas, int width, int height, float cellSize, Map<Float, Set<Pixel>> waits) {
-		this(outDatas, frictionDatas, width, height, cellSize, waits, Raster.getNoDataValue());
+	public ArrayRCMDistanceAnalysis(float[] outDatas, float[] frictionDatas, int width, int height, float cellSize, int noDataValue, Map<Float, Set<Pixel>> waits) {
+		this(outDatas, frictionDatas, width, height, cellSize, noDataValue, waits, Raster.getNoDataValue());
 	}
 
-	public ArrayRCMDistanceAnalysis(float[] outDatas, float[] frictionDatas, int width, int height, float cellSize, Map<Float, Set<Pixel>> waits, double threshold) {
+	public ArrayRCMDistanceAnalysis(float[] outDatas, float[] frictionDatas, int width, int height, float cellSize, int noDataValue, Map<Float, Set<Pixel>> waits, double threshold) {
 		this.outDatas = outDatas;
 		this.frictionDatas = frictionDatas;
 		this.width = width;
 		this.height = height;
 		this.cellSize = cellSize;
+		this.noDataValue = noDataValue;
 		this.waits = waits;
 		if(threshold == Raster.getNoDataValue()){
 			this.threshold = Integer.MAX_VALUE;
@@ -54,14 +59,12 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 			diffusionPaquet();
 			
 		}
-		
+		//System.out.println("nombre de diffusions = "+indexG);
 		setResult(outDatas);
 	}
 
 	private void setPixelAndValue(Map<Float, Set<Pixel>> waits, Pixel pixel, float value) {
-		//System.out.println("before "+value);
 		value = (float) (Math.floor(value * 100.0)/100.0);
-		//System.out.println("after "+value);
 		if (!waits.containsKey(value)) {
 			waits.put(value, new HashSet<Pixel>());
 		}
@@ -81,7 +84,7 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 			Pixel p;
 			while(itePixel.hasNext()){
 				p = itePixel.next();
-				itePixel.remove();
+				//itePixel.remove();
 				
 				diffusion(p, dd);
 			}
@@ -89,9 +92,10 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 	}
 	
 	private void diffusion(Pixel p, double dd) {
+		++indexG;
 		if (threshold > dd) { 
 			double vd = outDatas[p.x()+p.y()*width];  // valeur au point de diffusion
-			if (vd != Raster.getNoDataValue()) {
+			if (vd != noDataValue) {
 				double fd = frictionDatas[p.x()+p.y()*width]; // friction au point de diffusion
 				
 				Pixel np;
@@ -102,16 +106,18 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 						
 					if(np.x() >= 0 && np.x() < width && np.y() >= 0 && np.y() < height){
 						v = outDatas[np.x()+np.y()*width]; // valeur au point cardinal
-						if (v != Raster.getNoDataValue()) {
+						if (v != noDataValue) {
 							float fc = frictionDatas[np.x()+np.y()*width];
 							d = (float) (dd + (cellSize / 2) * fd + (cellSize / 2) * fc); // distance au point cardinal
 							if (v == -2 || d < v) { // MAJ ?
-								outDatas[np.x()+np.y()*width] = (float) d;
+								outDatas[np.x()+np.y()*width] = d;
 								
-								/*if(v != -2){
-									waits.get(v).remove(np);
-								}*/
-								setPixelAndValue(waits, np, (float) d);
+								if(v != -2){
+									float value = (float) (Math.floor(v * 100.0)/100.0);
+									waits.get(value).remove(np);
+								}
+								
+								setPixelAndValue(waits, np, d);
 							}
 						}
 					}
@@ -122,16 +128,18 @@ public class ArrayRCMDistanceAnalysis extends Analysis {
 						
 					if(np.x() >= 0 && np.x() < width && np.y() >= 0 && np.y() < height){
 						v = outDatas[np.x()+np.y()*width]; // valeur au point cardinal
-						if (v != Raster.getNoDataValue()) {
+						if (v != noDataValue) {
 							float fc = frictionDatas[np.x()+np.y()*width];
 							d = (float) (dd + (cellSize * Math.sqrt(2) / 2) * fd + (cellSize * Math.sqrt(2) / 2) * fc); // distance au point diagonal
 							if (v == -2 || d < v) { // MAJ ?
-								outDatas[np.x()+np.y()*width] = (float) d;
+								outDatas[np.x()+np.y()*width] = d;
 								
-								/*if(v != -2){
-									waits.get(v).remove(np);
-								}*/
-								setPixelAndValue(waits, np, (float) d);
+								if(v != -2){
+									float value = (float) (Math.floor(v * 100.0)/100.0);
+									waits.get(value).remove(np);
+								}
+								
+								setPixelAndValue(waits, np, d);
 							}
 						}
 					}

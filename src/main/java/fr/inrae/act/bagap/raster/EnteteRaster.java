@@ -2,13 +2,10 @@ package fr.inrae.act.bagap.raster;
 
 import java.awt.Rectangle;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.jumpmind.symmetric.csv.CsvReader;
 import org.locationtech.jts.geom.Envelope;
 
 public class EnteteRaster {
@@ -139,7 +136,28 @@ public class EnteteRaster {
 		return new Rectangle(x, y, ncols, nrows);
 	}
 	
-	public static EnteteRaster getEntete(EnteteRaster refEntete, Envelope envelope){
+	public static EnteteRaster getEntete(EnteteRaster refEntete, Envelope env){
+		
+		int ncols = new Double(Math.round(env.getMaxX() - env.getMinX()) / refEntete.cellsize).intValue();
+		if(Math.round(env.getMaxX() - env.getMinX()) % refEntete.cellsize != 0){
+			ncols++;
+		}
+		
+		int nrows = new Double(Math.round(env.getMaxY() - env.getMinY()) / refEntete.cellsize).intValue();
+		if(Math.round(env.getMaxY() - env.getMinY()) % refEntete.cellsize != 0){
+			nrows++;
+		}
+		
+		int x =   new Double(Math.round(env.getMinX() - refEntete.minx) / refEntete.cellsize).intValue();
+		
+		int y =   new Double(Math.round(refEntete.maxy - env.getMaxY()) / refEntete.cellsize).intValue();
+		
+		double minX = refEntete.minx + x*refEntete.cellsize;
+		double maxX = minX + ncols*refEntete.cellsize;
+		double maxY = refEntete.maxy - y*refEntete.cellsize;
+		double minY = maxY - nrows*refEntete.cellsize;
+		
+		/*
 		int deltaMinX = new Double((envelope.getMinX() - refEntete.minx)/refEntete.cellsize).intValue();
 		int deltaMaxX = new Double((refEntete.maxx - envelope.getMaxX())/refEntete.cellsize).intValue();
 		int deltaMinY = new Double((envelope.getMinY() - refEntete.miny)/refEntete.cellsize).intValue();
@@ -170,7 +188,7 @@ public class EnteteRaster {
 		
 		int ncols = refEntete.width - deltaMinX - deltaMaxX;
 		int nrows = refEntete.height - deltaMinY - deltaMaxY;
-		
+		*/
 		//System.out.println(ncols+" "+nrows);
 		
 		return new EnteteRaster(ncols, nrows, minX, maxX, minY, maxY, refEntete.cellsize, refEntete.noDataValue);
