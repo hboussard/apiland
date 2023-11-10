@@ -2,10 +2,16 @@ package fr.inrae.act.bagap.raster;
 
 import java.awt.Rectangle;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.locationtech.jts.geom.Envelope;
 
 public class EnteteRaster {
@@ -194,6 +200,32 @@ public class EnteteRaster {
 		return new EnteteRaster(ncols, nrows, minX, maxX, minY, maxY, refEntete.cellsize, refEntete.noDataValue);
 	}
 	
+	public static EnteteRaster read(String enteteFile){
+		try{
+			Properties properties = new Properties();
+	        Reader in = new InputStreamReader(new FileInputStream(enteteFile), "UTF8");
+			properties.load(in);
+			in.close();
+			
+			int width = Integer.parseInt(properties.getProperty("width"));
+			int height = Integer.parseInt(properties.getProperty("height"));
+			double minx = Double.parseDouble(properties.getProperty("minx"));
+			double maxx = Double.parseDouble(properties.getProperty("maxx"));
+			double miny = Double.parseDouble(properties.getProperty("miny"));
+			double maxy = Double.parseDouble(properties.getProperty("maxy"));
+			float cellsize = Float.parseFloat(properties.getProperty("cellsize"));
+			int noDataValue = Integer.parseInt(properties.getProperty("nodata_value"));
+			
+			return new EnteteRaster(width, height, minx, maxx, miny, maxy, cellsize, noDataValue);
+			
+		}catch(FileNotFoundException ex){
+			ex.printStackTrace();
+		}catch(IOException ex){
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static EnteteRaster readFromAsciiGridHeader(String asciiHeader){
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(asciiHeader));
@@ -240,6 +272,30 @@ public class EnteteRaster {
 		}
 		
 		return null;
+	}
+	
+	public static void export(EnteteRaster entete, String paramFile){
+		try{
+			Properties properties = new Properties();
+			
+			properties.setProperty("width", entete.width+"");
+			properties.setProperty("height", entete.height+"");
+			properties.setProperty("minx", entete.minx+"");
+			properties.setProperty("maxx", entete.maxx+"");
+			properties.setProperty("miny", entete.miny+"");
+			properties.setProperty("maxy", entete.maxy+"");
+			properties.setProperty("cellsize", entete.cellsize+"");
+			properties.setProperty("nodata_value", entete.noDataValue+"");
+			
+			FileOutputStream out = new FileOutputStream(paramFile);
+			properties.store(out,"parameter file generated with APILand");
+			out.close();
+		}catch(FileNotFoundException ex){
+			ex.printStackTrace();
+		}catch(IOException ex){
+			ex.printStackTrace();
+		} 
+		
 	}
 
 	/*
