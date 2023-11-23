@@ -12,7 +12,11 @@ import java.io.Reader;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import org.geotools.referencing.CRS;
 import org.locationtech.jts.geom.Envelope;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 public class EnteteRaster {
 
@@ -24,6 +28,8 @@ public class EnteteRaster {
 	
 	private int noDataValue;
 	
+	private CoordinateReferenceSystem crs;
+	
 	public EnteteRaster(int width, int height, double minx, double maxx, double miny, double maxy, float cellsize, int noDataValue){
 		this.width = width;
 		this.height = height;
@@ -33,11 +39,40 @@ public class EnteteRaster {
 		this.maxy = maxy;
 		this.cellsize = cellsize;
 		this.noDataValue = noDataValue;
+		try {
+			this.crs = CRS.decode("EPSG:2154");
+		} catch (FactoryException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public EnteteRaster(int width, int height, double minx, double maxx, double miny, double maxy, float cellsize, int noDataValue, CoordinateReferenceSystem crs){
+		this.width = width;
+		this.height = height;
+		this.minx = minx;
+		this.maxx = maxx;
+		this.miny = miny;
+		this.maxy = maxy;
+		this.cellsize = cellsize;
+		this.noDataValue = noDataValue;
+		if(crs == null){
+			try {
+				this.crs = CRS.decode("EPSG:2154");
+			} catch (FactoryException e) {
+				e.printStackTrace();
+			}
+		}else{
+			this.crs = crs;
+		}
 	}
 	
 	@Override
 	public String toString(){
-		return width+" "+height+" "+minx+" "+maxx+" "+miny+" "+maxy+" "+cellsize+" "+noDataValue;
+		return width+" "+height+" "+minx+" "+maxx+" "+miny+" "+maxy+" "+cellsize+" "+noDataValue+" "+CRS.toSRS(crs);
+	}
+	
+	public CoordinateReferenceSystem crs(){
+		return crs;
 	}
 	
 	public int width(){
@@ -88,7 +123,7 @@ public class EnteteRaster {
 		return new EnteteRaster(roi.width, roi.height, minX, maxX, minY, maxY, refEntete.cellsize, refEntete.noDataValue);
 	}
 	
-	public static EnteteRaster getEntete(Envelope envelope, float cellsize, int noDataValue) {
+	public static EnteteRaster getEntete(Envelope envelope, float cellsize, int noDataValue, CoordinateReferenceSystem crs) {
 		int ncols = new Double(Math.round(envelope.getMaxX() - envelope.getMinX()) / cellsize).intValue();
 		if(Math.round(envelope.getMaxX() - envelope.getMinX()) % cellsize != 0){
 			ncols++;
@@ -97,7 +132,7 @@ public class EnteteRaster {
 		if(Math.round(envelope.getMaxY() - envelope.getMinY()) % cellsize != 0){
 			nrows++;
 		}
-		return new EnteteRaster(ncols, nrows, envelope.getMinX(), envelope.getMinX() + ncols*cellsize, envelope.getMinY(), envelope.getMinY() + nrows*cellsize, cellsize, noDataValue);
+		return new EnteteRaster(ncols, nrows, envelope.getMinX(), envelope.getMinX() + ncols*cellsize, envelope.getMinY(), envelope.getMinY() + nrows*cellsize, cellsize, noDataValue, crs);
 	}
 	
 	public static EnteteRaster sum(EnteteRaster entete1, EnteteRaster entete2){
@@ -110,13 +145,12 @@ public class EnteteRaster {
 		double miny = Math.min(entete1.miny, entete2.miny);
 		double maxy = Math.max(entete1.maxy, entete2.maxy);
 		
-		return getEntete(new Envelope(minx, maxx, miny, maxy), entete1.cellsize, entete1.noDataValue);
+		return getEntete(new Envelope(minx, maxx, miny, maxy), entete1.cellsize, entete1.noDataValue, entete1.crs);
 	}
 
 	public static EnteteRaster getEntete(Set<EnteteRaster> entetes) {
 		
 		EnteteRaster entete = entetes.iterator().next();
-		
 		for(EnteteRaster e : entetes){
 			entete = sum(entete, e);
 		}
@@ -215,8 +249,18 @@ public class EnteteRaster {
 			double maxy = Double.parseDouble(properties.getProperty("maxy"));
 			float cellsize = Float.parseFloat(properties.getProperty("cellsize"));
 			int noDataValue = Integer.parseInt(properties.getProperty("nodata_value"));
+			CoordinateReferenceSystem crs = null;
+			try {
+				if(properties.containsKey("crs")){
+					crs = CRS.decode(properties.getProperty("crs"));
+				}else{
+					crs = CRS.decode("EPSG:2154"); // Lambert 93 par defaut
+				}
+			} catch (FactoryException e) {
+				e.printStackTrace();
+			}
 			
-			return new EnteteRaster(width, height, minx, maxx, miny, maxy, cellsize, noDataValue);
+			return new EnteteRaster(width, height, minx, maxx, miny, maxy, cellsize, noDataValue, crs);
 			
 		}catch(FileNotFoundException ex){
 			ex.printStackTrace();
@@ -286,6 +330,8 @@ public class EnteteRaster {
 			properties.setProperty("maxy", entete.maxy+"");
 			properties.setProperty("cellsize", entete.cellsize+"");
 			properties.setProperty("nodata_value", entete.noDataValue+"");
+			properties.setProperty("crs", CRS.toSRS(entete.crs));
+			
 			
 			FileOutputStream out = new FileOutputStream(paramFile);
 			properties.store(out,"parameter file generated with APILand");

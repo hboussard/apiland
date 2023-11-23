@@ -20,10 +20,8 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import fr.inra.sad.bagap.apiland.core.space.Linear;
-import fr.inra.sad.bagap.apiland.core.space.Local;
-import fr.inra.sad.bagap.apiland.core.space.Surfacic;
 import fr.inrae.act.bagap.raster.Coverage;
 import fr.inrae.act.bagap.raster.CoverageManager;
 import fr.inrae.act.bagap.raster.EnteteRaster;
@@ -62,35 +60,35 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 	
-	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue){
+	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue, CoordinateReferenceSystem crs){
 		
-		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
+		EnteteRaster entete = getEntete(input, cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, noDataValue);
 		CoverageManager.write(output, data, entete);
 	}
 	
-	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
+	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue, CoordinateReferenceSystem crs, double minx, double maxx, double miny, double maxy, float fillValue){
 		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, fillValue);
 		CoverageManager.write(output, data, entete);
 	}
 	
-	public static void rasterize(String output, String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue){
+	public static void rasterize(String output, String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, CoordinateReferenceSystem crs){
 		
-		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
+		EnteteRaster entete = getEntete(input, cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, codes, noDataValue);
 		CoverageManager.write(output, data, entete);
 	}
 	
-	public static void rasterize(String output, String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
+	public static void rasterize(String output, String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, CoordinateReferenceSystem crs, double minx, double maxx, double miny, double maxy, float fillValue){
 		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, codes, fillValue);
 		CoverageManager.write(output, data, entete);
 	}
 	
-	private static EnteteRaster getEntete(String zone, float cellSize, int noDataValue){
+	private static EnteteRaster getEntete(String zone, float cellSize, int noDataValue, CoordinateReferenceSystem crs){
 		try{
 			
 			ShpFiles sf = new ShpFiles(zone);
@@ -116,7 +114,7 @@ public class ShapeFile2CoverageConverter {
 			sfr.close();
 			sf.dispose();
 			
-			return EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+			return EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 			
 		} catch (ShapefileException e) {
 			e.printStackTrace();
@@ -140,17 +138,17 @@ public class ShapeFile2CoverageConverter {
 		return new TabCoverage(data, entete);
 	}
 	
-	public static Coverage getSurfaceCoverage(String input, String attribute, float cellSize, int noDataValue){
+	public static Coverage getSurfaceCoverage(String input, String attribute, float cellSize, int noDataValue, CoordinateReferenceSystem crs){
 		
-		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
+		EnteteRaster entete = getEntete(input, cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, noDataValue);
 
 		return new TabCoverage(data, entete);
 	}
 	
-	public static Coverage getSurfaceCoverage(String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
+	public static Coverage getSurfaceCoverage(String input, String attribute, float cellSize, int noDataValue, CoordinateReferenceSystem crs, double minx, double maxx, double miny, double maxy, float fillValue){
 		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, fillValue);
 
 		return new TabCoverage(data, entete);
@@ -163,17 +161,17 @@ public class ShapeFile2CoverageConverter {
 		return new TabCoverage(data, entete);
 	}
 	
-	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue){
+	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, CoordinateReferenceSystem crs){
 		
-		EnteteRaster entete = getEntete(input, cellSize, noDataValue);
+		EnteteRaster entete = getEntete(input, cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, codes, noDataValue);
 
 		return new TabCoverage(data, entete);
 	}
 	
-	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue){
+	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, CoordinateReferenceSystem crs, double minx, double maxx, double miny, double maxy, float fillValue){
 		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 		float[] data = getSurfaceData(input, entete, attribute, codes, fillValue);
 
 		return new TabCoverage(data, entete);
@@ -621,9 +619,9 @@ public class ShapeFile2CoverageConverter {
 		return new TabCoverage(data, entete);
 	}
 	
-	public static Coverage getLinearCoverage(String input, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){
+	public static Coverage getLinearCoverage(String input, String attribute, float cellSize, int noDataValue, CoordinateReferenceSystem crs, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){
 		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 		float[] data = getLinearData(input, entete, attribute, fillValue, buffer);
 
 		return new TabCoverage(data, entete);
@@ -717,9 +715,9 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 	
-	public static Coverage getLinearCoverage(String input, Map<String, String> conditionsAttributeAndValue, String attribute, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){
+	public static Coverage getLinearCoverage(String input, Map<String, String> conditionsAttributeAndValue, String attribute, float cellSize, int noDataValue, CoordinateReferenceSystem crs, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){
 		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 		float[] data = getLinearData(input, entete, conditionsAttributeAndValue, attribute, fillValue, buffer);
 
 		return new TabCoverage(data, entete);
@@ -837,9 +835,9 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 	
-	public static Coverage getLinearCoverage(String input, Map<String, String> conditionsAttributeAndValue, float value, float cellSize, int noDataValue, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){
+	public static Coverage getLinearCoverage(String input, Map<String, String> conditionsAttributeAndValue, float value, float cellSize, int noDataValue, CoordinateReferenceSystem crs, double minx, double maxx, double miny, double maxy, float fillValue, double buffer){
 		
-		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue);
+		EnteteRaster entete = EnteteRaster.getEntete(new Envelope(minx, maxx, miny, maxy), cellSize, noDataValue, crs);
 		float[] data = getLinearData(input, entete, conditionsAttributeAndValue, value, fillValue, buffer);
 
 		return new TabCoverage(data, entete);

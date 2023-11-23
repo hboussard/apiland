@@ -25,17 +25,15 @@ import org.opengis.parameter.ParameterValueGroup;
 
 import com.sun.media.jai.codecimpl.util.RasterFactory;
 
-import fr.inra.sad.bagap.apiland.analysis.matrix.ArrayChamferDistanceAnalysis;
-import fr.inrae.act.bagap.raster.CoverageManager;
 
 public class WriteHugeGeotiff {
 
 	public static void main(String[] args){
 		
-		script1();
+		//script1();
 		
 	}
-	
+	/*
 	private static void script2(){
 		try {
 			
@@ -68,15 +66,15 @@ public class WriteHugeGeotiff {
 								
 				int roiWidth = Math.min(maxTile, width - x);
 				int roiHeight = Math.min(maxTile, height - y);
-				/*
-				double roiPosX = imageMinX + x*cellSize;
-				double roiPosMaxX = roiPosX + roiWidth * cellSize;
-				double roiPosY = Math.max(imageMinY, imageMaxY - (y+roiHeight)*cellSize);
-				double roiPosMaxY = roiPosY + roiHeight * cellSize;
-				*/		
 				
-				GridCoverage2D cov = CoverageManager.get(temp+"_"+dx+"-"+dy+".tif");
-				float[] outDatas = CoverageManager.getData(cov, 0, 0, roiWidth, roiHeight);
+				//double roiPosX = imageMinX + x*cellSize;
+				//double roiPosMaxX = roiPosX + roiWidth * cellSize;
+				//double roiPosY = Math.max(imageMinY, imageMaxY - (y+roiHeight)*cellSize);
+				//double roiPosMaxY = roiPosY + roiHeight * cellSize;
+						
+				
+				//GridCoverage2D cov = CoverageManager.get(temp+"_"+dx+"-"+dy+".tif");
+				//float[] outDatas = CoverageManager.getData(cov, 0, 0, roiWidth, roiHeight);
 				
 				
 				//((WritableRenderedImage) coverage.getRenderedImage()).setData(raster);
@@ -101,8 +99,8 @@ public class WriteHugeGeotiff {
 		}
 		
 		
-	}
-	
+	}*/
+	/*
 	private static void script1(){
 		try {
 			
@@ -187,5 +185,5 @@ public class WriteHugeGeotiff {
 		
 		
 	}
-	
+	*/
 }
