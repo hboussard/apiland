@@ -3,16 +3,19 @@ package fr.inrae.act.bagap.raster.converter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.dbf.DbaseFileHeader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.files.ShpFiles;
 import org.geotools.data.shapefile.shp.ShapeType;
 import org.geotools.data.shapefile.shp.ShapefileException;
 import org.geotools.data.shapefile.shp.ShapefileReader;
+import org.geotools.data.store.ContentFeatureSource;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -20,6 +23,7 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.MultiLineString;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
+import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import fr.inrae.act.bagap.raster.Coverage;
@@ -31,6 +35,29 @@ import fr.inrae.act.bagap.raster.TabCoverage;
 
 public class ShapeFile2CoverageConverter {
 
+	public static CoordinateReferenceSystem getCoordinateReferenceSystem(String shape){
+		
+		try{
+			ShapefileDataStore SHPdataStore = new ShapefileDataStore(Paths.get(shape).toUri().toURL());
+			ContentFeatureSource featureSource = SHPdataStore.getFeatureSource();
+			SimpleFeatureType schema = featureSource.getSchema();
+			CoordinateReferenceSystem crs = schema.getCoordinateReferenceSystem();
+			
+			SHPdataStore.dispose();
+			
+			return crs; 
+			
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (ShapefileException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	
+		return null;
+	}
+	
 	public static ShapeType getShapeType(String shape){
 	
 		try{
@@ -40,11 +67,11 @@ public class ShapeFile2CoverageConverter {
 			}else{
 				sf = new ShpFiles(shape + ".shp");
 			}
-		
+			
 			ShapefileReader sfr = new ShapefileReader(sf, true, false, new org.locationtech.jts.geom.GeometryFactory());
 			
 			ShapeType st = sfr.getHeader().getShapeType();
-		
+			
 			sfr.close();
 			
 			return st; 
@@ -58,6 +85,20 @@ public class ShapeFile2CoverageConverter {
 		}
 	
 		return null;
+	}
+	
+	public static void rasterize(String output, String input, String attribute, float fillValue, EnteteRaster entete){
+		
+		float[] data = null; 
+		ShapeType sType = getShapeType(input);
+		if(sType.isPolygonType()){
+			data = getSurfaceData(input, entete, attribute, fillValue);
+		}else if(sType.isLineType()){
+			data = getLinearData(input, entete, attribute, fillValue, 0);
+		}else{
+			throw new IllegalArgumentException("shape type "+sType+" not supported yet");
+		}
+		CoverageManager.write(output, data, entete);
 	}
 	
 	public static void rasterize(String output, String input, String attribute, float cellSize, int noDataValue, CoordinateReferenceSystem crs){
@@ -949,6 +990,10 @@ public class ShapeFile2CoverageConverter {
 		return null;
 	}
 
+	public static Envelope getEnvelope(String zone){
+		return getEnvelope(zone, 0);
+	}
+	
 	public static Envelope getEnvelope(String zone, double buffer) {
 		
 		//System.out.println("récupération de l'enveloppe");

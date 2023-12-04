@@ -87,7 +87,6 @@ public class CoverageManager {
 			double inMaxX = coverage2D.getEnvelope().getMaximum(0);
 			double inMaxY = coverage2D.getEnvelope().getMaximum(1);
 			float inCellSize = (float) ((java.awt.geom.AffineTransform) coverage2D.getGridGeometry().getGridToCRS2D()).getScaleX();
-			
 			CoordinateReferenceSystem crs = coverage2D.getEnvelope().getCoordinateReferenceSystem();
 			
 			int noDataValue = Raster.getNoDataValue();
