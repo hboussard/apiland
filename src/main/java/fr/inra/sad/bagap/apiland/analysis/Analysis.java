@@ -32,13 +32,18 @@ public abstract class Analysis {
 	}
 	
 	public void addObserver(AnalysisObserver o){
+		if(observers == null){
+			observers = new HashSet<AnalysisObserver>();
+		}
 		observers.add(o);
 	}
 	
 	private void notifyObservers(){
-		AnalysisState s = state;
-		for(AnalysisObserver o : observers){
-			o.notify(this, s);
+		if(observers != null){
+			AnalysisState s = state;
+			for(AnalysisObserver o : observers){
+				o.notify(this, s);
+			}
 		}
 	}
 	
@@ -105,8 +110,10 @@ public abstract class Analysis {
 	 * @param total the total to aim
 	 */
 	public void updateProgression(int total){
-		for(AnalysisObserver o : observers()){
-			o.updateProgression(this, total);
+		if(observers != null){
+			for(AnalysisObserver o : observers){
+				o.updateProgression(this, total);
+			}
 		}
 	}
 	
