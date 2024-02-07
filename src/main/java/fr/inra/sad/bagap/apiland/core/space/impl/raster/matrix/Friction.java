@@ -38,7 +38,7 @@ public class Friction {
 	}
 	
 	public double get(double v){
-		System.out.println(v);
+		//System.out.println(v);
 		return r.get(v);
 	}
 	

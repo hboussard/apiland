@@ -42,6 +42,7 @@ import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.parameter.GeneralParameterValue;
 import org.opengis.parameter.ParameterValueGroup;
 import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.sun.media.jai.codecimpl.util.RasterFactory;
@@ -87,7 +88,8 @@ public class CoverageManager {
 			double inMaxX = coverage2D.getEnvelope().getMaximum(0);
 			double inMaxY = coverage2D.getEnvelope().getMaximum(1);
 			float inCellSize = (float) ((java.awt.geom.AffineTransform) coverage2D.getGridGeometry().getGridToCRS2D()).getScaleX();
-			CoordinateReferenceSystem crs = coverage2D.getEnvelope().getCoordinateReferenceSystem();
+			//CoordinateReferenceSystem crs = coverage2D.getEnvelope().getCoordinateReferenceSystem();
+			CoordinateReferenceSystem crs = CRS.decode("EPSG:2154");
 			
 			int noDataValue = Raster.getNoDataValue();
 			GridSampleDimension dim = coverage2D.getSampleDimension(0);
@@ -106,6 +108,10 @@ public class CoverageManager {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NoSuchAuthorityCodeException e) {
+			e.printStackTrace();
+		} catch (FactoryException e) {
 			e.printStackTrace();
 		}
 

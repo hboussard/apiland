@@ -135,6 +135,18 @@ public class EnteteRaster {
 		return new EnteteRaster(ncols, nrows, envelope.getMinX(), envelope.getMinX() + ncols*cellsize, envelope.getMinY(), envelope.getMinY() + nrows*cellsize, cellsize, noDataValue, crs);
 	}
 	
+	public static EnteteRaster getEntete(Envelope envelope, float cellsize, int noDataValue) {
+		int ncols = new Double(Math.round(envelope.getMaxX() - envelope.getMinX()) / cellsize).intValue();
+		if(Math.round(envelope.getMaxX() - envelope.getMinX()) % cellsize != 0){
+			ncols++;
+		}
+		int nrows = new Double(Math.round(envelope.getMaxY() - envelope.getMinY()) / cellsize).intValue();
+		if(Math.round(envelope.getMaxY() - envelope.getMinY()) % cellsize != 0){
+			nrows++;
+		}
+		return new EnteteRaster(ncols, nrows, envelope.getMinX(), envelope.getMinX() + ncols*cellsize, envelope.getMinY(), envelope.getMinY() + nrows*cellsize, cellsize, noDataValue);
+	}
+	
 	public static EnteteRaster sum(EnteteRaster entete1, EnteteRaster entete2){
 		if(entete1.cellsize != entete2.cellsize 
 				|| entete1.noDataValue != entete2.noDataValue){
