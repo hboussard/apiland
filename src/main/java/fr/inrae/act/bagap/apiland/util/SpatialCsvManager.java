@@ -547,17 +547,20 @@ public class SpatialCsvManager {
 			double x = Double.parseDouble(cr.get("X"));
 			double y = Double.parseDouble(cr.get("Y"));
 			int i=0, j=0;
+			boolean ok = true;
 			for(double nextY=minY + (height-1)*cellSize + cellSize/2; nextY>=minY; nextY-=cellSize, j++){
 				i=0;
 				for(double nextX=minX + cellSize - cellSize/2; nextX<(minX + width*cellSize); nextX+=cellSize, i++){
 					
-					if((Math.abs(y-nextY) < (cellSize/2.0)) && (Math.abs(x-nextX) < (cellSize/2.0))){
+					if(ok && (Math.abs(y-nextY) < (cellSize/2.0)) && (Math.abs(x-nextX) < (cellSize/2.0))){
 						
 						data[j*width+i] = Float.parseFloat(cr.get(variable));
 						
 						if(cr.readRecord()){
 							x = Double.parseDouble(cr.get("X"));
 							y = Double.parseDouble(cr.get("Y"));
+						}else {
+							ok = false;
 						}
 					}else{
 						

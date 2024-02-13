@@ -202,6 +202,13 @@ public class ShapeFile2CoverageConverter {
 		return new TabCoverage(data, entete);
 	}
 	
+	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, EnteteRaster entete, float fillValue){
+		
+		float[] data = getSurfaceData(input, entete, attribute, codes, fillValue);
+
+		return new TabCoverage(data, entete);
+	}
+	
 	public static Coverage getSurfaceCoverage(String input, String attribute, Map<String, Integer> codes, float cellSize, int noDataValue, CoordinateReferenceSystem crs){
 		
 		EnteteRaster entete = getEntete(input, cellSize, noDataValue, crs);
@@ -576,12 +583,19 @@ public class ShapeFile2CoverageConverter {
 	
 	public static Coverage getLinearCoverage(String input, EnteteRaster entete, float value, float fillValue){
 		
-		float[] data = getLinearData(input, entete, value, fillValue);
+		float[] data = getLinearData(input, entete, value, fillValue, 0);
+ 
+		return new TabCoverage(data, entete);
+	}
+	
+	public static Coverage getLinearCoverage(String input, EnteteRaster entete, float value, float fillValue, double buffer){
+		
+		float[] data = getLinearData(input, entete, value, fillValue, buffer);
 
 		return new TabCoverage(data, entete);
 	}
 	
-	private static float[] getLinearData(String inputShape, EnteteRaster entete, float value, float fillValue){
+	private static float[] getLinearData(String inputShape, EnteteRaster entete, float value, float fillValue, double buffer){
 		try{
 			
 			ShpFiles sf = new ShpFiles(inputShape);
@@ -601,7 +615,7 @@ public class ShapeFile2CoverageConverter {
 				if(the_geom instanceof LineString){
 					the_line = (LineString) the_geom;
 					
-					rls = RasterLineString.getRasterLineString(the_line, entete.minx(), entete.maxy(), entete.cellsize());
+					rls = RasterLineString.getRasterLineString(the_line, entete.minx(), entete.maxy(), entete.cellsize(), buffer);
 					indrp = 0;
 					xdelta = rls.getDeltaI();
 					ydelta = rls.getDeltaJ();
@@ -621,7 +635,7 @@ public class ShapeFile2CoverageConverter {
 					for(int i=0; i<the_geom.getNumGeometries(); i++){
 						the_line = (LineString) ((MultiLineString) the_geom).getGeometryN(i);
 						
-						rls = RasterLineString.getRasterLineString(the_line, entete.minx(), entete.maxy(), entete.cellsize());
+						rls = RasterLineString.getRasterLineString(the_line, entete.minx(), entete.maxy(), entete.cellsize(), buffer);
 						indrp = 0;
 						xdelta = rls.getDeltaI();
 						ydelta = rls.getDeltaJ();
@@ -1004,7 +1018,7 @@ public class ShapeFile2CoverageConverter {
 	
 	public static Envelope getEnvelope(String zone, double buffer) {
 		
-		//System.out.println("récupération de l'enveloppe");
+		//System.out.println("rï¿½cupï¿½ration de l'enveloppe");
 		
 		double minx = Double.MAX_VALUE;
 		double maxx = Double.MIN_VALUE;
