@@ -373,6 +373,7 @@ public class SpatialCsvManager {
 			int is = 0;
 			for(String icsv : inputCsv){
 				suffix = suffixCsv[is++];
+				
 				reader = new CsvReader(icsv);
 				reader.setDelimiter(';');
 				reader.readHeaders();
@@ -455,6 +456,96 @@ public class SpatialCsvManager {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	
+	public static void mergeMapPixels(String outputCsv, Map<String, String> localCsv, int noDataValue, Set<Pixel> pixels) {
+		
+		try {
+		
+			Map<String, CsvReader> readers = new HashMap<String, CsvReader>();
+			List<String> headers = new ArrayList<String>();
+			for(String csv : localCsv.keySet()){
+				
+				CsvReader cr = new CsvReader(csv);
+				cr.setDelimiter(';');
+				readers.put(csv, cr);
+				
+				cr.readHeaders();
+				
+				if(headers.size() == 0) { // initialisation 1ere passe
+					for(int h=0; h<cr.getHeaderCount(); h++){
+						String header = cr.getHeader(h);
+						if(!header.equalsIgnoreCase("ID") && !header.equalsIgnoreCase("X") && !header.equalsIgnoreCase("Y")){
+							headers.add(header);
+						}
+					}
+					
+				}
+			}
+			
+			CsvWriter cw = new CsvWriter(outputCsv);
+			cw.setDelimiter(';');
+			cw.write("ID");
+			cw.write("X");
+			cw.write("Y");
+			cw.write("RASTER");
+			for(String header : headers){
+				cw.write(header);
+			}
+			cw.endRecord();
+			
+			boolean write, writeOk;
+			String tmpID = null, tmpX = null, tmpY = null;
+			for(Pixel pixel : pixels) {
+				writeOk = false;
+				for(String csv : localCsv.keySet()){
+					write = false;
+					CsvReader cr = readers.get(csv);
+					cr.readRecord();
+					tmpID = cr.get("ID");
+					tmpX = cr.get("X");
+					tmpY = cr.get("Y");
+					for(String header : headers){
+						
+						double v = Double.parseDouble(cr.get(header));
+						if(v != noDataValue) {
+							write = true;
+							writeOk = true;
+							break;
+						}
+					}
+					if(write) {
+						cw.write(cr.get("ID"));
+						cw.write(cr.get("X"));
+						cw.write(cr.get("Y"));
+						cw.write(localCsv.get(csv));
+						for(String header : headers){
+							cw.write(cr.get(header));
+						}	
+						cw.endRecord();
+					}
+				}
+				if(!writeOk) {
+					cw.write(tmpID);
+					cw.write(tmpX);
+					cw.write(tmpY);
+					cw.write("");
+					for(String header : headers){
+						cw.write(noDataValue+"");
+					}
+					cw.endRecord();
+				}
+			}
+			
+			cw.close();
+			for(CsvReader cr : readers.values()) {
+				cr.close();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*public static void mergeIDXY(String outputCsv, String[] inputCsv, String[] suffixCsv, String id, String idX, String idY, EnteteRaster entete, Set<Pixel> pixels){
