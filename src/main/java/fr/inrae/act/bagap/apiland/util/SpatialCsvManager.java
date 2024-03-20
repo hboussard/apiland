@@ -54,14 +54,14 @@ public class SpatialCsvManager {
 				index = new LinkedHashMap<String, Integer>();
 				for(int c=0; c<reader.getHeaderCount(); c++){
 					header = reader.getHeader(c);
-					if(!header.equalsIgnoreCase("name")){
+					if(!header.equalsIgnoreCase("raster")){
 						index.put(header, c);
 					}
 				}
 				
 				while(reader.readRecord()){
 					
-					String name = reader.get("name");
+					String name = reader.get("raster");
 					
 					if(!values.containsKey(name)){
 						values.put(name, new LinkedHashMap<String, String>());
@@ -79,7 +79,7 @@ public class SpatialCsvManager {
 			
 			CsvWriter cw = new CsvWriter(outputCsv);
 			cw.setDelimiter(';');
-			cw.write("name");
+			cw.write("raster");
 			for(Entry<String, String> ind : values.entrySet().iterator().next().getValue().entrySet()){
 				cw.write(ind.getKey());
 			}
@@ -244,6 +244,110 @@ public class SpatialCsvManager {
 	public static void mergeXY(String outputCsv, String[] inputCsv, String[] suffixCsv, String idX, String idY, EnteteRaster entete){
 		
 		try {
+			
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outputCsv));
+			bw.write("X;Y");
+			
+			Map<CsvReader, Set<Integer>> readers = new LinkedHashMap<CsvReader, Set<Integer>>();
+			CsvReader reader;
+			Set<Integer> index;
+			for(String icsv : inputCsv){
+				
+				reader = new CsvReader(icsv);
+				reader.setDelimiter(';');
+				reader.readHeaders();
+				
+				index = new HashSet<Integer>();
+				for(int c=0; c<reader.getHeaderCount(); c++){
+					if(!idX.equalsIgnoreCase(reader.getHeader(c)) && !idY.equalsIgnoreCase(reader.getHeader(c))){
+						index.add(c);
+					}
+				}
+				readers.put(reader, index);	
+			}
+			int is = 0;
+			for(Entry<CsvReader, Set<Integer>> r : readers.entrySet()){
+				String suffix = suffixCsv[is++];
+				for(int ind : r.getValue()){
+					bw.write(";"+r.getKey().getHeader(ind)+suffix);
+				}
+			}
+			bw.newLine();
+			
+			Map<CsvReader, Map<RefPoint, String>> waits = new HashMap<CsvReader, Map<RefPoint, String>>();
+			StringBuilder local = new StringBuilder();
+			boolean export;
+			RefPoint lp;
+			StringBuilder sb = new StringBuilder();
+			for(int j=0; j<entete.height(); j++){
+				for(int i=0; i<entete.width(); i++){
+					export = false;
+					lp = new RefPoint(CoordinateManager.getProjectedX(entete, i), CoordinateManager.getProjectedY(entete, j));
+					
+					local.setLength(0);
+					for(Entry<CsvReader, Set<Integer>> r : readers.entrySet()){
+						
+						if(waits.containsKey(r.getKey()) && waits.get(r.getKey()).containsKey(lp)){
+							
+							local.append(waits.get(r.getKey()).remove(lp));
+							
+							export = true;
+						
+						}else if(r.getKey().readRecord()){
+							
+							sb.setLength(0);
+							for(int ind : r.getValue()){
+								sb.append(";"+r.getKey().get(ind));
+							}
+							
+							double xx = Double.parseDouble(r.getKey().get(idX));
+							double yy = Double.parseDouble(r.getKey().get(idY));
+							if(lp.getX() == xx && lp.getY() == yy){
+								local.append(sb.toString());
+								export = true;
+							}else{
+								if(!waits.containsKey(r.getKey())){
+									waits.put(r.getKey(), new HashMap<RefPoint, String>());
+								}
+								waits.get(r.getKey()).put(new RefPoint(xx, yy), sb.toString());
+								
+								for(int ind : r.getValue()){
+									local.append(";"+entete.noDataValue());
+								}
+							}
+						}else{
+							for(int ind : r.getValue()){
+								local.append(";"+entete.noDataValue());
+							}
+						}
+					}
+					
+					if(export){
+						//bw.write(CoordinateManager.getProjectedX(entete, i)+";");
+						//bw.write(CoordinateManager.getProjectedY(entete, j)+"");
+						bw.write(lp.getX()+";");
+						bw.write(lp.getY()+"");
+						bw.write(local.toString());
+						bw.newLine();
+					}
+				}	
+			}
+			
+			bw.close();
+			for(CsvReader r : readers.keySet()){
+				r.close();
+			}
+			readers.clear();
+			readers = null;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void mergeXYOld(String outputCsv, String[] inputCsv, String[] suffixCsv, String idX, String idY, EnteteRaster entete){
+		
+		try {
 			CsvWriter cw = new CsvWriter(outputCsv);
 			cw.setDelimiter(';');
 			cw.write(idX);
@@ -353,8 +457,6 @@ public class SpatialCsvManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	public static void mergeFromPixels(String outputCsv, String[] inputCsv, String[] suffixCsv, EnteteRaster entete, Set<Pixel> pixels){
